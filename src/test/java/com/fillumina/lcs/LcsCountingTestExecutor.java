@@ -1,0 +1,104 @@
+package com.fillumina.lcs;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import static org.junit.Assert.assertEquals;
+
+/**
+ *
+ * @author Francesco Illuminati <fillumina@gmail.com>
+ */
+public abstract class LcsCountingTestExecutor extends CharacterLcsTestHelper {
+    private final Map<String, Integer> countingMap = new HashMap<>();
+
+    public static class Result {
+        private final String result;
+        private final CountingResult countingResult;
+
+        public Result(String result, CountingResult countingResult) {
+            this.result = result;
+            this.countingResult = countingResult;
+        }
+
+        public Result assertResult(String result) {
+            assertEquals(result, this.result);
+            return this;
+        }
+
+        public Result assertNumberOfCalls(long calls) {
+            assertEquals(calls, countingResult.getNumberOfCalls());
+            return this;
+        }
+
+        public void printerr() {
+            System.err.println(toString());
+        }
+
+        @Override
+        public String toString() {
+            return countingResult.toString();
+        }
+    }
+
+    private static class CountingResult {
+        private final List<Map.Entry<String,Integer>> list;
+        private final long numberOfCalls;
+
+        public CountingResult(Map<String,Integer> countingMap) {
+            long counter = 0;
+            list = new ArrayList<>(countingMap.size());
+            for (Map.Entry<String,Integer> entry : countingMap.entrySet()) {
+                counter += entry.getValue();
+                list.add(entry);
+            }
+            this.numberOfCalls = counter;
+        }
+
+        public long getNumberOfCalls() {
+            return numberOfCalls;
+        }
+
+        @Override
+        public String toString() {
+            Collections.sort(list,
+                    (o1, o2) -> Integer.compare(o2.getValue(), o1.getValue()));
+
+            StringBuilder buf = new StringBuilder();
+            list.stream().forEach((entry) -> {
+                buf.append(entry.getValue()).append(":\t")
+                        .append(entry.getKey()).append('\n');
+            });
+            buf.append("\n--------\nTOTAL:\t").append(numberOfCalls).append('\n');
+            return buf.toString();
+        }
+    }
+
+    /**
+     * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
+     * the body of the created
+     * {@link Lcs#lcs(java.util.List, java.util.List)}.
+     */
+    protected abstract Lcs<Character> getLcs();
+
+    public Result lcs(final String xs, final String ys) {
+        return new Result(
+                executeLcs(getLcs(), xs, ys),
+                new CountingResult(countingMap));
+    }
+
+    protected void count(List<Character> xs, List<Character> ys) {
+        count(xs.toString() + ys.toString());
+    }
+
+    private void count(String s) {
+        Integer num = countingMap.get(s);
+        if (num == null) {
+            num = 0;
+        }
+        countingMap.put(s, num + 1);
+    }
+
+}

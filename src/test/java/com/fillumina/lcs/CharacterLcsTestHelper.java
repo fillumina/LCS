@@ -2,17 +2,16 @@ package com.fillumina.lcs;
 
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LcsTestHelper {
+public class CharacterLcsTestHelper {
 
-    protected void testLcs(Lcs<Character> lcs, String a, String b, String result) {
+    protected String executeLcs(Lcs<Character> lcs, String a, String b) {
         List<Character> resultList = lcs.lcs(toList(a), toList(b));
-        assertEquals(result, toString(resultList));
+        return toString(resultList);
     }
 
     protected List<Character> toList(String s) {
