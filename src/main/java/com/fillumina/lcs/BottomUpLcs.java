@@ -13,14 +13,14 @@ public class BottomUpLcs<T> implements Lcs<T> {
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
         Grid grid = createGrid(xs, ys);
-        System.out.println(printGrid(xs, ys, grid));
+        System.out.println(gridToString(xs, ys, grid));
 
         List<T> lcs = new ArrayList<>();
         int i = xs.size() - 1;
         int j = ys.size() - 1;
-        DO:
+        char move;
         do {
-            final char move = grid.get(i, j).move;
+            move = grid.get(i, j).move;
             System.out.println(i + " " + j + " " + move);
             switch(move) {
                 case '\\':
@@ -36,11 +36,8 @@ public class BottomUpLcs<T> implements Lcs<T> {
                 case '<':
                     j--;
                     break;
-
-                case 'e':
-                    break DO;
             }
-        } while (true);
+        } while (move != 'e');
 
         Collections.reverse(lcs);
         return lcs;
@@ -79,7 +76,7 @@ public class BottomUpLcs<T> implements Lcs<T> {
         return grid;
     }
 
-    private String printGrid(List<T> xs, List<T> ys, Grid grid) {
+    private String gridToString(List<T> xs, List<T> ys, Grid grid) {
         StringBuilder buf = new StringBuilder();
         buf.append("  ");
         for (int j=0; j<ys.size(); j++) {
@@ -117,11 +114,12 @@ public class BottomUpLcs<T> implements Lcs<T> {
         }
 
         public Cell get(int x, int y) {
-            if (x < 0 || x > array.length - 1 ||
-                    y < 0 || y > array[0].length -1) {
-                return def;
+            Cell value;
+            try {
+                value = array[x][y];
+            } catch (IndexOutOfBoundsException e) {
+                value = def;
             }
-            final Cell value = array[x][y];
             if (value == null) {
                 return def;
             }
@@ -129,25 +127,14 @@ public class BottomUpLcs<T> implements Lcs<T> {
         }
 
         public void set(int x, int y, Cell cell) {
-            if (cell == null ||
-                    x < 0 || x >= array.length ||
-                    y < 0 || y >= array[0].length) {
+            if (cell == null) {
                 return;
             }
-            array[x][y] = cell;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder buf = new StringBuilder();
-            for (int i=0; i<array.length; i++) {
-                for (int j=0; j<array[0].length; j++) {
-                    buf.append(get(i,j).move);
-                }
-                buf.append('\n');
+            try {
+                array[x][y] = cell;
+            } catch (IndexOutOfBoundsException e) {
+                // do nothing
             }
-            return buf.toString();
         }
-
     }
 }
