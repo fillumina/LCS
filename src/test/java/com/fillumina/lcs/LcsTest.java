@@ -78,6 +78,21 @@ public class LcsTest {
                         }
                     };
                 }
+            }},
+            {new LcsCountingTestExecutor() {
+
+                @Override
+                protected Lcs<Character> getLcs() {
+                    return new HirschbergLinearSpaceAlgorithmLcs<Character>() {
+
+                        @Override
+                        public List<Character> lcs(List<Character> xs,
+                                List<Character> ys) {
+                            count(xs, ys);
+                            return super.lcs(xs, ys);
+                        }
+                    };
+                }
             }}
         });
     }

@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,6 +13,18 @@ public class ListUtils {
     public static <T> List<T> add(List<T> list, T element) {
         list.add(element);
         return list;
+    }
+
+    public static <T> List<T> add(List<T> a, List<T> b) {
+        if (a.isEmpty()) {
+            return b;
+        }
+        if (b.isEmpty()) {
+            return a;
+        }
+        List<T> l = new ArrayList<>(a);
+        l.addAll(b);
+        return l;
     }
 
     public static <T> List<T> maxLenght(List<T> a, List<T> b) {
@@ -30,4 +43,9 @@ public class ListUtils {
         return list.get(list.size() - 1);
     }
 
+    public static <T> List<T> reverse(final List<T> list) {
+        List<T> l = new ArrayList<>(list);
+        Collections.reverse(l);
+        return l;
+    }
 }
