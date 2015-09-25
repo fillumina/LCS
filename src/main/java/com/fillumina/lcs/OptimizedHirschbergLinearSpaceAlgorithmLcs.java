@@ -41,11 +41,6 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
             int k = indexOfBiggerSum(ll_b, ll_e, ny);
 
-            System.out.println("ll_e: " + Arrays.toString(ll_e));
-            System.out.println("ll_b: " + Arrays.toString(ll_b));
-            System.out.println("k: " + k);
-
-
             RList<T> yb = ys.subList(0, k);
             RList<T> ye = ys.subList(k, ny);
 
