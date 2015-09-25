@@ -13,50 +13,51 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
-        return lcs_rlw(new RList<>(xs), new RList<>(ys),
-            new int[3][ys.size() + 1]);
+        final int ysSize = ys.size();
+        return lcs_rlw(xs, 0, xs.size(),
+                ys, 0, ysSize,
+            new int[3][ysSize + 1]);
     }
 
-    List<T> lcs_rlw(RList<T> xs, RList<T> ys, int[][] buffer) {
-        int nx = xs.size();
-        int ny = ys.size();
+    List<T> lcs_rlw(List<T> xs, int xsStart, int xsEnd,
+            List<T> ys, int ysStart, int ysEnd,
+            int[][] buffer) {
+        final int xsSize = xsEnd - xsStart;
 
-        if (nx == 0) {
+        if (xsSize == 0) {
             return Collections.<T>emptyList();
 
-        } else if (nx == 1) {
-            final T xs0 = xs.get(0);
-            if (ys.contains(xs0)) {
-                return Collections.singletonList(xs0);
+        } else if (xsSize == 1) {
+            final T xs0 = xs.get(xsStart);
+            for (int i=ysStart; i<ysEnd; i++) {
+                if (xs0.equals(ys.get(i))) {
+                    return Collections.singletonList(xs0);
+                }
             }
             return Collections.<T>emptyList();
 
         } else {
-            int i = nx / 2;
-            final int start = ys.start();
+            final int i = xsStart + xsSize / 2;
 
-            RList<T> xb = xs.subList(0, i);
-            RList<T> xe = xs.subList(i, nx);
+            int[] ll_b = lcs_lens(xs, xsStart, i, ys, ysStart, ysEnd, buffer);
+            int[] ll_e = lcs_lens_reverse(xs, i, xsEnd, ys, ysStart, ysEnd, buffer);
 
-            int[] ll_b = lcs_lens(xb, ys, buffer, start);
-            int[] ll_e = lcs_lens_reverse(xe, ys, buffer, start);
+            int k = indexOfBiggerSum(ll_b, ll_e, ysStart, ysEnd) ;
 
-            int k = indexOfBiggerSum(ll_b, ll_e, start, ny);
+            System.out.println("ll_e: " + Arrays.toString(ll_e));
+            System.out.println("ll_b: " + Arrays.toString(ll_b));
+            System.out.println("k: " + k);
 
-            RList<T> yb = ys.subList(0, k);
-            RList<T> ye = ys.subList(k, ny);
-
-            // this step could be parallelized
-            return add(lcs_rlw(xb, yb, buffer), lcs_rlw(xe, ye, buffer));
+            return add(lcs_rlw(xs, xsStart, i, ys, ysStart, k, buffer),
+                    lcs_rlw(xs, i, xsEnd, ys, k, ysEnd, buffer));
         }
     }
 
     private static int indexOfBiggerSum(int[] ll_b, int[] ll_e,
-            int start, int ny) {
-        //assert ny + 1 == ll_b.length && ny + 1 == ll_e.length;
-        int tmp, k = -1, max = -1, end = start + ny;
-        for (int j=start; j<=ny; j++) {
-            tmp = ll_b[j] + ll_e[ny-j];
+            int start, int end) {
+        int tmp, k = -1, max = -1;
+        for (int j=start; j<=end; j++) {
+            tmp = ll_b[j] + ll_e[end-j+start];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -65,20 +66,19 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
         return k;
     }
 
-    private static <T> int[] lcs_lens(RList<T> xs, RList<T> ys,
-            int[][] buffer, int start) {
-        final int ysSize = ys.size();
-        final int length = start + ysSize;
-
+    private static <T> int[] lcs_lens(List<T> xs, int xsStart, int xsEnd,
+            List<T> ys, int ysStart, int ysEnd,
+            int[][] buffer) {
         int[] curr = buffer[0];
-        Arrays.fill(curr, start, length, 0);
+        zero(curr, ysStart, ysEnd + 1);
         int[] prev = buffer[2];
 
-        for (T x : xs) {
-            System.arraycopy(curr, start, prev, start, ysSize);
+        for (int j=xsStart; j<xsEnd; j++) {
+            T x = xs.get(j);
+            System.arraycopy(curr, ysStart, prev, ysStart, ysEnd - ysStart + 1);
 
-            for (int i=start; i<length; i++) {
-                T y = ys.get(i - start);
+            for (int i=ysStart; i<ysEnd; i++) {
+                T y = ys.get(i);
                 if (x.equals(y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
@@ -89,29 +89,34 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
         return curr;
     }
 
-    private static <T> int[] lcs_lens_reverse(RList<T> xs, RList<T> ys,
-            int[][] buffer, int start) {
-        final int ysSize = ys.size();
-        final int length = start + ysSize;
-
+    private static <T> int[] lcs_lens_reverse(
+            List<T> xs, int xsStart, int xsEnd,
+            List<T> ys, int ysStart, int ysEnd,
+            int[][] buffer) {
         int[] curr = buffer[1];
-        Arrays.fill(curr, start, length, 0);
+        zero(curr, ysStart, ysEnd + 1);
         int[] prev = buffer[2];
 
-        for (int j=xs.size()-1; j>=0 ; j--) {
+        for (int j=xsEnd-1; j>=xsStart; j--) {
             T x = xs.get(j);
-            System.arraycopy(curr, start, prev, start, ysSize);
+            System.arraycopy(curr, ysStart, prev, ysStart, ysEnd - ysStart + 1);
 
-            for (int i=length-1; i>start; i--) {
-                T y = ys.get(i - start);
+            for (int i=ysStart; i<ysEnd; i++) {
+                T y = ys.get(ysEnd - i + ysStart - 1);
                 if (x.equals(y)) {
-                    curr[i - 1] = prev[i] + 1;
+                    curr[i + 1] = prev[i] + 1;
                 } else {
-                    curr[i - 1] = Math.max(curr[i], prev[i - 1]);
+                    curr[i + 1] = Math.max(curr[i], prev[i + 1]);
                 }
             }
         }
         return curr;
+    }
+
+    private static void zero(int[] array, int from, int to) {
+        for (int i = from; i < to; i++) {
+            array[i] = 0;
+        }
     }
 
     private static <T> List<T> add(List<T> a, List<T> b) {

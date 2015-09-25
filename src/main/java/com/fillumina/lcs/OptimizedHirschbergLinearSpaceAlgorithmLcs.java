@@ -1,6 +1,7 @@
 package com.fillumina.lcs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
             int[] ll_e = lcs_lens(xe.reverse(), ys.reverse());
 
             int k = indexOfBiggerSum(ll_b, ll_e, ny);
+
+            System.out.println("ll_e: " + Arrays.toString(ll_e));
+            System.out.println("ll_b: " + Arrays.toString(ll_b));
+            System.out.println("k: " + k);
+
 
             RList<T> yb = ys.subList(0, k);
             RList<T> ye = ys.subList(k, ny);
