@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import java.util.ArrayList;
 import java.util.List;
 import static com.fillumina.lcs.ListUtils.*;
 import java.util.Collections;
@@ -22,9 +21,7 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
         } else if (nx == 1) {
             final T xs0 = xs.get(0);
             if (ys.contains(xs0)) {
-                List<T> l = new ArrayList<>();
-                l.add(xs0);
-                return l;
+                return Collections.singletonList(xs0);
             }
             return Collections.<T>emptyList();
 
