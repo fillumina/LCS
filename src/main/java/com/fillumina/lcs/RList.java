@@ -45,9 +45,9 @@ class RList<T> extends AbstractList<T> {
         } else {
             idx += index;
         }
-        if (idx < start || idx >= end) {
-            throw new IndexOutOfBoundsException("index: " + idx);
-        }
+//        if (idx < start || idx >= end) {
+//            throw new IndexOutOfBoundsException("index: " + idx);
+//        }
         return list.get(idx);
     }
 

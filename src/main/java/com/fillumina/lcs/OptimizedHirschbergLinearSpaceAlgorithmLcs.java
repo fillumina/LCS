@@ -42,6 +42,8 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
             RList<T> yb = ys.subList(0, k);
             RList<T> ye = ys.subList(k, ny);
+
+            // this step could be parallelized
             return add(lcs_rlw(xb, yb), lcs_rlw(xe, ye));
         }
     }
