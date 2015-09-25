@@ -37,6 +37,14 @@ class RList<T> extends AbstractList<T> {
         this.reverse = reverse;
     }
 
+    public int start() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
     @Override
     public T get(int index) {
         int idx = start;
