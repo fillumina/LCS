@@ -9,11 +9,11 @@ import static org.junit.Assert.*;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ReversableListWrapperTest {
+public class RListTest {
 
     RList<Integer> wrapper;
 
-    public ReversableListWrapperTest() {
+    public RListTest() {
         List<Integer> list = Arrays.asList(0, 1, 2, 3, 4, 5);
         wrapper = new RList<>(list);
     }
@@ -100,5 +100,61 @@ public class ReversableListWrapperTest {
     @Test
     public void shouldReturnTheCorrectSize() {
         assertEquals(3, wrapper.subList(1, 4).size());
+    }
+
+    @Test
+    public void shouldEmptyListBeEmpty() {
+        assertTrue(RList.emptyList().isEmpty());
+    }
+
+    @Test
+    public void shouldEmptyListBeZeroSized() {
+        assertEquals(0, RList.emptyList().size());
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void shouldNotGetFromAnEmptyList() {
+        RList.emptyList().get(0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void shouldNotAddElementToEmptyList() {
+        RList.<String>emptyList().add("Hello");
+    }
+
+    @Test
+    public void shouldAddListToEmptyList() {
+        RList<String> l = new RList<>(Arrays.asList("one", "two", "three"));
+        assertEquals(l, RList.<String>emptyList().add(l));
+    }
+
+    @Test
+    public void shouldAddEmptyListToEmptyList() {
+        RList<String> l = RList.<String>emptyList();
+        assertEquals(l, RList.<String>emptyList().add(l));
+    }
+
+    @Test
+    public void shouldReturnTheSingletonElement() {
+        RList<String> singleton = RList.<String>singleton("hello");
+        assertEquals("hello", singleton.get(0));
+    }
+
+    @Test
+    public void shouldSingletonHasSizeOne() {
+        assertEquals(1, RList.singleton("one").size());
+    }
+
+    @Test
+    public void shouldSingletonBeNotEmpty() {
+        assertFalse(RList.singleton("one").isEmpty());
+    }
+
+    @Test
+    public void shouldAddRListToSingleton() {
+        assertEquals(Arrays.asList("one", "two", "three"),
+                RList.singleton("one").add(
+                    RList.singleton("two").add(
+                        RList.singleton("three"))));
     }
 }

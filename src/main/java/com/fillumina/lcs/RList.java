@@ -2,7 +2,6 @@ package com.fillumina.lcs;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +30,15 @@ class RList<T> extends AbstractList<T> {
 
             @Override
             public Object get(int index) {
-                return null;
+                throw new IndexOutOfBoundsException("empty list!");
+            }
+
+            @Override
+            public RList<Object> subList(int fromIndex, int toIndex) {
+                if (fromIndex == 0 && toIndex == 0) {
+                    return this;
+                }
+                throw new IndexOutOfBoundsException("empty list!");
             }
 
             @Override
@@ -82,14 +89,15 @@ class RList<T> extends AbstractList<T> {
 
             @Override
             public RList<T> add(RList<T> list) {
-                if (list.isEmpty()) {
+                if (list == null || list.isEmpty()) {
                     return this;
                 } else if (list instanceof SingletonRList) {
-                    return new RList<>(
-                            Arrays.asList(t, ((SingletonRList<T>)list).t));
+                    List<T> l = new ArrayList<>();
+                    l.add(t);
+                    l.add(((SingletonRList<T>)list).t);
+                    return new RList<>(l);
                 }
-                list.set(0, t);
-                return list;
+                return super.add(list);
             }
         };
 
@@ -124,7 +132,7 @@ class RList<T> extends AbstractList<T> {
     }
 
     public RList<T> add(RList<T> list) {
-        final ArrayList<T> arrayList = new ArrayList<>(this.list);
+        final ArrayList<T> arrayList = new ArrayList<>(this);
         arrayList.addAll(list);
         return new RList<>(arrayList);
     }
