@@ -38,8 +38,8 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
             RList<T> xb = xs.subList(0, i);
             RList<T> xe = xs.subList(i, nx);
 
-            int[] ll_b = lcs_lens(xb, ys, buffer, 0, start);
-            int[] ll_e = lcs_lens(xe.reverse(), ys.reverse(), buffer, 1, start);
+            int[] ll_b = lcs_lens(xb, ys, buffer, start);
+            int[] ll_e = lcs_lens_reverse(xe, ys, buffer, start);
 
             int k = indexOfBiggerSum(ll_b, ll_e, start, ny);
 
@@ -66,16 +66,16 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
     }
 
     private static <T> int[] lcs_lens(RList<T> xs, RList<T> ys,
-            int[][] buffer, int index, int start) {
+            int[][] buffer, int start) {
         final int ysSize = ys.size();
         final int length = start + ysSize;
 
-        int[] curr = buffer[index];
-        Arrays.fill(curr, 0);
+        int[] curr = buffer[0];
+        Arrays.fill(curr, start, length, 0);
         int[] prev = buffer[2];
 
         for (T x : xs) {
-            System.arraycopy(curr, 0, prev, 0, curr.length);
+            System.arraycopy(curr, start, prev, start, ysSize);
 
             for (int i=start; i<length; i++) {
                 T y = ys.get(i - start);
@@ -83,6 +83,31 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);
+                }
+            }
+        }
+        return curr;
+    }
+
+    private static <T> int[] lcs_lens_reverse(RList<T> xs, RList<T> ys,
+            int[][] buffer, int start) {
+        final int ysSize = ys.size();
+        final int length = start + ysSize;
+
+        int[] curr = buffer[1];
+        Arrays.fill(curr, start, length, 0);
+        int[] prev = buffer[2];
+
+        for (int j=xs.size()-1; j>=0 ; j--) {
+            T x = xs.get(j);
+            System.arraycopy(curr, start, prev, start, ysSize);
+
+            for (int i=length-1; i>start; i--) {
+                T y = ys.get(i - start);
+                if (x.equals(y)) {
+                    curr[i - 1] = prev[i] + 1;
+                } else {
+                    curr[i - 1] = Math.max(curr[i], prev[i - 1]);
                 }
             }
         }
