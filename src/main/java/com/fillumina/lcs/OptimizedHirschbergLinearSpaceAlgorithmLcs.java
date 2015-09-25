@@ -1,5 +1,7 @@
 package com.fillumina.lcs;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,19 +15,19 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
         return lcs_rlw(new RList<>(xs), new RList<>(ys));
     }
 
-    RList<T> lcs_rlw(RList<T> xs, RList<T> ys) {
+    List<T> lcs_rlw(RList<T> xs, RList<T> ys) {
         int nx = xs.size();
         int ny = ys.size();
 
         if (nx == 0) {
-            return RList.<T>emptyList();
+            return Collections.<T>emptyList();
 
         } else if (nx == 1) {
             final T xs0 = xs.get(0);
             if (ys.contains(xs0)) {
-                return RList.singleton(xs0);
+                return Collections.singletonList(xs0);
             }
-            return RList.<T>emptyList();
+            return Collections.<T>emptyList();
 
         } else {
             int i = nx / 2;
@@ -40,11 +42,11 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
             RList<T> yb = ys.subList(0, k);
             RList<T> ye = ys.subList(k, ny);
-            return lcs_rlw(xb, yb).add(lcs_rlw(xe, ye));
+            return add(lcs_rlw(xb, yb), lcs_rlw(xe, ye));
         }
     }
 
-    private int indexOfBiggerSum(int[] ll_b, int[] ll_e, int ny) {
+    private static int indexOfBiggerSum(int[] ll_b, int[] ll_e, int ny) {
         assert ny + 1 == ll_b.length && ny + 1 == ll_e.length;
         int tmp, k = -1, max = -1;
         for (int j=0; j<=ny; j++) {
@@ -57,7 +59,7 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
         return k;
     }
 
-    private int[] lcs_lens(RList<T> xs, RList<T> ys) {
+    private static <T> int[] lcs_lens(RList<T> xs, RList<T> ys) {
         final int ysSize = ys.size();
         final int length = ysSize + 1;
 
@@ -77,5 +79,22 @@ public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
             }
         }
         return curr;
+    }
+
+    private static <T> List<T> add(List<T> a, List<T> b) {
+        if (a.isEmpty()) {
+            return b;
+        }
+        if (b.isEmpty()) {
+            return a;
+        }
+        try {
+            a.addAll(b);
+            return a;
+        } catch (UnsupportedOperationException e) {
+            List<T> l = new ArrayList<>(a);
+            l.addAll(b);
+            return l;
+        }
     }
 }

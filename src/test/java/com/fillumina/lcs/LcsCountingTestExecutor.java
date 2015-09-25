@@ -2,6 +2,7 @@ package com.fillumina.lcs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,14 +64,19 @@ public abstract class LcsCountingTestExecutor extends CharacterLcsTestHelper {
 
         @Override
         public String toString() {
-            Collections.sort(list,
-                    (o1, o2) -> Integer.compare(o2.getValue(), o1.getValue()));
+            Collections.sort(list, new Comparator<Map.Entry<String,Integer>>() {
+                @Override
+                public int compare(Map.Entry<String, Integer> o1,
+                        Map.Entry<String, Integer> o2) {
+                    return Integer.compare(o2.getValue(), o1.getValue());
+                }
+            });
 
             StringBuilder buf = new StringBuilder();
-            list.stream().forEach((entry) -> {
+            for (Map.Entry<String,Integer> entry : list) {
                 buf.append(entry.getValue()).append(":\t")
                         .append(entry.getKey()).append('\n');
-            });
+            };
             buf.append("\n--------\nTOTAL:\t").append(numberOfCalls).append('\n');
             return buf.toString();
         }
