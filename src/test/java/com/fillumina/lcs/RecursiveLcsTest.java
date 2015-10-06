@@ -13,7 +13,7 @@ public class RecursiveLcsTest {
     public void shouldGetTheRightResult() {
 
 
-        new LcsCountingTestExecutor() {
+        new AbstractLcsTestExecutor() {
 
             @Override
             protected Lcs<Character> getLcs() {

@@ -24,6 +24,9 @@ public class CharacterLcsTestHelper {
     }
 
     protected String toString(List<Character> list) {
+        if (list == null || list.isEmpty()) {
+            return "empty";
+        }
         int i = 0;
         char[] array = new char[list.size()];
         for (Character c : list) {

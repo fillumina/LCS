@@ -6,6 +6,9 @@ import java.util.Collections;
 
 /**
  *
+ * @see <a href="https://www.ics.uci.edu/~eppstein/161/960229.html">
+ *  LCS
+ * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {

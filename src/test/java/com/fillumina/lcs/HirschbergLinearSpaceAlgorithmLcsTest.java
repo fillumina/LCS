@@ -13,7 +13,7 @@ public class HirschbergLinearSpaceAlgorithmLcsTest {
     @Test
     public void shouldGetTheRightResult() {
 
-        new LcsCountingTestExecutor() {
+        new AbstractLcsTestExecutor() {
 
             @Override
             protected Lcs<Character> getLcs() {

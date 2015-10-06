@@ -14,12 +14,28 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class LcsTest {
 
-    private final LcsCountingTestExecutor testExecutor;
+    private final AbstractLcsTestExecutor testExecutor;
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-            {new LcsCountingTestExecutor() {
+            {new AbstractLcsTestExecutor() {
+
+                @Override
+                protected Lcs<Character> getLcs() {
+                    // this is not recursive
+                    return new WagnerFischerLcs<>();
+                }
+            }},
+            {new AbstractLcsTestExecutor() {
+
+                @Override
+                protected Lcs<Character> getLcs() {
+                    // this is not recursive
+                    return new NotRecursingLcs<>();
+                }
+            }},
+            {new AbstractLcsTestExecutor() {
 
                 @Override
                 protected Lcs<Character> getLcs() {
@@ -34,7 +50,7 @@ public class LcsTest {
                     };
                 }
             }},
-            {new LcsCountingTestExecutor() {
+            {new AbstractLcsTestExecutor() {
 
                 @Override
                 protected Lcs<Character> getLcs() {
@@ -49,7 +65,7 @@ public class LcsTest {
                     };
                 }
             }},
-            {new LcsCountingTestExecutor() {
+            {new AbstractLcsTestExecutor() {
 
                 @Override
                 protected Lcs<Character> getLcs() {
@@ -64,7 +80,7 @@ public class LcsTest {
                     };
                 }
             }},
-            {new LcsCountingTestExecutor() {
+            {new AbstractLcsTestExecutor() {
 
                 @Override
                 protected Lcs<Character> getLcs() {
@@ -79,7 +95,7 @@ public class LcsTest {
                     };
                 }
             }},
-            {new LcsCountingTestExecutor() {
+            {new AbstractLcsTestExecutor() {
 
                 @Override
                 protected Lcs<Character> getLcs() {
@@ -97,7 +113,7 @@ public class LcsTest {
         });
     }
 
-    public LcsTest(LcsCountingTestExecutor testExecutor) {
+    public LcsTest(AbstractLcsTestExecutor testExecutor) {
         this.testExecutor = testExecutor;
     }
 

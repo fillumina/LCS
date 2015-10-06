@@ -12,7 +12,8 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class LcsCountingTestExecutor extends CharacterLcsTestHelper {
+public abstract class AbstractLcsTestExecutor
+        extends CharacterLcsTestHelper {
     private final Map<String, Integer> countingMap = new HashMap<>();
 
     public static class Result {

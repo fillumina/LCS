@@ -1,7 +1,6 @@
 package com.fillumina.lcs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

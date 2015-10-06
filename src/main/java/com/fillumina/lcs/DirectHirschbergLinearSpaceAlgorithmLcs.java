@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class DirectHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
@@ -38,26 +38,21 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
         } else {
             final int i = xsStart + xsSize / 2;
 
-            int[] ll_b = lcs_lens(xs, xsStart, i, ys, ysStart, ysEnd, buffer);
-            int[] ll_e = lcs_lens_reverse(xs, i, xsEnd, ys, ysStart, ysEnd, buffer);
-
-            int k = indexOfBiggerSum(ll_b, ll_e, ysStart, ysEnd) ;
+            final int k = calculateCuttingIndex(xs, xsStart, i, xsEnd,
+                    ys, ysStart, ysEnd, buffer);
 
             return add(lcs_rlw(xs, xsStart, i, ys, ysStart, k, buffer),
                     lcs_rlw(xs, i, xsEnd, ys, k, ysEnd, buffer));
         }
     }
 
-    private static int indexOfBiggerSum(int[] ll_b, int[] ll_e,
-            int start, int end) {
-        int tmp, k = -1, max = -1;
-        for (int j=start; j<=end; j++) {
-            tmp = ll_b[j] + ll_e[end-j+start];
-            if (tmp > max) {
-                max = tmp;
-                k = j;
-            }
-        }
+    private int calculateCuttingIndex(
+            List<T> xs, int xsStart, final int i, int xsEnd,
+            List<T> ys, int ysStart, int ysEnd,
+            int[][] buffer) {
+        int[] ll_b = lcs_lens(xs, xsStart, i, ys, ysStart, ysEnd, buffer);
+        int[] ll_e = lcs_lens_reverse(xs, i, xsEnd, ys, ysStart, ysEnd, buffer);
+        int k = indexOfBiggerSum(ll_b, ll_e, ysStart, ysEnd) ;
         return k;
     }
 
@@ -106,6 +101,19 @@ public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<
             }
         }
         return curr;
+    }
+
+    private static int indexOfBiggerSum(int[] ll_b, int[] ll_e,
+            int start, int end) {
+        int tmp, k = -1, max = -1;
+        for (int j=start; j<=end; j++) {
+            tmp = ll_b[j] + ll_e[end-j+start];
+            if (tmp > max) {
+                max = tmp;
+                k = j;
+            }
+        }
+        return k;
     }
 
     private static void zero(int[] array, int from, int to) {

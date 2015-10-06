@@ -12,7 +12,7 @@ public class MemoizedRecursiveLcsTest {
     @Test
     public void shouldGetTheRightResult() {
 
-        new LcsCountingTestExecutor() {
+        new AbstractLcsTestExecutor() {
 
             @Override
             protected Lcs<Character> getLcs() {

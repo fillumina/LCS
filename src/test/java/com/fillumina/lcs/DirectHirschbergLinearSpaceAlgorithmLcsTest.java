@@ -8,16 +8,16 @@ import static org.junit.Assert.*;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BetterOptimizedHirschbergLinearSpaceAlgorithmLcsTest {
+public class DirectHirschbergLinearSpaceAlgorithmLcsTest {
 
     @Test
     public void shouldGetTheRightResult() {
 
-        new LcsCountingTestExecutor() {
+        new AbstractLcsTestExecutor() {
 
             @Override
             protected Lcs<Character> getLcs() {
-                return new BetterOptimizedHirschbergLinearSpaceAlgorithmLcs<Character>() {
+                return new DirectHirschbergLinearSpaceAlgorithmLcs<Character>() {
 
                     @Override
                     public List<Character> lcs(List<Character> xs,
