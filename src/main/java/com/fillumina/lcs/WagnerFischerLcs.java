@@ -54,20 +54,6 @@ public class WagnerFischerLcs<T> implements Lcs<T> {
         return d;
     }
 
-    private int min(int a, int b, int c) {
-        if (a < b) {
-            if (c < a) {
-                return c;
-            }
-            return a;
-        } else {
-            if (c < b) {
-                return c;
-            }
-            return b;
-        }
-    }
-
     private List<T> createLcs(int m, int n, int[][] d, List<T> s) {
         int lcsLength = d[m][n];
         List<T> lcs = new ArrayList<>(lcsLength);
@@ -88,4 +74,17 @@ public class WagnerFischerLcs<T> implements Lcs<T> {
         return lcs;
     }
 
+    private int min(int a, int b, int c) {
+        if (a < b) {
+            if (c < a) {
+                return c;
+            }
+            return a;
+        } else {
+            if (c < b) {
+                return c;
+            }
+            return b;
+        }
+    }
 }
