@@ -19,7 +19,7 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs<T> implements Lcs<T> {
+public class SpaceOptimizedMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
@@ -34,7 +34,7 @@ public class MyersLcs<T> implements Lcs<T> {
         int m = b.size();
         int max = n + m;
 
-        BidirectionalArray vv = new BidirectionalArray(max);
+        EndPointTable vv = new EndPointTable(max + 1);
         BidirectionalVector v = new BidirectionalVector(max);
 
         int next, prev, x, y;
@@ -67,7 +67,7 @@ public class MyersLcs<T> implements Lcs<T> {
     }
 
     private List<Snake> calculateSolution(int n, int m, int lastD,
-            BidirectionalArray vs, int xx, int yy) {
+            EndPointTable vs, int xx, int yy) {
         List<Snake> snakes = new ArrayList<>();
 
         int x = xx;
@@ -132,7 +132,6 @@ public class MyersLcs<T> implements Lcs<T> {
             this.yMid = yMid;
             this.xEnd = xEnd;
             this.yEnd = yEnd;
-            System.out.println(toString());
         }
 
         @Override
@@ -145,7 +144,6 @@ public class MyersLcs<T> implements Lcs<T> {
 
     /** A vector that allows for negative indexes. */
     protected static class BidirectionalVector {
-
         private final int[] array;
         private final int halfSize;
 
@@ -180,69 +178,66 @@ public class MyersLcs<T> implements Lcs<T> {
         }
     }
 
-    /** An array that allows for negative indexes. */
-    protected static class BidirectionalArray {
+    /** Contains the k,d endpoints in a packed form. */
+    protected static class EndPointTable {
+        private final int[] vector;
+        private final int[] precalculatedPlaces;
+        private final int size;
 
-        private final int[][] array;
-        private final int halfSize;
-
-        public BidirectionalArray(int size) {
-            this.halfSize = size;
-            this.array = new int[halfSize][(halfSize << 1) + 1];
+        public EndPointTable(int size) {
+            this.vector = new int[(size + 1) * size / 2 + 1];
+            this.size = size;
+            this.precalculatedPlaces = new int[size];
+            for (int i=0; i<size; i++) {
+                precalculatedPlaces[i] = (i + 1) * i / 2;
+            }
         }
 
-        public int get(int x, int y) {
-            if (x < 0 || x >= array.length) {
-                return 0;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return 0;
-            }
-            return array[x][indexY];
+        public int get(int d, int k) {
+            return vector[calculatePos(d, k)];
         }
 
-        public void set(int x, int y, int value) {
-            if (x < 0 || x >= array.length) {
-                return;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return;
-            }
-            array[x][indexY] = value;
+        public void set(int d, int k, int value) {
+            vector[calculatePos(d, k)] = value;
         }
 
-        public BidirectionalVector getVector(int x) {
-            return new BidirectionalVector(array[x]);
+        private int calculatePos(int d, int k) {
+            if (d < 0 || d > size) {
+                return vector.length - 1;
+            }
+            if (k < -size || k > size) {
+                return vector.length - 1;
+            }
+            int kk = (k < 0) ? -k - 1 : k;
+            return precalculatedPlaces[d] + kk;
         }
 
-        public void copy(int line, BidirectionalVector v) {
-            System.arraycopy(v.array, 0, array[line], 0, v.array.length);
+        public void copy(int d, BidirectionalVector v) {
+            for (int k=-d; k<=d; k+=2) {
+                set(d, k, v.get(k));
+            }
         }
 
         @Override
         public String toString() {
             StringBuilder buf = new StringBuilder("\n");
-            for (int i = 0; i < array.length; i++) {
-                for (int j = 0; j < array[i].length; j++) {
-                    buf.append(array[i][j]).append(" ");
+            for (int d=0; d<size; d++) {
+                for (int k=-d; k<=d; k+=2) {
+                    buf.append(get(d, k)).append(" ");
                 }
                 buf.append('\n');
             }
             return buf.toString();
         }
+
     }
 
     /** A vector that starts from index 1 instead of 0. */
     protected static class OneBasedVector<T> {
-
         private final List<T> list;
-        private final int size;
 
         public OneBasedVector(List<T> list) {
             this.list = list;
-            this.size = list.size();
         }
 
         public T get(int x) {
@@ -254,7 +249,7 @@ public class MyersLcs<T> implements Lcs<T> {
         }
 
         public int size() {
-            return size;
+            return list.size();
         }
     }
 }
