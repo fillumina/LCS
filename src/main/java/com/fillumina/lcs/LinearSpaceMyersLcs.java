@@ -277,10 +277,10 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         private VList(List<T> list,
                 int start, int end, boolean reverse) {
-            this.end = end;
             this.list = list;
-            this.size = end - start;
             this.start = start;
+            this.end = end;
+            this.size = end - start;
             this.reverse = reverse;
         }
 
@@ -313,12 +313,12 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         public VList<T> subList(int fromIndex, int toIndex) {
             final int correctedFromIndex = calculateIndex(fromIndex);
-            final int correctedToIndex = toIndex > size ?
-                    size + 1 : calculateIndex(toIndex);
+            final int correctedToIndex = toIndex < size ?
+                    calculateIndex(toIndex) : (reverse ? 0 : end);
             if (reverse) {
                 return new VList<>(list,
-                        start + end - correctedFromIndex - 1,
-                        start + end - correctedToIndex - 1,
+                        start + size - correctedFromIndex - 1,
+                        start + size - correctedToIndex,
                         reverse);
             }
             return new VList<>(list,

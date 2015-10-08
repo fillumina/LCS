@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -88,9 +87,15 @@ public class VListTest {
     }
 
     @Test
-    public void shouldSublistIncludingStart() {
+    public void shouldSublist() {
         VList<Integer> sublist = wrapper.subList(2, 6);
         assertList(sublist, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void shouldSublistIncludingStart() {
+        VList<Integer> sublist = wrapper.subList(1, 4);
+        assertList(sublist, 1, 2, 3, 4);
     }
 
     @Test
@@ -103,6 +108,13 @@ public class VListTest {
     public void shouldSublistAllList() {
         VList<Integer> sublist = wrapper.subList(1, 7);
         assertList(sublist, 1, 2, 3, 4, 5, 6);
+    }
+
+    @Test
+    public void shouldSublistAllReversedList() {
+        VList<Integer> reversed = wrapper.reverse();
+        VList<Integer> sublist = reversed.subList(1, 7);
+        assertList(sublist, 6, 5, 4, 3, 2, 1);
     }
 
     @Test
@@ -121,8 +133,7 @@ public class VListTest {
     }
 
     private <T> void assertList(VList<T> list, T... values) {
-        assertEquals("size mismatch list size=" + list.size(),
-                values.length, list.size());
+        assertEquals("size mismatch", values.length, list.size());
         for (int i=0; i<values.length; i++) {
             assertEquals("index=" + i, values[i], list.get(i+1));
         }
