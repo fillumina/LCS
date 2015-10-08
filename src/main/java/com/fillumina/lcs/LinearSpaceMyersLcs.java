@@ -1,7 +1,7 @@
 package com.fillumina.lcs;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -170,7 +170,6 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
             this.yMid = yMid;
             this.xEnd = xEnd;
             this.yEnd = yEnd;
-            System.out.println(toString());
         }
 
         /** @return the given {@link Snake}, or this if it is null. */
@@ -184,6 +183,9 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                     } else {
                         current.next = s;
                     }
+                    while(current.next != null) {
+                        current = current.next;
+                    }
                 }
             }
             return head;
@@ -195,20 +197,19 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         @Override
         public Iterator<Snake> iterator() {
-            if (this == NULL) {
-                return Collections.<Snake>emptyIterator();
-            }
             return new Iterator<Snake>() {
                 private Snake current = Snake.this;
 
                 @Override
                 public boolean hasNext() {
-                    return current.next != null && current.next != NULL;
+                    return current != null && current != NULL;
                 }
 
                 @Override
                 public Snake next() {
-                    return current = current.next;
+                    Snake tmp = current;
+                    current = current.next;
+                    return tmp;
                 }
             };
         }
@@ -261,6 +262,11 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                 return;
             }
             array[index] = value;
+        }
+
+        @Override
+        public String toString() {
+            return "" + halfSize + ":" + Arrays.toString(array);
         }
     }
 
