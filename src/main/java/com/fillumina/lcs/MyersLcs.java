@@ -58,7 +58,7 @@ public class MyersLcs<T> implements Lcs<T> {
                     vv.copy(d, v);
 
                     //int lcs = (max - d) / 2;
-                    return calculateSolution(n, m, d, vv, x, y);
+                    return calculateSolution(d, vv, x, y);
                 }
             }
             vv.copy(d, v);
@@ -66,7 +66,7 @@ public class MyersLcs<T> implements Lcs<T> {
         return Collections.<Snake>emptyList();
     }
 
-    private List<Snake> calculateSolution(int n, int m, int lastD,
+    private List<Snake> calculateSolution(int lastD,
             BidirectionalArray vs, int xx, int yy) {
         List<Snake> snakes = new ArrayList<>();
 

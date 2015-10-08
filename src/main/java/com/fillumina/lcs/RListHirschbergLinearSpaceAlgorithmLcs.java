@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,8 +52,8 @@ public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
     private static int indexOfBiggerSum(int[] ll_b, int[] ll_e, int ny) {
         assert ny + 1 == ll_b.length && ny + 1 == ll_e.length;
         int tmp, k = -1, max = -1;
-        for (int j=0; j<=ny; j++) {
-            tmp = ll_b[j] + ll_e[ny-j];
+        for (int j = 0; j <= ny; j++) {
+            tmp = ll_b[j] + ll_e[ny - j];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -71,7 +72,7 @@ public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
         for (T x : xs) {
             System.arraycopy(curr, 0, prev, 0, length);
 
-            for (int i=0; i<ysSize; i++) {
+            for (int i = 0; i < ysSize; i++) {
                 T y = ys.get(i);
                 if (x.equals(y)) {
                     curr[i + 1] = prev[i] + 1;
@@ -99,4 +100,69 @@ public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
             return l;
         }
     }
+
+    /**
+     * A list wrapper that can't change its content but can be sub-listed and
+     * reversed without the need to copy to a new list.
+     *
+     * @author Francesco Illuminati <fillumina@gmail.com>
+     */
+    static class RList<T> extends AbstractList<T> {
+
+        private final List<T> list;
+        private final int size;
+        private final int start;
+        private final int end;
+        private final boolean reverse;
+
+        public RList() {
+            this(null);
+        }
+
+        public RList(List<T> list) {
+            this(list, false);
+        }
+
+        private RList(List<T> list, boolean reverse) {
+            this(list, 0, list == null ? 0 : list.size(), reverse);
+        }
+
+        private RList(List<T> list,
+                int start, int end, boolean reverse) {
+            this.list = list;
+            this.size = end - start - 1;
+            this.start = start;
+            this.end = end;
+            this.reverse = reverse;
+        }
+
+        @Override
+        public T get(int index) {
+            int idx = start;
+            if (reverse) {
+                idx += (size - index);
+            } else {
+                idx += index;
+            }
+            return list.get(idx);
+        }
+
+        @Override
+        public RList<T> subList(int fromIndex, int toIndex) {
+            return new RList<>(list,
+                    start + fromIndex,
+                    start + toIndex,
+                    reverse);
+        }
+
+        public RList<T> reverse() {
+            return new RList<>(list, start, end, !reverse);
+        }
+
+        @Override
+        public int size() {
+            return size + 1;
+        }
+    }
+
 }

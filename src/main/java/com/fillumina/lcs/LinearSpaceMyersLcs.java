@@ -1,7 +1,9 @@
 package com.fillumina.lcs;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -12,43 +14,82 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
-        final OneBasedVector<T> oneBasedVectorA = new OneBasedVector<>(a);
-        List<Snake> snakes =
-                lcsMyers(oneBasedVectorA, new OneBasedVector<>(b));
-        return extractLcs(snakes, oneBasedVectorA);
+        final VList<T> va = new VList<>(a);
+        final VList<T> vb = new VList<>(b);
+        Snake snakes = lcs(va, vb);
+        return extractLcs(snakes, va);
     }
 
-    private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
+    Snake lcs(VList<T> a, VList<T> b) {
         int n = a.size();
         int m = b.size();
-        int max = n + m;
-
-        BidirectionalArray vv = new BidirectionalArray(max);
-        BidirectionalVector v = new BidirectionalVector(max);
-
-        int[] xy = new int[2];
-        for (int d = 0; d <= max; d++) {
-            for (int k = -d; k <= d; k += 2) {
-                findFurthestReachingDPath(d, k, a,n, b,m, v, xy);
-                v.set(k, xy[0]);
-
-                if (xy[0] >= n && xy[1] >= m) {
-                    vv.copy(d, v);
-
-                    //int lcs = (max - d) / 2;
-                    return calculateSolution(n, m, d, vv, xy[0], xy[1]);
-                }
+        if (n > 0 && m > 0) {
+            Snake snake = findMiddleSnake(a, b);
+            if (snake.d > 1) {
+                Snake before = //FIXME the snake here referes to wrong indexes!
+                    lcs(a.subList(1, snake.xStart), b.subList(1, snake.yStart));
+                Snake after =
+                    lcs(a.subList(snake.xEnd + 1, n), b.subList(snake.yEnd, m));
+                return Snake.chain(before, snake, after);
+            } else if (m > n) {
+                return new Snake(0, 0,0, n,0, n,0);
+            } else {
+                return new Snake(0, 0,0, 0,m, 0,m);
             }
-            vv.copy(d, v);
         }
-        return Collections.<Snake>emptyList();
+        return Snake.NULL;
     }
 
-    protected void findFurthestReachingDPath(int d, int k,
-            OneBasedVector<T> a, int n, OneBasedVector<T> b, int m,
-            BidirectionalVector v, int[] xy) {
-        int x = xy[0];
-        int y = xy[1];
+    Snake findMiddleSnake(VList<T> a, VList<T> b) {
+        VList<T> ar = a.reverse();
+        VList<T> br = b.reverse();
+
+        int n = a.size();
+        int m = b.size();
+
+        int max = (int) Math.ceil(n + m / 2.0);
+
+        BidirectionalVector vf1 = new BidirectionalVector(max);
+        BidirectionalVector vr1 = new BidirectionalVector(max);
+        BidirectionalVector vf2 = new BidirectionalVector(max);
+        BidirectionalVector vr2 = new BidirectionalVector(max);
+
+        int delta = n - m;
+        boolean oddDelta = (delta & 1) == 1;
+        int kk, xf, xr;
+        for (int d = 0; d <= max; d++) {
+            for (int k = -d; k <= d; k += 2) {
+
+                xf = findFurthestReachingDPath(d, k, a, n, b, m, vf1);
+                final int dMinusOne = d - 1;
+                if (oddDelta &&
+                        (delta - dMinusOne) <= k && k <= (delta + dMinusOne)) {
+                    xr = n - findFurthestReachingDPath(
+                            dMinusOne, k, ar, n, br, m, vr1);
+                    if (xr <= xf) {
+                        return findLastSnake(d, xf, a.getStart(), k, vf1);
+                    }
+                }
+            }
+
+            for (int k = -d; k <= d; k += 2) {
+                kk = k + delta;
+                xr = n - findFurthestReachingDPath(d, kk, ar, n, br, m, vr2);
+                if (!oddDelta && -delta <= kk && kk <= delta) {
+                    xf = findFurthestReachingDPath(d, kk, a, n, b, m, vf2);
+                    if (xr <= xf) {
+                        return findLastSnake(d, xr, ar.getStart(), kk, vr2);
+                    }
+                }
+            }
+        }
+        return Snake.NULL;
+    }
+
+    private int findFurthestReachingDPath(int d, int k,
+            VList<T> a, int n, VList<T> b, int m,
+            BidirectionalVector v) {
+        int x, y;
 
         int next = v.get(k + 1);
         int prev = v.get(k - 1);
@@ -63,54 +104,42 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
             x++;
             y++;
         }
-
-        xy[0] = x;
-        xy[1] = y;
+        v.set(k, x);
+        return x;
     }
 
-    private List<Snake> calculateSolution(int n, int m, int lastD,
-            BidirectionalArray vs, int xx, int yy) {
-        List<Snake> snakes = new ArrayList<>();
+    private Snake findLastSnake(int d, int x, int start, int k,
+            BidirectionalVector v) {
+        int y = x - k;
 
-        int x = xx;
-        int y = yy;
+        int xEnd = x;
+        int yEnd = y;
 
-        int d, xStart, yStart, xMid, yMid, xEnd, yEnd;
-        for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
-            int k = x - y;
-
-            xEnd = x;
-            yEnd = y;
-
-            int next = vs.get(d - 1, k + 1);
-            int prev = vs.get(d - 1, k - 1);
-            if (k == -d || (k != d && prev < next)) {
-                xStart = next;
-                yStart = next - k - 1;
-                xMid = xStart;
-            } else {
-                xStart = prev;
-                yStart = prev - k + 1;
-                xMid = xStart + 1;
-            }
-
-            yMid = xMid - k;
-
-            snakes.add(new Snake(xStart, yStart, xMid, yMid, xEnd, yEnd));
-
-            x = xStart;
-            y = yStart;
+        int next = v.get(k + 1);
+        int prev = v.get(k - 1);
+        int xStart, yStart, xMid, yMid;
+        if (k == -d || (k != d && prev < next)) {
+            xStart = next;
+            yStart = next - k - 1;
+            xMid = xStart;
+        } else {
+            xStart = prev;
+            yStart = prev - k + 1;
+            xMid = xStart + 1;
         }
-        Collections.reverse(snakes);
-        return snakes;
+
+        yMid = xMid - k;
+        return new Snake(d, xStart, yStart, xMid, yMid, xEnd, yEnd);
     }
 
-    /** @return the common subsequence elements. */
-    private List<T> extractLcs(List<Snake> snakes, OneBasedVector<T> a) {
+    /**
+     * @return the common subsequence elements.
+     */
+    private List<T> extractLcs(Snake snakes, VList<T> a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             System.out.println(snake);
-            for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
+            for (int x = snake.xMid + 1; x <= snake.xEnd; x++) {
                 list.add(a.get(x));
             }
         }
@@ -118,35 +147,82 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     /**
-     * Records each snake in the solution. A snake is a sequence of
-     * equal elements starting from mid to end and preceeded by a vertical
-     * or horizontal edge going from start to mid.
+     * A snake is a sequence of equal
+     * elements starting from mid to end and preceeded by a vertical or
+     * horizontal edge going from start to mid.
      */
-    protected static class Snake {
+    static class Snake implements Iterable<Snake> {
+        static final Snake NULL = new Snake(-1,-1,-1,-1,-1,-1,-1);
+        public final int d, xStart, yStart, xMid, yMid, xEnd, yEnd;
+        private Snake next;
 
-        public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
-
-        public Snake(int xStart, int yStart, int xMid, int yMid, int xEnd,
+        public Snake(int d, int xStart, int yStart, int xMid, int yMid, int xEnd,
                 int yEnd) {
+            this.d = d;
             this.xStart = xStart;
             this.yStart = yStart;
             this.xMid = xMid;
             this.yMid = yMid;
             this.xEnd = xEnd;
             this.yEnd = yEnd;
-            System.out.println(toString());
+        }
+
+        /** @return the given {@link Snake}, or this if it is null. */
+        static Snake chain(Snake... snakes) {
+            Snake head = NULL;
+            Snake current = null;
+            for (Snake s : snakes) {
+                if (s != null && s != NULL) {
+                    if (head == NULL) {
+                        current = head = s;
+                    } else {
+                        current.next = s;
+                    }
+                }
+            }
+            return head;
+        }
+
+        public boolean isRemoveLeft() {
+            return xStart == xMid;
+        }
+
+        @Override
+        public Iterator<Snake> iterator() {
+            if (this == NULL) {
+                return Collections.<Snake>emptyIterator();
+            }
+            return new Iterator<Snake>() {
+                private Snake current = Snake.this;
+
+                @Override
+                public boolean hasNext() {
+                    return current.next != null && current.next != NULL;
+                }
+
+                @Override
+                public Snake next() {
+                    return current = current.next;
+                }
+            };
         }
 
         @Override
         public String toString() {
-            return "Snake{" + "xStart=" + xStart + ", yStart=" + yStart +
+            if (this == NULL) {
+                return "Snake{NULL}";
+            }
+            return "Snake{" + "d=" + d +
+                    ", xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
                     ", yEnd=" + yEnd + '}';
         }
     }
 
-    /** A vector that allows for negative indexes. */
-    protected static class BidirectionalVector {
+    /**
+     * A vector that allows for negative indexes.
+     */
+    static class BidirectionalVector {
 
         private final int[] array;
         private final int halfSize;
@@ -158,7 +234,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         /**
          * @param size specify the positive size (the total size will be
-         *             {@code size * 2 + 1}.
+         * {@code size * 2 + 1}.
          */
         public BidirectionalVector(int size) {
             this.halfSize = size;
@@ -182,126 +258,96 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         }
     }
 
-    /** An array that allows for negative indexes. */
-    protected static class BidirectionalArray {
+    /** Reversable, sublistable vector with starting index 1. */
+    static class VList<T> {
 
-        private final int[][] array;
-        private final int halfSize;
-
-        public BidirectionalArray(int size) {
-            this.halfSize = size;
-            this.array = new int[halfSize][(halfSize << 1) + 1];
-        }
-
-        public int get(int x, int y) {
-            if (x < 0 || x >= array.length) {
-                return 0;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return 0;
-            }
-            return array[x][indexY];
-        }
-
-        public void set(int x, int y, int value) {
-            if (x < 0 || x >= array.length) {
-                return;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return;
-            }
-            array[x][indexY] = value;
-        }
-
-        public BidirectionalVector getVector(int x) {
-            return new BidirectionalVector(array[x]);
-        }
-
-        public void copy(int line, BidirectionalVector v) {
-            System.arraycopy(v.array, 0, array[line], 0, v.array.length);
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder buf = new StringBuilder("\n");
-            for (int i = 0; i < array.length; i++) {
-                for (int j = 0; j < array[i].length; j++) {
-                    buf.append(array[i][j]).append(" ");
-                }
-                buf.append('\n');
-            }
-            return buf.toString();
-        }
-    }
-
-    public interface Vector<T> {
-        T get(int x);
-        Vector<T> reverse();
-        void set(int x, T value);
-        int size();
-    }
-
-
-    /** A vector that starts from index 1 instead of 0. */
-    protected static class OneBasedVector<T> implements Vector<T> {
-        private final List<T> list;
-
-        public OneBasedVector(List<T> list) {
-            this.list = list;
-        }
-
-        @Override
-        public T get(int x) {
-            return list.get(x - 1);
-        }
-
-        @Override
-        public void set(int x, T value) {
-            list.set(x - 1, value);
-        }
-
-        @Override
-        public ReversedOneBasedVector<T> reverse() {
-            return new ReversedOneBasedVector<>(list);
-        }
-
-        @Override
-        public int size() {
-            return list.size();
-        }
-    }
-
-    /** A vector that starts from index 1 instead of 0. */
-    protected static class ReversedOneBasedVector<T> implements Vector<T> {
         private final List<T> list;
         private final int size;
+        private final int start;
+        private final int end;
+        private final boolean reverse;
 
-        public ReversedOneBasedVector(List<T> list) {
+        public VList(List<T> list) {
+            this(list, false);
+        }
+
+        private VList(List<T> list, boolean reverse) {
+            this(list, 0, list == null ? 0 : list.size(), reverse);
+        }
+
+        private VList(List<T> list,
+                int start, int end, boolean reverse) {
+            this.end = end;
             this.list = list;
-            this.size = list.size();
+            this.size = end - start;
+            this.start = start;
+            this.reverse = reverse;
         }
 
-        @Override
-        public T get(int x) {
-            return list.get(size - x);
+        /** @return the first index of the wrapped list. */
+        public int getStart() {
+            if (reverse) {
+                return end - start - 1;
+            }
+            return start + 1;
         }
 
-        @Override
-        public void set(int x, T value) {
-            list.set(size - x, value);
+        /** Note that the first index is 1 and not 0. */
+        public T get(int index) {
+            return list.get(calculateIndex(index));
         }
 
-        @Override
+        private int calculateIndex(int index) {
+            if (index <= 0 || index > size) {
+                throw new IndexOutOfBoundsException(
+                        "index (size=" + size + "): " + index);
+            }
+            int idx = start;
+            if (reverse) {
+                idx += (size - index);
+            } else {
+                idx += index - 1;
+            }
+            return idx;
+        }
+
+        public VList<T> subList(int fromIndex, int toIndex) {
+            final int correctedFromIndex = calculateIndex(fromIndex);
+            final int correctedToIndex = toIndex > size ?
+                    size + 1 : calculateIndex(toIndex);
+            if (reverse) {
+                return new VList<>(list,
+                        start + end - correctedFromIndex - 1,
+                        start + end - correctedToIndex - 1,
+                        reverse);
+            }
+            return new VList<>(list,
+                    start + correctedFromIndex,
+                    start + correctedToIndex,
+                    false);
+        }
+
+        public VList<T> reverse() {
+            return new VList<>(list, start, end, !reverse);
+        }
+
+        /** Note that the last index is {@code size}. */
         public int size() {
             return size;
         }
 
         @Override
-        public Vector<T> reverse() {
-            return new OneBasedVector<>(list);
+        public String toString() {
+            if (size() == 0) {
+                return "[]";
+            }
+            StringBuilder buf = new StringBuilder().append('[');
+            buf.append(get(1));
+            for (int i=2; i<=size; i++) {
+                buf.append(", ").append(get(i));
+            }
+            buf.append(']');
+            return buf.toString();
         }
     }
-
 }
