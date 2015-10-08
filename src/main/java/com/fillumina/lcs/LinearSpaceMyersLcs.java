@@ -313,17 +313,28 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         public VList<T> subList(int fromIndex, int toIndex) {
             final int correctedFromIndex = calculateIndex(fromIndex);
-            final int correctedToIndex = toIndex < size ?
-                    calculateIndex(toIndex) : (reverse ? 0 : end);
+            if (toIndex > size) {
+                if (reverse) {
+                    return new VList<>(list,
+                            end - correctedFromIndex - 1,
+                            end,
+                            true);
+                }
+                return new VList<>(list,
+                        correctedFromIndex,
+                        end,
+                        false);
+            }
+            final int correctedToIndex = calculateIndex(toIndex);
             if (reverse) {
                 return new VList<>(list,
-                        start + size - correctedFromIndex - 1,
-                        start + size - correctedToIndex,
-                        reverse);
+                        end - correctedFromIndex,
+                        end - correctedToIndex,
+                        true);
             }
             return new VList<>(list,
-                    start + correctedFromIndex,
-                    start + correctedToIndex,
+                    correctedFromIndex,
+                    correctedToIndex,
                     false);
         }
 

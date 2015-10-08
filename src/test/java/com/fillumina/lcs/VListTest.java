@@ -70,20 +70,20 @@ public class VListTest {
 
     @Test
     public void shouldSubListASublistedReversedSublist() {
-        VList<Integer> sublist = wrapper.subList(2, 6);
-        assertList(sublist, 2, 3, 4, 5);
+        VList<Integer> list1 = wrapper.subList(2, 6);
+        assertList(list1, 2, 3, 4, 5);
 
-        VList<Integer> reversed = sublist.reverse();
-        assertList(reversed, 5, 4, 3, 2);
+        VList<Integer> list2 = list1.reverse();
+        assertList(list2, 5, 4, 3, 2);
 
-        VList<Integer> sublistedReverse = reversed.subList(2, 4);
-        assertList(sublistedReverse, 4, 3);
+        VList<Integer> list3 = list2.subList(2, 4);
+        assertList(list3, 4, 3);
 
-        VList<Integer> rereversed = sublistedReverse.reverse();
-        assertList(rereversed, 3, 4);
+        VList<Integer> list4 = list3.reverse();
+        assertList(list4, 3, 4);
 
-        VList<Integer> resublisted = sublistedReverse.subList(1, 2);
-        assertList(resublisted, 3);
+        VList<Integer> list5 = list4.subList(1, 2);
+        assertList(list5, 3);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class VListTest {
     @Test
     public void shouldSublistIncludingStart() {
         VList<Integer> sublist = wrapper.subList(1, 4);
-        assertList(sublist, 1, 2, 3, 4);
+        assertList(sublist, 1, 2, 3);
     }
 
     @Test
