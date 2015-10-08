@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,10 +30,15 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                 Snake after =
                     lcs(a.subList(snake.xEnd + 1, n), b.subList(snake.yEnd, m));
                 return Snake.chain(before, snake, after);
-            } else if (m > n) {
-                return new Snake(0, 0,0, n,0, n,0);
+            }
+
+            int x0 = a.zero();
+            int y0 = b.zero();
+
+            if (m > n) {
+                return new Snake(0, x0,y0, x0+n,x0, x0+n,y0);
             } else {
-                return new Snake(0, 0,0, 0,m, 0,m);
+                return new Snake(0, x0,y0, x0,y0+m, x0,y0+m);
             }
         }
         return Snake.NULL;
@@ -67,7 +71,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                     xr = n - findFurthestReachingDPath(
                             dMinusOne, k, ar, n, br, m, vr1);
                     if (xr <= xf) {
-                        return findLastSnake(d, xf, a.getStart(), k, vf1);
+                        return findLastSnake(d, xf, a.zero(),b.zero(), k, vf1);
                     }
                 }
             }
@@ -78,7 +82,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                 if (!oddDelta && -delta <= kk && kk <= delta) {
                     xf = findFurthestReachingDPath(d, kk, a, n, b, m, vf2);
                     if (xr <= xf) {
-                        return findLastSnake(d, xr, ar.getStart(), kk, vr2);
+                        return findLastSnake(d, xr, ar.zero(),br.zero(), kk, vr2);
                     }
                 }
             }
@@ -108,7 +112,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         return x;
     }
 
-    private Snake findLastSnake(int d, int x, int start, int k,
+    private Snake findLastSnake(int d, int x, int x0, int y0, int k,
             BidirectionalVector v) {
         int y = x - k;
 
@@ -129,7 +133,8 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         yMid = xMid - k;
-        return new Snake(d, xStart, yStart, xMid, yMid, xEnd, yEnd);
+        return new Snake(d, x0+xStart, y0+yStart,
+                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
     /**
@@ -165,6 +170,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
             this.yMid = yMid;
             this.xEnd = xEnd;
             this.yEnd = yEnd;
+            System.out.println(toString());
         }
 
         /** @return the given {@link Snake}, or this if it is null. */
@@ -285,11 +291,8 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         /** @return the first index of the wrapped list. */
-        public int getStart() {
-            if (reverse) {
-                return end - start - 1;
-            }
-            return start + 1;
+        public int zero() {
+            return start;
         }
 
         /** Note that the first index is 1 and not 0. */
