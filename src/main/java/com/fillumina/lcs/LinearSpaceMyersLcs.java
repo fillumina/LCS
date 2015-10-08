@@ -297,14 +297,14 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         /** Note that the first index is 1 and not 0. */
         public T get(int index) {
-            return list.get(calculateIndex(index));
-        }
-
-        private int calculateIndex(int index) {
             if (index <= 0 || index > size) {
                 throw new IndexOutOfBoundsException(
                         "index (size=" + size + "): " + index);
             }
+            return list.get(calculateIndex(index));
+        }
+
+        private int calculateIndex(int index) {
             int idx = start;
             if (reverse) {
                 idx += (size - index);
@@ -315,24 +315,13 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         public VList<T> subList(int fromIndex, int toIndex) {
+            //TODO do some check about indexes
             final int correctedFromIndex = calculateIndex(fromIndex);
-            if (toIndex > size) {
-                if (reverse) {
-                    return new VList<>(list,
-                            end - correctedFromIndex - 1,
-                            end,
-                            true);
-                }
-                return new VList<>(list,
-                        correctedFromIndex,
-                        end,
-                        false);
-            }
             final int correctedToIndex = calculateIndex(toIndex);
             if (reverse) {
                 return new VList<>(list,
-                        end - correctedFromIndex,
-                        end - correctedToIndex,
+                        correctedToIndex + 1,
+                        correctedFromIndex + 1,
                         true);
             }
             return new VList<>(list,

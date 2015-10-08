@@ -93,6 +93,27 @@ public class VListTest {
     }
 
     @Test
+    public void shouldGetAllOfASublist() {
+        VList<Integer> sublist = wrapper.subList(2, 6);
+        assertList(sublist, 2, 3, 4, 5);
+
+        VList<Integer> all = sublist.subList(1, 5);
+        assertList(all, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void shouldGetAllOfAReversedSublist() {
+        VList<Integer> sublist = wrapper.subList(2, 6);
+        assertList(sublist, 2, 3, 4, 5);
+
+        VList<Integer> reversed = sublist.reverse();
+        assertList(reversed, 5, 4, 3, 2);
+
+        VList<Integer> all = reversed.subList(1, 5);
+        assertList(all, 5, 4, 3, 2);
+    }
+
+    @Test
     public void shouldSublistIncludingStart() {
         VList<Integer> sublist = wrapper.subList(1, 4);
         assertList(sublist, 1, 2, 3);
@@ -113,8 +134,37 @@ public class VListTest {
     @Test
     public void shouldSublistAllReversedList() {
         VList<Integer> reversed = wrapper.reverse();
+        assertList(reversed, 6, 5, 4, 3, 2, 1);
+
         VList<Integer> sublist = reversed.subList(1, 7);
         assertList(sublist, 6, 5, 4, 3, 2, 1);
+    }
+
+    @Test
+    public void shouldSublistAReversedList() {
+        VList<Integer> reversed = wrapper.reverse();
+        assertList(reversed, 6, 5, 4, 3, 2, 1);
+
+        VList<Integer> sublist = reversed.subList(3, 6);
+        assertList(sublist, 4, 3, 2);
+
+        VList<Integer> sublist1 = reversed.subList(1, 3);
+        assertList(sublist1, 6, 5);
+
+        VList<Integer> sublist2 = reversed.subList(5, 7);
+        assertList(sublist2, 2, 1);
+
+        VList<Integer> sublist3 = reversed.subList(6, 7);
+        assertList(sublist3, 1);
+    }
+
+    @Test
+    public void shouldReverseASublist() {
+        VList<Integer> sublist = wrapper.subList(1, 5);
+        assertList(sublist, 1, 2, 3, 4);
+
+        VList<Integer> reversed = sublist.reverse();
+        assertList(reversed, 4, 3, 2, 1);
     }
 
     @Test
