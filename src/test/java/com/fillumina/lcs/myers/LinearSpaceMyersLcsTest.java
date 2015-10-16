@@ -1,18 +1,23 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.AbstractLcsTestExecutor;
+import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.myers.LinearSpaceMyersLcs;
+import java.util.Arrays;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs0Test {
+public class LinearSpaceMyersLcsTest {
 
     private final AbstractLcsTestExecutor executor = new AbstractLcsTestExecutor() {
 
         @Override
         protected Lcs<Character> getLcs() {
-            return new LinearSpaceMyersLcs0<>();
+            return new LinearSpaceMyersLcs<>();
         }
 
     };

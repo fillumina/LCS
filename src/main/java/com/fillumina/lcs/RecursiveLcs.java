@@ -1,8 +1,9 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.List;
-import static com.fillumina.lcs.ListUtils.*;
+import static com.fillumina.lcs.util.ListUtils.*;
 
 /**
  * Implementation of the Longest Common Subsequence algorithm.

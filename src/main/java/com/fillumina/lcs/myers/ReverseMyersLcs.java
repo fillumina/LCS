@@ -1,5 +1,9 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.util.BidirectionalArray;
+import com.fillumina.lcs.util.BidirectionalVector;
+import com.fillumina.lcs.util.OneBasedVector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -145,119 +149,6 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
             return "Snake{" + "xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
                     ", yEnd=" + yEnd + '}';
-        }
-    }
-
-    /** A vector that allows for negative indexes. */
-    static class BidirectionalVector {
-
-        private final int[] array;
-        private final int halfSize;
-
-        public BidirectionalVector(int[] array) {
-            this.halfSize = array.length >> 1;
-            this.array = array;
-        }
-
-        /**
-         * @param size specify the positive size (the total size will be
-         *             {@code size * 2 + 1}.
-         */
-        public BidirectionalVector(int size) {
-            this.halfSize = size;
-            this.array = new int[(halfSize << 1) + 1];
-        }
-
-        public int get(int x) {
-            int index = halfSize + x;
-            if (index < 0 || index >= array.length) {
-                return 0;
-            }
-            return array[index];
-        }
-
-        public void set(int x, int value) {
-            int index = halfSize + x;
-            if (index < 0 || index >= array.length) {
-                return;
-            }
-            array[index] = value;
-        }
-
-        @Override
-        public String toString() {
-            return ArraysUtil.printVector(array);
-        }
-    }
-
-    /** An array that allows for negative indexes. */
-    static class BidirectionalArray {
-
-        private final int[][] array;
-        private final int halfSize;
-
-        public BidirectionalArray(int size) {
-            this.halfSize = size;
-            this.array = new int[halfSize][(halfSize << 1) + 1];
-        }
-
-        public int get(int x, int y) {
-            if (x < 0 || x >= array.length) {
-                return 0;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return 0;
-            }
-            return array[x][indexY];
-        }
-
-        public void set(int x, int y, int value) {
-            if (x < 0 || x >= array.length) {
-                return;
-            }
-            int indexY = halfSize + y;
-            if (indexY < 0 || indexY >= array[x].length) {
-                return;
-            }
-            array[x][indexY] = value;
-        }
-
-        public BidirectionalVector getVector(int x) {
-            return new BidirectionalVector(array[x]);
-        }
-
-        public void copy(int line, BidirectionalVector v) {
-            System.arraycopy(v.array, 0, array[line], 0, v.array.length);
-        }
-
-        @Override
-        public String toString() {
-            return ArraysUtil.printArray(array);
-        }
-    }
-
-    /** A vector that starts from index 1 instead of 0. */
-    static class OneBasedVector<T> {
-
-        private final List<T> list;
-        private final int size;
-
-        public OneBasedVector(List<T> list) {
-            this.list = list;
-            this.size = list.size();
-        }
-
-        public T get(int x) {
-            return list.get(x - 1);
-        }
-
-        public void set(int x, T value) {
-            list.set(x - 1, value);
-        }
-
-        public int size() {
-            return size;
         }
     }
 }

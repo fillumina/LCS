@@ -1,6 +1,5 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.util;
 
-import com.fillumina.lcs.LinearSpaceMyersLcs.VList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;

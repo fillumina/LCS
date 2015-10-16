@@ -1,7 +1,7 @@
 package com.fillumina.lcs;
 
 import java.util.List;
-import static com.fillumina.lcs.ListUtils.*;
+import static com.fillumina.lcs.util.ListUtils.*;
 import java.util.Collections;
 
 /**

@@ -1,24 +1,27 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.MyersLcs.BidirectionalArray;
-import com.fillumina.lcs.MyersLcs.BidirectionalVector;
-import com.fillumina.lcs.MyersLcs.OneBasedVector;
+import com.fillumina.lcs.AbstractLcsTestExecutor;
+import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.myers.MyersLcs;
+import com.fillumina.lcs.util.BidirectionalArray;
+import com.fillumina.lcs.util.BidirectionalVector;
+import com.fillumina.lcs.util.OneBasedVector;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ReverseMyersLcsTest {
+public class MyersLcsTest {
 
     private final AbstractLcsTestExecutor executor = new AbstractLcsTestExecutor() {
 
         @Override
         protected Lcs<Character> getLcs() {
-            return new ReverseMyersLcs<>();
+            return new MyersLcs<>();
         }
 
     };
@@ -27,7 +30,7 @@ public class ReverseMyersLcsTest {
     public void shouldWorkABCABBA() {
 
         executor.lcs("ABCABBA", "CBABAC")
-                .assertResult("BABA"); // it's the reverse path
+                .assertResult("CABA");
 
     }
 
@@ -39,7 +42,7 @@ public class ReverseMyersLcsTest {
 
     }
 
-    @Ignore @Test
+    @Test
     public void shouldGetOneBasedVector() {
         OneBasedVector<Character> v = new OneBasedVector<>(
                 Arrays.asList('H', 'E', 'L', 'O'));
@@ -50,9 +53,9 @@ public class ReverseMyersLcsTest {
         assertEquals(Character.valueOf('O'), v.get(4));
     }
 
-    @Ignore @Test
+    @Test
     public void shouldGetBidirectionalVector() {
-        BidirectionalVector v = new MyersLcs.BidirectionalVector(3);
+        BidirectionalVector v = new BidirectionalVector(3);
 
         for (int i = -3; i <= 3; i++) {
             v.set(i, i);
@@ -62,9 +65,9 @@ public class ReverseMyersLcsTest {
         }
     }
 
-    @Ignore @Test
+    @Test
     public void shouldGetBidirectionalArray() {
-        BidirectionalArray a = new MyersLcs.BidirectionalArray(3);
+        BidirectionalArray a = new BidirectionalArray(3);
 
         for (int d = 0; d < 3; d++) {
             for (int i = -3; i <= 3; i++) {
@@ -79,10 +82,10 @@ public class ReverseMyersLcsTest {
         }
     }
 
-    @Ignore @Test
+    @Test
     public void shouldCopyABidirectionalVector() {
-        BidirectionalArray a = new MyersLcs.BidirectionalArray(3);
-        BidirectionalVector v = new MyersLcs.BidirectionalVector(3);
+        BidirectionalArray a = new BidirectionalArray(3);
+        BidirectionalVector v = new BidirectionalVector(3);
 
         for (int i = -3; i <= 3; i++) {
             v.set(i, i);

@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
