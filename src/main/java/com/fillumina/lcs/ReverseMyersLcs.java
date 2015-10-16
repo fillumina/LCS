@@ -19,46 +19,57 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs<T> implements Lcs<T> {
+public class ReverseMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
-        final OneBasedVector<T> oneBasedVectorA = new OneBasedVector<>(a);
-        List<Snake> snakes =
-                lcsMyers(oneBasedVectorA, new OneBasedVector<>(b));
-        return extractLcs(snakes, oneBasedVectorA);
+        OneBasedVector<T> obvA = new OneBasedVector<>(a);
+        OneBasedVector<T> obvB = new OneBasedVector<>(b);
+        List<Snake> snakes = lcsMyers(obvA, obvB);
+        return extractLcs(snakes, obvA);
     }
 
     private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
-        int n = a.size();
-        int m = b.size();
-        int max = n + m;
+        final int n = a.size();
+        final int m = b.size();
+        final int dmax = n + m;
+        final int delta = n - m;
 
-        BidirectionalArray vv = new BidirectionalArray(max);
-        BidirectionalVector v = new BidirectionalVector(max);
+        BidirectionalArray vv = new BidirectionalArray(dmax);
+        BidirectionalVector v = new BidirectionalVector(dmax);
+
+        v.set(delta-1, n);
 
         int next, prev, x, y;
-        for (int d = 0; d <= max; d++) {
-            for (int k = -d; k <= d; k += 2) {
-                next = v.get(k + 1); // down
-                prev = v.get(k - 1); // right
-                if (k == -d || (k != d && prev < next)) {
-                    x = next;
+        for (int d = 0; d <= dmax; d++) {
+            for (int k = -d+delta; k <= d+delta; k += 2) {
+                next = v.get(k + 1); // left
+                prev = v.get(k - 1); // up
+                if (k == d+delta || (k != -d+delta && prev < next)) {
+                    x = prev;   // up
                 } else {
-                    x = prev + 1;
+                    x = next - 1;   // left
                 }
                 y = x - k;
-                while (x >= 0 && y >= 0 && x < n && y < m &&
-                        a.get(x + 1).equals(b.get(y + 1))) {
-                    x++;
-                    y++;
+                while (x > 0 && y > 0 && x <= n && y <= m &&
+                        a.get(x).equals(b.get(y))) {
+                    x--;
+                    y--;
                 }
                 v.set(k, x);
-                if (x >= n && y >= m) {
+                if (x <= 0 && y <= 0) {
                     vv.copy(d, v);
 
-                    //int lcs = (max - d) / 2;
-                    return calculateSolution(d, vv, x, y);
+//                    int lcs = (dmax - d) / 2;
+//                    System.out.println("LCS=" + lcs);
+//                    System.out.println("D=" + d);
+//                    System.out.println("K=" + k);
+//                    System.out.println("DELTA=" + delta);
+//                    System.out.println("x=" + x);
+//                    System.out.println("y=" + y);
+//                    System.out.println(vv.toString());
+
+                    return calculateSolution(d, vv, x, y, delta, n, m);
                 }
             }
             vv.copy(d, v);
@@ -67,39 +78,34 @@ public class MyersLcs<T> implements Lcs<T> {
     }
 
     private List<Snake> calculateSolution(int lastD,
-            BidirectionalArray vs, int xx, int yy) {
+            BidirectionalArray vs, int xx, int yy, int delta, int n, int m) {
         List<Snake> snakes = new ArrayList<>();
 
-        int x = xx;
-        int y = yy;
+        int xStart = xx;
+        int yStart = yy;
 
-        int d, xStart, yStart, xMid, yMid, xEnd, yEnd;
-        for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
-            int k = x - y;
+        int d, next, prev, xMid, yMid, xEnd, yEnd;
+        for (d = lastD; d >= 0 && xStart < n && yStart < m; d--) {
+            int k = xStart - yStart;
 
-            xEnd = x;
-            yEnd = y;
-
-            int next = vs.get(d - 1, k + 1);
-            int prev = vs.get(d - 1, k - 1);
-            if (k == -d || (k != d && prev < next)) {
-                xStart = next;
-                yStart = next - k - 1;
-                xMid = xStart;
+            next = vs.get(d - 1, k + 1);
+            prev = vs.get(d - 1, k - 1);
+            if (k == d+delta || (k != -d+delta && prev != 0 && prev < next)) {
+                xEnd = prev;
+                yEnd = prev - k + 1;
+                xMid = xEnd;
             } else {
-                xStart = prev;
-                yStart = prev - k + 1;
-                xMid = xStart + 1;
+                xEnd = next;
+                yEnd = next - k - 1;
+                xMid = xEnd - 1;
             }
-
             yMid = xMid - k;
 
             snakes.add(new Snake(xStart, yStart, xMid, yMid, xEnd, yEnd));
 
-            x = xStart;
-            y = yStart;
+            xStart = xEnd;
+            yStart = yEnd;
         }
-        Collections.reverse(snakes);
         return snakes;
     }
 
@@ -108,7 +114,7 @@ public class MyersLcs<T> implements Lcs<T> {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             System.out.println(snake);
-            for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
+            for (int x=snake.xStart + 1; x<=snake.xMid; x++) {
                 list.add(a.get(x));
             }
         }
@@ -120,7 +126,7 @@ public class MyersLcs<T> implements Lcs<T> {
      * equal elements starting from mid to end and preceeded by a vertical
      * or horizontal edge going from start to mid.
      */
-    protected static class Snake {
+    static class Snake {
 
         public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
 
@@ -143,7 +149,7 @@ public class MyersLcs<T> implements Lcs<T> {
     }
 
     /** A vector that allows for negative indexes. */
-    protected static class BidirectionalVector {
+    static class BidirectionalVector {
 
         private final int[] array;
         private final int halfSize;
@@ -177,10 +183,15 @@ public class MyersLcs<T> implements Lcs<T> {
             }
             array[index] = value;
         }
+
+        @Override
+        public String toString() {
+            return ArraysUtil.printVector(array);
+        }
     }
 
     /** An array that allows for negative indexes. */
-    protected static class BidirectionalArray {
+    static class BidirectionalArray {
 
         private final int[][] array;
         private final int halfSize;
@@ -222,19 +233,12 @@ public class MyersLcs<T> implements Lcs<T> {
 
         @Override
         public String toString() {
-            StringBuilder buf = new StringBuilder("\n");
-            for (int i = 0; i < array.length; i++) {
-                for (int j = 0; j < array[i].length; j++) {
-                    buf.append(array[i][j]).append(" ");
-                }
-                buf.append('\n');
-            }
-            return buf.toString();
+            return ArraysUtil.printArray(array);
         }
     }
 
     /** A vector that starts from index 1 instead of 0. */
-    protected static class OneBasedVector<T> {
+    static class OneBasedVector<T> {
 
         private final List<T> list;
         private final int size;

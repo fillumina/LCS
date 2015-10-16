@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs<T> implements Lcs<T> {
+public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
@@ -24,13 +24,22 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         final int n = a.size();
         final int m = b.size();
 
+        final int a0 = a.zero();
+        final int b0 = b.zero();
+
+        if (n == 0) {
+            return new Snake(111, a0, b0, a0, m, a0, m);
+        }
+
+        if (m == 0) {
+            return new Snake(111, a0, b0, n, b0, n, b0);
+        }
+
         if (n == 1) {
             T t = a.get(1);
             for (int i=1; i<=m; i++) {
                 if (t.equals(b.get(i))) {
-                    final int a0 = a.zero();
-                    final int b0 = b.zero();
-                    return new Snake(2, a0, b0, a0, i-1, a0 + 1, i);
+                    return new Snake(100, a0, b0, a0, i-1, a0 + 1, i);
                 }
             }
             return Snake.NULL;
@@ -40,58 +49,45 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
             T t = b.get(1);
             for (int i=1; i<=n; i++) {
                 if (t.equals(a.get(i))) {
-                    final int a0 = a.zero();
-                    final int b0 = b.zero();
-                    return new Snake(2, a0, b0, i - 1, b0, i, b0 + 1);
+                    return new Snake(100, a0, b0, i - 1, b0, i, b0 + 1);
                 }
             }
             return Snake.NULL;
         }
 
-        final int a0 = a.zero();
-        final int b0 = b.zero();
-
-        if (n > 0 && m > 0) {
-            Snake snake = findMiddleSnake(a, b);
-            if (snake.d > 1) {
-                Snake before = //FIXME the snake here referes to wrong indexes!
-                    lcs(a.subList(1, snake.xStart + 1 - a0),
-                            b.subList(1, snake.yStart + 1 - b0));
-                Snake after =
-                    lcs(a.subList(snake.xEnd - a0, n + 1),
-                            b.subList(snake.yEnd - b0, m + 1));
-                return Snake.chain(before, snake, after);
-            }
-
-            return snake;
-//            int x0 = a.zero();
-//            int y0 = b.zero();
-//
-//            if (m > n) {
-//                return new Snake(0, x0,y0, x0+n,x0, x0+n,y0);
-//            } else {
-//                return new Snake(0, x0,y0, x0,y0+m, x0,y0+m);
-//            }
+        Snake snake = findMiddleSnake(a, n, b, m);
+        if (snake.d > 1) {
+            Snake before =
+                lcs(a.subList(1, snake.xStart + 1 - a0),
+                        b.subList(1, snake.yStart + 1 - b0));
+            Snake after =
+                lcs(a.subList(snake.xEnd - a0, n + 1),
+                        b.subList(snake.yEnd - b0, m + 1));
+            return Snake.chain(before, snake, after);
         }
-        return Snake.NULL;
+
+        return snake;
     }
 
-    Snake findMiddleSnake(VList<T> a, VList<T> b) {
-        int n = a.size();
-        int m = b.size();
+    Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
+        final int max = (int) Math.ceil((n + m) / 2.0);
 
-        VList<T> ar = a.reverse();
-        VList<T> br = b.reverse();
+        final BidirectionalVector vf1 = new BidirectionalVector(max);
+        final BidirectionalVector vr1 = new BidirectionalVector(max);
 
-        int max = (int) Math.ceil((n + m) / 2.0);
+//        final BidirectionalVector vf2 = new BidirectionalVector(max);
+//        final BidirectionalVector vr2 = new BidirectionalVector(max);
 
-        BidirectionalVector vf1 = new BidirectionalVector(max);
-        BidirectionalVector vr1 = new BidirectionalVector(max);
-        BidirectionalVector vf2 = new BidirectionalVector(max);
-        BidirectionalVector vr2 = new BidirectionalVector(max);
+        final int delta = n - m;
+        final boolean oddDelta = (delta & 1) == 1;
 
-        int delta = n - m;
-        boolean oddDelta = (delta & 1) == 1;
+        for (int i=-max; i<=max; i++) {
+            vr1.set(i, n);
+        }
+//        vr2.set(delta-1, n);
+//        vr1.set(delta+1, n);
+//        vr2.set(delta+1, n);
+
         int kk, xf, xr;
         for (int d = 0; d <= max; d++) {
             final int dMinusOne = d - 1;
@@ -100,21 +96,21 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
                 xf = findFurthestReachingDPath(d, k, a, n, b, m, vf1);
                 if (oddDelta &&
                         (delta - dMinusOne) <= k && k <= (delta + dMinusOne)) {
-                    xr = n - findFurthestReachingDPath(
-                            dMinusOne, k, ar, n, br, m, vr1);
+                    xr = findFurthestReachingDPathReverse(
+                            dMinusOne, k, a, n, b, m, vr1);
                     if (xr <= xf) {
-                        return findLastSnake(d, k, xf, a.zero(),b.zero(), vf1, false, 0,0);
+                        return findLastSnake(d, k, xf, a.zero(),b.zero(), vf1);
                     }
                 }
             }
 
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
-                xr = n - findFurthestReachingDPath(d, kk, ar, n, br, m, vr2);
+                xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, vr1);
                 if (!oddDelta && -delta <= kk && kk <= delta) {
-                    xf = findFurthestReachingDPath(d, kk, a, n, b, m, vf2);
-                    if (xr <= xf) {
-                        return findLastSnake(d, kk, n - xr, ar.zero(),br.zero(), vr2, true, n+1, m+1);
+                    xf = findFurthestReachingDPath(d, kk, a, n, b, m, vf1);
+                    if (xr >= 0 && xr <= xf) {
+                        return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vr1, n+1, m+1);
                     }
                 }
             }
@@ -135,7 +131,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
             x = prev + 1;
         }
         y = x - k;
-        while (x >= 0 && y >= 0 && x < n && y < m &&
+        while (x >= 0 && y >= 0 && x + 1 < n && y + 1 < m &&
                 a.get(x + 1).equals(b.get(y + 1))) {
             x++;
             y++;
@@ -145,7 +141,7 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     private Snake findLastSnake(int d, int k, int x, int x0, int y0,
-            BidirectionalVector v, boolean reverse, int n, int m) {
+            BidirectionalVector v) {
         int y = x - k;
 
         int xEnd = x;
@@ -165,12 +161,57 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         yMid = xMid - k;
-        if (reverse) {
-            return new Snake(d, x0+(n-xEnd), y0+(m-yEnd),
-                x0+(n-xMid), y0+(m-yMid), x0+(n-xStart), y0+(m-yStart));
-        }
         return new Snake(d, x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
+    }
+
+    private int findFurthestReachingDPathReverse(int d, int k,
+            VList<T> a, int n, VList<T> b, int m,
+            BidirectionalVector v) {
+        int x, y;
+
+        final int prev = v.get(k-1);
+        final int next = v.get(k+1);
+        if (k == d || (k != -d && prev < next)) {
+            x = next - 1;
+        } else {
+            x = prev;
+        }
+        y = x - k;
+        while (x > 1 && y > 1 && x < n && y < m && a.get(x - 1) == b.get(y - 1)) {
+            x--;
+            y--;
+        }
+
+        v.set(k, x);
+        return x;
+    }
+
+    private Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
+            BidirectionalVector v, int n, int m) {
+        int x = xe, y;
+
+        int xStart = x;
+        int yStart = xe - k;
+
+        final int prev = v.get(k-1);
+        final int next = v.get(k+1);
+        final int xMid, yMid;
+        if (k == d || (k != -d && prev < next)) {
+            x = next - 1;
+        } else {
+            x = prev;
+        }
+        y = x - k;
+        xMid = x;
+        yMid = y;
+
+        final int xEnd = x;
+        final int yEnd = y;
+
+        v.set(k, x);
+        return new Snake(d, x0+(n-xEnd), y0+(m-yEnd),
+                x0+(n-xMid), y0+(n-yMid), x0+(n-xStart), y0+(m-yStart));
     }
 
     /**
@@ -340,11 +381,15 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         /** Note that the first index is 1 and not 0. */
         public T get(int index) {
-            if (index <= 0 || index > size) {
+            final int idx = calculateIndex(index);
+            if (idx < start || idx >= end) {
                 throw new IndexOutOfBoundsException(
                         "index (size=" + size + "): " + index);
             }
-            final int idx = calculateIndex(index);
+            if (idx < 0 || idx >= list.size()) {
+                throw new IndexOutOfBoundsException(
+                        "index (list size=" + size + "): " + index);
+            }
             return list.get(idx);
         }
 
@@ -360,21 +405,28 @@ public class LinearSpaceMyersLcs<T> implements Lcs<T> {
 
         @SuppressWarnings("unchecked")
         public VList<T> subList(int fromIndex, int toIndex) {
-            if (fromIndex <= 0 || toIndex <= 0) {
+            if (fromIndex < 1 || toIndex < 1) {
                 throw new IndexOutOfBoundsException(
                         "indexes cannot be less than 1, to=" +
-                                toIndex + ", from=" + fromIndex);
+                                toIndex + ", from=" + fromIndex +
+                                " " + toString());
             }
             final int correctedFromIndex = calculateIndex(fromIndex);
-            final int correctedToIndex = calculateIndex(toIndex);
+            int correctedToIndex = calculateIndex(toIndex);
             if (correctedFromIndex < 0 || correctedFromIndex >= list.size()) {
                 throw new IndexOutOfBoundsException(
-                        "from index out of boundaries " + correctedFromIndex);
+                        "from index out of boundaries " + correctedFromIndex +
+                                " " + toString());
             }
-            if (correctedToIndex < correctedFromIndex ||
-                    correctedFromIndex >= correctedToIndex + size) {
+            if (correctedToIndex < correctedFromIndex) {
                 throw new IndexOutOfBoundsException(
-                        "to index out of boundaries " + correctedToIndex);
+                        "to index out of boundaries " + correctedToIndex +
+                                " " + toString());
+            }
+            if (correctedFromIndex + size < correctedToIndex) {
+                throw new IndexOutOfBoundsException("toIndex=" + toIndex +
+                                " " + toString());
+                //correctedToIndex = correctedFromIndex + size;
             }
             if (correctedFromIndex == correctedToIndex) {
                 return (VList<T>) EMPTY;

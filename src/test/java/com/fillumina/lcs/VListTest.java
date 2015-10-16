@@ -159,6 +159,18 @@ public class VListTest {
     }
 
     @Test
+    public void shouldSublistOfZeroSizeBeEmpty() {
+        VList<Integer> empty = wrapper.subList(3, 3);
+        assertEquals(0, empty.size());
+    }
+
+    @Test
+    public void shouldSublistOfInvertedIdexesBeEmpty() {
+        VList<Integer> empty = wrapper.subList(5, 3);
+        assertEquals(0, empty.size());
+    }
+
+    @Test
     public void shouldReverseASublist() {
         VList<Integer> sublist = wrapper.subList(1, 5);
         assertList(sublist, 1, 2, 3, 4);
