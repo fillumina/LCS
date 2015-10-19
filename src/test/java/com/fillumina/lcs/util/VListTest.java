@@ -103,7 +103,7 @@ public class VListTest {
     @Test
     public void shouldGetZeroOfASublist() {
         VList<Integer> sublist = wrapper.subList(2, 6);
-        assertEquals(2, sublist.zero());
+        assertEquals(1, sublist.zero());
     }
 
     @Test

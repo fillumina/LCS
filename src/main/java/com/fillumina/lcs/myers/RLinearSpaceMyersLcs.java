@@ -79,7 +79,10 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
-        if (snake.d > 1) {
+        if (snake.d == 0) {
+            return Snake.NULL;
+        }
+        if (snake.d < n) {
             Snake before =
                 lcs(a.subList(1, snake.xStart + 1 - a0),
                         b.subList(1, snake.yStart + 1 - b0));
@@ -88,7 +91,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                         b.subList(snake.yEnd + 1 - b0, m + 1));
             return Snake.chain(before, snake, after);
         }
-        return Snake.NULL;
+        return snake;
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
@@ -109,7 +112,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 if (oddDelta &&
                         (delta - dMinusOne) <= k && k <= (delta + dMinusOne)) {
                     if (vb.get(k) <= xf) {
-                        return findLastSnake(d, k, xf, a.zero(),b.zero(), vf);
+                        return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
                     }
                 }
             }
@@ -119,7 +122,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
                 if (!oddDelta && -delta <= kk && kk <= delta) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
-                        return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta);
+                        return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
                     }
                 }
             }
@@ -150,7 +153,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     private Snake findLastSnake(int d, int k, int x, int x0, int y0,
-            BidirectionalVector v) {
+            BidirectionalVector v,
+            VList<T> a, VList<T> b) {
         int y = x - k;
 
         int xEnd = x;
@@ -170,7 +174,19 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         yMid = xMid - k;
-        return new Snake(false, d, x0+xStart, y0+yStart,
+
+        boolean reverse = false;
+        if (xMid == xEnd && yMid == yEnd) {
+            xMid = xStart;
+            yMid = yStart;
+            while (xStart >0 && yStart >0 && a.get(xStart).equals(b.get(yStart))) {
+                xStart--;
+                yStart--;
+            }
+            reverse = true;
+        }
+
+        return new Snake(reverse, d, x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
@@ -199,10 +215,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     private Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
-            BidirectionalVector v, int delta) {
-        final int xEnd, yEnd, xMid, yMid;
+            BidirectionalVector v, int delta,
+            VList<T> a, int n, VList<T> b, int m) {
         final int xStart = xe;
         final int yStart = xe - k;
+        int xEnd, yEnd, xMid, yMid;
 
         final int next = v.get(k + 1);
         final int prev = v.get(k - 1);
@@ -217,7 +234,18 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         yMid = xMid - k;
 
-        return new Snake(true, d, x0+xStart, y0+yStart,
+        boolean reverse = true;
+        if (xMid == xStart && yMid == yStart) {
+            xMid = xEnd;
+            yMid = yEnd;
+            while (xEnd < n && yEnd < m && a.get(xEnd+1).equals(b.get(yEnd+1))) {
+                xEnd++;
+                yEnd++;
+            }
+            reverse = false;
+        }
+
+        return new Snake(reverse, d, x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
@@ -321,5 +349,4 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                     ", yEnd=" + yEnd + '}';
         }
     }
-
 }

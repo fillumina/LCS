@@ -72,12 +72,12 @@ public class VList<T> {
                     "indexes cannot be less than 1, to=" + toIndex + ", from=" +
                             fromIndex + " " + toString());
         }
-        if (toIndex <= fromIndex) {
-            return (VList<T>) EMPTY;
+        if (toIndex < fromIndex) {
+            toIndex = fromIndex;
         }
         final int correctedFromIndex = calculateIndex(fromIndex);
         int correctedToIndex = calculateIndex(toIndex);
-        if (correctedFromIndex < 0 || correctedFromIndex >= list.size()) {
+        if (correctedFromIndex < 0 || correctedFromIndex > list.size()) {
             throw new IndexOutOfBoundsException(
                     "from index out of boundaries " + correctedFromIndex + " " +
                             toString());
@@ -86,9 +86,6 @@ public class VList<T> {
             throw new IndexOutOfBoundsException(
                     "toIndex=" + toIndex + " " + toString());
             //correctedToIndex = correctedFromIndex + size;
-        }
-        if (correctedFromIndex == correctedToIndex) {
-            return (VList<T>) EMPTY;
         }
         if (reverse) {
             return new VList<>(list, correctedToIndex + 1,
