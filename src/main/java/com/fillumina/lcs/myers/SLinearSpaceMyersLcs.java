@@ -31,7 +31,8 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (n == 0) {
             if (m != 0) {
-                return createSegment(false, -111, a0, b0, a0, b0+m, a0, b0+m);
+                //return createSegment(false, -111, a0, b0, a0, b0+m, a0, b0+m);
+                return new Vertical(a0, b0, m);
             }
             return Segment.NULL;
         }
@@ -41,23 +42,30 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int i=1; i<=m; i++) {
                 if (t.equals(b.get(i))) {
                     if (i == 1) {
-                        return createSegment(true, -100, a0, b0, a0+1, b0+i, a0+1, b0+m);
+                        return new Diagonal(a0, b0, 1).vertical(m-1);
+                        //return createSegment(true, -100, a0, b0, a0+1, b0+i, a0+1, b0+m);
                     } else if (i == m) {
-                        return createSegment(false, -100, a0, b0, a0, b0+m-1, a0+1, b0+m);
+                        return new Vertical(a0, b0, m-1).diagonal(1);
+                        //return createSegment(false, -100, a0, b0, a0, b0+m-1, a0+1, b0+m);
                     } else {
-                        return Segment.chain(
-                            createSegment(false, -100, a0, b0, a0, b0+i-1, a0+1, b0+i),
-                            createSegment(false, -100, a0+1, b0+i, a0+1, b0+i, a0+1, b0+m)
-                        );
+                        final Vertical vertical = new Vertical(a0, b0, i-1);
+                        vertical.diagonal(1).vertical(m - i);
+                        return vertical;
+//                        return Segment.chain(
+//                            createSegment(false, -100, a0, b0, a0, b0+i-1, a0+1, b0+i),
+//                            createSegment(false, -100, a0+1, b0+i, a0+1, b0+i, a0+1, b0+m)
+//                        );
                     }
                 }
             }
-            return createSegment(false, -222, a0,b0, a0,b0+m, a0,b0+m);
+            //return createSegment(false, -222, a0,b0, a0,b0+m, a0,b0+m);
+            return new Vertical(a0, b0, m);
         }
 
         if (m == 0) {
             if (n != 0) {
-                return createSegment(false, -111, a0, b0, a0+n, b0, a0+n, b0);
+                return new Horizontal(a0, b0, n);
+                //return createSegment(false, -111, a0, b0, a0+n, b0, a0+n, b0);
             }
             return Segment.NULL;
         }
@@ -67,16 +75,22 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int i=1; i<=n; i++) {
                 if (t.equals(a.get(i))) {
                     if (i == 1) {
-                        return createSegment(true, -100, a0, b0, a0+i, b0+1, a0+n, b0+1);
+                        return new Diagonal(a0, b0, 1).horizontal(n-1);
+//                        return createSegment(true, -100, a0, b0, a0+i, b0+1, a0+n, b0+1);
                     } else if (i == n) {
-                        return createSegment(false, -100, a0, b0, a0+n-1, b0, a0+n, b0+1);
+                        return new Horizontal(a0, b0, n-1).diagonal(1);
+                        //return createSegment(false, -100, a0, b0, a0+n-1, b0, a0+n, b0+1);
                     }
-                    return Segment.chain(
-                            createSegment(false, -100, a0, b0, a0+i-1, b0+1, a0+i, b0+1),
-                            createSegment(false, -100, a0+i, b0+1, a0+n, b0+m, a0+n, b0+m));
+                    Horizontal horizontal = new Horizontal(a0, b0, i-1);
+                    horizontal.diagonal(1).horizontal(n-i);
+                    return horizontal;
+//                    return Segment.chain(
+//                            createSegment(false, -100, a0, b0, a0+i-1, b0+1, a0+i, b0+1),
+//                            createSegment(false, -100, a0+i, b0+1, a0+n, b0+m, a0+n, b0+m));
                 }
             }
-            return createSegment(false, -222, a0,b0, a0+n,b0, a0+n,b0);
+            return new Horizontal(a0, b0, n);
+//            return createSegment(false, -222, a0,b0, a0+n,b0, a0+n,b0);
         }
 
         Segment segment = findMiddleSnake(a, n, b, m);
@@ -278,7 +292,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     static abstract class Segment implements Iterable<Segment>, Serializable {
         private static final long serialVersionUID = 1L;
-        public static final Segment NULL = new DiagonalSegment(-1,-1,-1);
+        public static final Segment NULL = new Diagonal(-1,-1,-1);
         protected final int x,y,steps;
         protected Segment next;
 
@@ -312,17 +326,33 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             // do nothing;
         }
 
+        Segment vertical(int distance) {
+            next = new Vertical(getXEnd(), getYEnd(), distance);
+            return this;
+        }
+
+        Segment horizontal(int distance) {
+            next = new Horizontal(getXEnd(), getYEnd(), distance);
+            return this;
+        }
+
+        Segment diagonal(int distance) {
+            next = new Diagonal(getXEnd(), getYEnd(), distance);
+            return this;
+        }
+
+        @Deprecated // to be removed
         static Segment create(int xStart, int yStart, int xEnd, int yEnd) {
             int steps = xEnd - xStart;
             if (steps > 0) {
                 if (yStart < yEnd) {
-                    return new DiagonalSegment(xStart, yStart, steps);
+                    return new Diagonal(xStart, yStart, steps);
                 }
-                return new HorizontalSegment(xStart, yStart, steps);
+                return new Horizontal(xStart, yStart, steps);
             }
             steps = yEnd - yStart;
             if (steps > 0) {
-                return new VerticalSegment(xStart, yStart, steps);
+                return new Vertical(xStart, yStart, steps);
             }
             throw new IllegalArgumentException();
         }
@@ -345,23 +375,24 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return head;
         }
 
+        @Deprecated
         public Segment add(int nextX, int nextY) {
             final int xEnd = getXEnd();
             final int yEnd = getYEnd();
             int distance = nextX - xEnd;
             if (distance > 0) {
                 if (yEnd < nextY) {
-                    Segment diagonal = new DiagonalSegment(xEnd, yEnd, distance);
+                    Segment diagonal = new Diagonal(xEnd, yEnd, distance);
                     this.next = diagonal;
                     return diagonal;
                 }
-                Segment horizontal = new HorizontalSegment(xEnd, yEnd, distance);
+                Segment horizontal = new Horizontal(xEnd, yEnd, distance);
                 this.next = horizontal;
                 return horizontal;
             }
             distance = nextY - yEnd;
             if (distance > 0) {
-                Segment vertical = new VerticalSegment(xEnd, yEnd, distance);
+                Segment vertical = new Vertical(xEnd, yEnd, distance);
                 this.next = vertical;
                 return vertical;
             }
@@ -425,9 +456,9 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
     }
 
-    static class DiagonalSegment extends Segment {
+    static class Diagonal extends Segment {
         private static final long serialVersionUID = 1L;
-        public DiagonalSegment(int x, int y, int steps) {
+        public Diagonal(int x, int y, int steps) {
             super(x,y,steps);
         }
         @Override int getXEnd() { return x + steps; }
@@ -441,18 +472,18 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
     }
 
-    static class HorizontalSegment extends Segment {
+    static class Horizontal extends Segment {
         private static final long serialVersionUID = 1L;
-        public HorizontalSegment(int x, int y, int steps) {
+        public Horizontal(int x, int y, int steps) {
             super(x,y,steps);
         }
         @Override int getXEnd() { return x + steps; }
         @Override int getYEnd() { return y; }
     }
 
-    static class VerticalSegment extends Segment {
+    static class Vertical extends Segment {
         private static final long serialVersionUID = 1L;
-        public VerticalSegment(int x, int y, int steps) {
+        public Vertical(int x, int y, int steps) {
             super(x,y,steps);
         }
         @Override int getXEnd() { return x; }
