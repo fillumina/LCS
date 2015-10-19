@@ -101,6 +101,12 @@ public class VListTest {
     }
 
     @Test
+    public void shouldGetZeroOfASublist() {
+        VList<Integer> sublist = wrapper.subList(2, 6);
+        assertEquals(2, sublist.zero());
+    }
+
+    @Test
     public void shouldGetAllOfAReversedSublist() {
         VList<Integer> sublist = wrapper.subList(2, 6);
         assertList(sublist, 2, 3, 4, 5);

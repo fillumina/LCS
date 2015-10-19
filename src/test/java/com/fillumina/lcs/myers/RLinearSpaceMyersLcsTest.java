@@ -2,10 +2,9 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTestExecutor;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.RLinearSpaceMyersLcs;
-import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
