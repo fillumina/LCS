@@ -35,19 +35,28 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Snake.NULL;
         }
 
-        if (m == 0) {
-            if (n != 0) {
-                return new Snake(false, -111, a0, b0, a0+n, b0, a0+n, b0);
-            }
-            return Snake.NULL;
-        }
-
         if (n == 1) {
             T t = a.get(1);
             for (int i=1; i<=m; i++) {
                 if (t.equals(b.get(i))) {
-                    return new Snake(false, -100, a0, b0, a0, b0+i-1, a0+1, b0+i);
+                    if (i == 1) {
+                        return new Snake(true, -100, a0, b0, a0+1, b0+i, a0+1, b0+m);
+                    } else if (i == m) {
+                        return new Snake(false, -100, a0, b0, a0, b0+m-1, a0+1, b0+m);
+                    } else {
+                        return Snake.chain(
+                            new Snake(false, -100, a0, b0, a0, b0+i-1, a0+1, b0+i),
+                            new Snake(false, -100, a0+1, b0+i, a0+1, b0+i, a0+1, b0+m)
+                        );
+                    }
                 }
+            }
+            return new Snake(false, -222, a0,b0, a0,b0+m, a0,b0+m);
+        }
+
+        if (m == 0) {
+            if (n != 0) {
+                return new Snake(false, -111, a0, b0, a0+n, b0, a0+n, b0);
             }
             return Snake.NULL;
         }
@@ -56,10 +65,17 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             T t = b.get(1);
             for (int i=1; i<=n; i++) {
                 if (t.equals(a.get(i))) {
-                    return new Snake(false, -100, a0, b0, a0+i-1, b0, a0+i, b0+1);
+                    if (i == 1) {
+                        return new Snake(true, -100, a0, b0, a0+i, b0+1, a0+n, b0+1);
+                    } else if (i == n) {
+                        return new Snake(false, -100, a0, b0, a0+n-1, b0+1, a0+n, b0+1);
+                    }
+                    return Snake.chain(
+                            new Snake(false, -100, a0, b0, a0+i-1, b0+1, a0+i, b0+1),
+                            new Snake(false, -100, a0+i, b0+1, a0+n, b0+m, a0+n, b0+m));
                 }
             }
-            return Snake.NULL;
+            return new Snake(false, -222, a0,b0, a0+n,b0, a0+n,b0);
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
@@ -72,8 +88,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                         b.subList(snake.yEnd + 1 - b0, m + 1));
             return Snake.chain(before, snake, after);
         }
-
-        return snake;
+        return Snake.NULL;
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
@@ -125,7 +140,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             x = prev + 1;
         }
         y = x - k;
-        while (x >= 0 && y >= 0 && x + 1 < n && y + 1 < m &&
+        while (x >= 0 && y >= 0 && x < n && y < m &&
                 a.get(x + 1).equals(b.get(y + 1))) {
             x++;
             y++;
@@ -231,11 +246,10 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         private final boolean reverse;
         private Snake next;
 
-        public Snake(boolean reverse,
-                int d, int xStart, int yStart, int xMid, int yMid, int xEnd,
-                int yEnd) {
-            this.d = d;
+        public Snake(boolean reverse, int d,
+                int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
             this.reverse = reverse;
+            this.d = d;
             this.xStart = xStart;
             this.yStart = yStart;
             this.xMid = xMid;
@@ -300,7 +314,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             if (this == NULL) {
                 return "Snake{NULL}";
             }
-            return "Snake{" + "d=" + d +
+            return "Snake{" + (reverse ? "reverse" : "forward") +
+                    ", d=" + d +
                     ", xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
                     ", yEnd=" + yEnd + '}';

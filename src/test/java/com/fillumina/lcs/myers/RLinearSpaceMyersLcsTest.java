@@ -21,6 +21,7 @@ public class RLinearSpaceMyersLcsTest {
 
     };
 
+    @Ignore
     @Test
     public void shouldWorkABCABBA() {
 
