@@ -7,28 +7,24 @@ import org.junit.Test;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class RecursiveLcsTest {
+public class RecursiveLcsTest extends AbstractLcsTest {
+
+    @Override
+    protected Lcs<Character> getLcsAlgorithm() {
+        return new RecursiveLcs<Character>() {
+
+            @Override
+            public List<Character> lcs(List<Character> xs,
+                    List<Character> ys) {
+                count(xs, ys);
+                return super.lcs(xs, ys);
+            }
+        };
+    }
 
     @Test
     public void shouldGetTheRightResult() {
-
-
-        new AbstractLcsTestExecutor() {
-
-            @Override
-            protected Lcs<Character> getLcs() {
-                return new RecursiveLcs<Character>() {
-
-                    @Override
-                    public List<Character> lcs(List<Character> xs,
-                            List<Character> ys) {
-                        count(xs, ys);
-                        return super.lcs(xs, ys);
-                    }
-                };
-            }
-
-        }.lcs("HUMAN", "CHIMPANZEE")
+        lcs("HUMAN", "CHIMPANZEE")
                 .assertResult("HMAN")
                 .assertNumberOfCalls(2221);
     }

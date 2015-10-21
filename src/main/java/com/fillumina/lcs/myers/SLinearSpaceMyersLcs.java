@@ -31,7 +31,6 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (n == 0) {
             if (m != 0) {
-                //return createSegment(false, -111, a0, b0, a0, b0+m, a0, b0+m);
                 return new Vertical(a0, b0, m);
             }
             return Segment.NULL;
@@ -43,29 +42,21 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
                 if (t.equals(b.get(i))) {
                     if (i == 1) {
                         return new Diagonal(a0, b0, 1).vertical(m-1);
-                        //return createSegment(true, -100, a0, b0, a0+1, b0+i, a0+1, b0+m);
                     } else if (i == m) {
                         return new Vertical(a0, b0, m-1).diagonal(1);
-                        //return createSegment(false, -100, a0, b0, a0, b0+m-1, a0+1, b0+m);
                     } else {
                         final Vertical vertical = new Vertical(a0, b0, i-1);
                         vertical.diagonal(1).vertical(m - i);
                         return vertical;
-//                        return Segment.chain(
-//                            createSegment(false, -100, a0, b0, a0, b0+i-1, a0+1, b0+i),
-//                            createSegment(false, -100, a0+1, b0+i, a0+1, b0+i, a0+1, b0+m)
-//                        );
                     }
                 }
             }
-            //return createSegment(false, -222, a0,b0, a0,b0+m, a0,b0+m);
             return new Vertical(a0, b0, m);
         }
 
         if (m == 0) {
             if (n != 0) {
                 return new Horizontal(a0, b0, n);
-                //return createSegment(false, -111, a0, b0, a0+n, b0, a0+n, b0);
             }
             return Segment.NULL;
         }
@@ -76,21 +67,15 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
                 if (t.equals(a.get(i))) {
                     if (i == 1) {
                         return new Diagonal(a0, b0, 1).horizontal(n-1);
-//                        return createSegment(true, -100, a0, b0, a0+i, b0+1, a0+n, b0+1);
                     } else if (i == n) {
                         return new Horizontal(a0, b0, n-1).diagonal(1);
-                        //return createSegment(false, -100, a0, b0, a0+n-1, b0, a0+n, b0+1);
                     }
                     Horizontal horizontal = new Horizontal(a0, b0, i-1);
                     horizontal.diagonal(1).horizontal(n-i);
                     return horizontal;
-//                    return Segment.chain(
-//                            createSegment(false, -100, a0, b0, a0+i-1, b0+1, a0+i, b0+1),
-//                            createSegment(false, -100, a0+i, b0+1, a0+n, b0+m, a0+n, b0+m));
                 }
             }
             return new Horizontal(a0, b0, n);
-//            return createSegment(false, -222, a0,b0, a0+n,b0, a0+n,b0);
         }
 
         Segment segment = findMiddleSnake(a, n, b, m);
@@ -194,6 +179,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         yMid = xMid - k;
 
         boolean reverse = false;
+
         if (xMid == xEnd && yMid == yEnd) {
             xMid = xStart;
             yMid = yStart;
@@ -203,6 +189,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             }
             reverse = true;
         }
+
 
         return createSegment(reverse, d, x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
@@ -281,6 +268,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         return list;
     }
 
+    @Deprecated
     private Segment createSegment(boolean reverse, int d,
                 int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
 //        return new Snake(reverse, d, xStart, yStart, xMid, yMid, xEnd, yEnd);

@@ -1,9 +1,9 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.List;
 import static com.fillumina.lcs.util.ListUtils.*;
+import java.util.Collections;
 
 /**
  * Implementation of the Longest Common Subsequence algorithm.
@@ -23,9 +23,25 @@ public class RecursiveLcs<T> implements Lcs<T> {
         T ye = getLastElement(ys);
 
         if (xe.equals(ye)) {
-            return add(lcs(xb, yb), xe);
+            return concatenate(lcs(xb, yb), xe);
         } else {
             return maxLenght(lcs(xs, yb), lcs(xb, ys));
         }
     }
+
+    private static <T> List<T> allButLastElementSublist(List<T> list) {
+        int size = list.size();
+        if (size == 0) {
+            return Collections.<T>emptyList();
+        }
+        return list.subList(0, size - 1);
+    }
+
+    private static <T> T getLastElement(List<T> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(list.size() - 1);
+    }
+
 }

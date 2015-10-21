@@ -16,7 +16,7 @@ public class SpaceOptimizedMyersLcsTest {
     private final AbstractLcsTestExecutor executor = new AbstractLcsTestExecutor() {
 
         @Override
-        protected Lcs<Character> getLcs() {
+        protected Lcs<Character> getLcsAlgorithm() {
             return new SpaceOptimizedMyersLcs<>();
         }
 

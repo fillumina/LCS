@@ -9,12 +9,12 @@ import java.util.List;
  */
 public class CharacterLcsTestHelper {
 
-    protected String executeLcs(Lcs<Character> lcs, String a, String b) {
+    public static String executeLcs(Lcs<Character> lcs, String a, String b) {
         List<Character> resultList = lcs.lcs(toList(a), toList(b));
         return toString(resultList);
     }
 
-    protected List<Character> toList(String s) {
+    public static  List<Character> toList(String s) {
         char[] array = s.toCharArray();
         List<Character> list = new ArrayList<>(array.length);
         for (char c : array) {
@@ -23,9 +23,9 @@ public class CharacterLcsTestHelper {
         return list;
     }
 
-    protected String toString(List<Character> list) {
+    public static  String toString(List<Character> list) {
         if (list == null || list.isEmpty()) {
-            return "empty";
+            return "";
         }
         int i = 0;
         char[] array = new char[list.size()];

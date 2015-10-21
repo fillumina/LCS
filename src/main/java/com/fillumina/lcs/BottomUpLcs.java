@@ -13,7 +13,6 @@ public class BottomUpLcs<T> implements Lcs<T> {
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
         Grid grid = createGrid(xs, ys);
-        System.out.println(gridToString(xs, ys, grid));
 
         List<T> lcs = new ArrayList<>();
         int i = xs.size() - 1;
@@ -21,7 +20,6 @@ public class BottomUpLcs<T> implements Lcs<T> {
         char move;
         do {
             move = grid.get(i, j).move;
-            System.out.println(i + " " + j + " " + move);
             switch(move) {
                 case '\\':
                     lcs.add(xs.get(i));

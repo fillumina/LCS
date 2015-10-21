@@ -10,6 +10,19 @@ import java.util.Objects;
  *
  */
 public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
+    private final Map<Operands<T>, List<T>> resultsMap = new HashMap<>();
+
+    @Override
+    public List<T> lcs(List<T> xs, List<T> ys) {
+        Operands<T> o = new Operands<>(xs, ys);
+        List<T> result = resultsMap.get(o);
+        if (result != null) {
+            return result;
+        }
+        result = super.lcs(xs, ys);
+        resultsMap.put(o, result);
+        return result;
+    }
 
     private static class Operands<T> {
         private final List<T> xs, ys;
@@ -28,8 +41,8 @@ public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
 
         private int calculateHashCode() {
             int hash = 7;
-            hash = 61 * hash + Objects.hashCode(this.xs);
-            hash = 61 * hash + Objects.hashCode(this.ys);
+            hash = 61 * hash + Objects.hashCode(xs);
+            hash = 61 * hash + Objects.hashCode(ys);
             return hash;
         }
 
@@ -42,6 +55,9 @@ public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
                 return false;
             }
             final Operands<?> other = (Operands<?>) obj;
+            if (this.hashCode != other.hashCode) {
+                return false;
+            }
             if (!Objects.equals(this.xs, other.xs)) {
                 return false;
             }
@@ -50,19 +66,11 @@ public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
             }
             return true;
         }
-    }
 
-    private final Map<Operands<T>, List<T>> resultsMap = new HashMap<>();
-
-    @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
-        Operands<T> o = new Operands<>(xs, ys);
-        List<T> result = resultsMap.get(o);
-        if (result != null) {
-            return result;
+        @Override
+        public String toString() {
+            return "Operands{" + "hashCode=" + hashCode +
+                    ", xs=" + xs + ", ys=" + ys + '}';
         }
-        result = super.lcs(xs, ys);
-        resultsMap.put(o, result);
-        return result;
     }
 }

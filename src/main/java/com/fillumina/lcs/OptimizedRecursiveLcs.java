@@ -24,7 +24,7 @@ public class OptimizedRecursiveLcs<T> implements Lcs<T> {
         T ye = ys.get(j - 1);
 
         if (xe.equals(ye)) {
-            return add(optimizedLcs(xs, ys, i - 1, j - 1), xe);
+            return concatenate(optimizedLcs(xs, ys, i - 1, j - 1), xe);
         } else {
             return maxLenght(
                     optimizedLcs(xs, ys, i, j - 1),

@@ -39,7 +39,7 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
             List<T> yb = ys.subList(0, k);
             List<T> ye = ys.subList(k, ny);
-            return add(lcs(xb, yb), lcs(xe, ye));
+            return concatenate(lcs(xb, yb), lcs(xe, ye));
         }
     }
 

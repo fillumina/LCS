@@ -16,7 +16,7 @@ public abstract class AbstractLcsTestExecutor
         extends CharacterLcsTestHelper {
     private final Map<String, Integer> countingMap = new HashMap<>();
 
-    public static class Result {
+    public class Result {
         private final String result;
         private final CountingResult countingResult;
 
@@ -25,13 +25,21 @@ public abstract class AbstractLcsTestExecutor
             this.countingResult = countingResult;
         }
 
-        public Result assertResult(String result) {
-            assertEquals(result, this.result);
+        public Result assertResult(String... results) {
+            boolean success = false;
+            for (String result : results) {
+                success = success || result.equals(this.result);
+            }
+            if (!success) {
+                throw new AssertionError(getName() +
+                        " invalid result: " + this.result);
+            }
             return this;
         }
 
         public Result assertNumberOfCalls(long calls) {
-            assertEquals(calls, countingResult.getNumberOfCalls());
+            assertEquals(getName() + " wrong number of calls",
+                    calls, countingResult.getNumberOfCalls());
             return this;
         }
 
@@ -88,11 +96,11 @@ public abstract class AbstractLcsTestExecutor
      * the body of the created
      * {@link Lcs#lcs(java.util.List, java.util.List)}.
      */
-    protected abstract Lcs<Character> getLcs();
+    protected abstract Lcs<Character> getLcsAlgorithm();
 
     public Result lcs(final String xs, final String ys) {
         return new Result(
-                executeLcs(getLcs(), xs, ys),
+                executeLcs(getLcsAlgorithm(), xs, ys),
                 new CountingResult(countingMap));
     }
 
@@ -106,6 +114,15 @@ public abstract class AbstractLcsTestExecutor
             num = 0;
         }
         countingMap.put(s, num + 1);
+    }
+
+    private String getName() {
+        final Class<? extends Lcs> clazz = getLcsAlgorithm().getClass();
+        final String simpleName = clazz.getSimpleName();
+        if (simpleName.isEmpty()) {
+            return clazz.getSuperclass().getSimpleName();
+        }
+        return simpleName;
     }
 
 }

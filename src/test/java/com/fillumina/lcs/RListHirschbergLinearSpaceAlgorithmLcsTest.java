@@ -16,7 +16,7 @@ public class RListHirschbergLinearSpaceAlgorithmLcsTest {
         new AbstractLcsTestExecutor() {
 
             @Override
-            protected Lcs<Character> getLcs() {
+            protected Lcs<Character> getLcsAlgorithm() {
                 return new RListHirschbergLinearSpaceAlgorithmLcs<Character>() {
 
                     @Override

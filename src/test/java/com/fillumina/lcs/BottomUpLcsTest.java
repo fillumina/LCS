@@ -1,26 +1,15 @@
 package com.fillumina.lcs;
 
-import java.util.List;
 import org.junit.Test;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BottomUpLcsTest {
+public class BottomUpLcsTest extends AbstractLcsTest {
 
-    @Test
-    public void shouldGetTheRightResult() {
-
-
-        new AbstractLcsTestExecutor() {
-
-            @Override
-            protected Lcs<Character> getLcs() {
-                return new BottomUpLcs<>();
-            }
-
-        }.lcs("HUMAN", "CHIMPANZEE")
-                .assertResult("HMAN");
+    @Override
+    protected Lcs<Character> getLcsAlgorithm() {
+        return new BottomUpLcs<>();
     }
 }

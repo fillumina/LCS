@@ -5,47 +5,41 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The methods in this class doesn't modify the arguments.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class ListUtils {
 
-    public static <T> List<T> add(List<T> list, T element) {
-        list.add(element);
-        return list;
+    /** The given list is not modified. */
+    public static <T> List<T> concatenate(List<T> list, T element) {
+        List<T> l = new ArrayList<>(list.size() + 1);
+        l.addAll(list);
+        l.add(element);
+        return Collections.unmodifiableList(l);
     }
 
-    public static <T> List<T> add(List<T> a, List<T> b) {
+    /** The given lists are not modified. */
+    public static <T> List<T> concatenate(List<T> a, List<T> b) {
         if (a.isEmpty()) {
             return b;
         }
         if (b.isEmpty()) {
             return a;
         }
-        List<T> l = new ArrayList<>(a);
+        List<T> l = new ArrayList<>(a.size() + b.size());
+        l.addAll(a);
         l.addAll(b);
-        return l;
+        return Collections.unmodifiableList(l);
     }
 
     public static <T> List<T> maxLenght(List<T> a, List<T> b) {
         return a.size() > b.size() ? a : b;
     }
 
-    public static <T> List<T> allButLastElementSublist(List<T> list) {
-        int size = list.size();
-        if (size == 0) {
-            return Collections.<T>emptyList();
-        }
-        return list.subList(0, size - 1);
-    }
-
-    public static <T> T getLastElement(List<T> list) {
-        return list.get(list.size() - 1);
-    }
-
     public static <T> List<T> reverse(final List<T> list) {
         List<T> l = new ArrayList<>(list);
         Collections.reverse(l);
-        return l;
+        return Collections.unmodifiableList(l);
     }
 }
