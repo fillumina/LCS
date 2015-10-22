@@ -24,4 +24,8 @@ public class OneBasedVector<T> {
         return size;
     }
 
+    @Override
+    public String toString() {
+        return "OneBasedVector{" + "list=" + list + ", size=" + size + '}';
+    }
 }

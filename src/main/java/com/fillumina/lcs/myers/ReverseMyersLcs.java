@@ -36,7 +36,11 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
     private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
         final int n = a.size();
         final int m = b.size();
-        final int dmax = n + m;
+        if (n==0 || m==0) {
+            return Collections.<Snake>emptyList();
+        }
+
+        final int dmax = n + m + 1;
         final int delta = n - m;
 
         BidirectionalArray vv = new BidirectionalArray(dmax);
@@ -45,7 +49,7 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
         v.set(delta-1, n);
 
         int next, prev, x, y;
-        for (int d = 0; d <= dmax; d++) {
+        for (int d = 0; d < dmax; d++) {
             for (int k = -d+delta; k <= d+delta; k += 2) {
                 next = v.get(k + 1); // left
                 prev = v.get(k - 1); // up
@@ -92,8 +96,8 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
         for (d = lastD; d >= 0 && xStart < n && yStart < m; d--) {
             int k = xStart - yStart;
 
-            next = vs.get(d - 1, k + 1);
-            prev = vs.get(d - 1, k - 1);
+            next = vs.get(d, k + 1);
+            prev = vs.get(d, k - 1);
             if (k == d+delta || (k != -d+delta && prev != 0 && prev < next)) {
                 xEnd = prev;
                 yEnd = prev - k + 1;
@@ -117,7 +121,6 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
     private List<T> extractLcs(List<Snake> snakes, OneBasedVector<T> a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
-            System.out.println(snake);
             for (int x=snake.xStart + 1; x<=snake.xMid; x++) {
                 list.add(a.get(x));
             }

@@ -32,9 +32,19 @@ public abstract class AbstractLcsTestExecutor
             }
             if (!success) {
                 throw new AssertionError(getName() +
-                        " invalid result: " + this.result);
+                        " invalid result: " + orEmpty(this.result));
             }
             return this;
+        }
+
+        private String orEmpty(String s) {
+            if (s == null) {
+                return "NULL";
+            }
+            if (s.isEmpty()) {
+                return "EMPTY";
+            }
+            return "\"" + s + "\"";
         }
 
         public Result assertNumberOfCalls(long calls) {

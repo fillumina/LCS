@@ -1,3 +1,8 @@
+/*
+copied from:
+http://grepcode.com/file_/repo1.maven.org/maven2/org.docx4j/docx4j/3.2.1/org/eclipse/compare/internal/LCSSettings.java/?v=source
+*/
+
 package com.fillumina.lcs.myers.docx4j;
 
 /*

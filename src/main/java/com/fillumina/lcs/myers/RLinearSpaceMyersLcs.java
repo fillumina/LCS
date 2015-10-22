@@ -82,7 +82,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         if (snake.d == 0) {
             return Snake.NULL;
         }
-        if (snake.d < n) {
+        if (snake != Snake.NULL && snake.d < n) {
             Snake before =
                 lcs(a.subList(1, snake.xStart + 1 - a0),
                         b.subList(1, snake.yStart + 1 - b0));
@@ -256,9 +256,15 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     private List<T> extractLcs(Snake snakes, VList<T> a) {
         System.out.println("SOLUTION:");
         List<T> list = new ArrayList<>();
+        int x=0, y=0;
         for (Snake snake : snakes) {
+            if (snake.xStart != x || snake.yStart != y) {
+                throw new AssertionError();
+            }
             System.out.println(snake);
             snake.addEquals(list, a);
+            x = snake.xEnd;
+            y = snake.yEnd;
         }
         return list;
     }

@@ -36,13 +36,13 @@ public class MyersLcs<T> implements Lcs<T> {
     private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
         int n = a.size();
         int m = b.size();
-        int max = n + m;
+        int max = n + m + 1;
 
         BidirectionalArray vv = new BidirectionalArray(max);
         BidirectionalVector v = new BidirectionalVector(max);
 
         int next, prev, x, y;
-        for (int d = 0; d <= max; d++) {
+        for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {
                 next = v.get(k + 1); // down
                 prev = v.get(k - 1); // right
@@ -59,7 +59,9 @@ public class MyersLcs<T> implements Lcs<T> {
                 }
                 v.set(k, x);
                 if (x >= n && y >= m) {
-                    vv.copy(d, v);
+                    if (d < max) {
+                        vv.copy(d, v);
+                    }
 
                     //int lcs = (max - d) / 2;
                     return calculateSolution(d, vv, x, y);
@@ -84,8 +86,8 @@ public class MyersLcs<T> implements Lcs<T> {
             xEnd = x;
             yEnd = y;
 
-            int next = vs.get(d - 1, k + 1);
-            int prev = vs.get(d - 1, k - 1);
+            int next = vs.get(d, k + 1);
+            int prev = vs.get(d, k - 1);
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
                 yStart = next - k - 1;
@@ -111,7 +113,6 @@ public class MyersLcs<T> implements Lcs<T> {
     private List<T> extractLcs(List<Snake> snakes, OneBasedVector<T> a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
-            System.out.println(snake);
             for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
                 list.add(a.get(x));
             }

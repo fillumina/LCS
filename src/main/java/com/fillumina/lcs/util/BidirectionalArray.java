@@ -15,7 +15,8 @@ public class BidirectionalArray {
 
     public int get(int x, int y) {
         if (x < 0 || x >= array.length) {
-            return 0;
+            throw new IllegalArgumentException(
+                    "first index out of boudaries (max=" + halfSize + "): " + x);
         }
         int indexY = halfSize + y;
         if (indexY < 0 || indexY >= array[x].length) {
