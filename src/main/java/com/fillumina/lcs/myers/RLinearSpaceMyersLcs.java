@@ -136,7 +136,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return Snake.NULL;
     }
 
-    private boolean isIn(int value, int startInterval, int endInterval) {
+    private static boolean isIn(int value, int startInterval, int endInterval) {
         if (startInterval < endInterval) {
             if (value < startInterval) {
                 return false;

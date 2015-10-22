@@ -36,24 +36,6 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Segment.NULL;
         }
 
-        if (n == 1) {
-            T t = a.get(1);
-            for (int i=1; i<=m; i++) {
-                if (t.equals(b.get(i))) {
-                    if (i == 1) {
-                        return new Diagonal(a0, b0, 1).vertical(m-1);
-                    } else if (i == m) {
-                        return new Vertical(a0, b0, m-1).diagonal(1);
-                    } else {
-                        final Vertical vertical = new Vertical(a0, b0, i-1);
-                        vertical.diagonal(1).vertical(m - i);
-                        return vertical;
-                    }
-                }
-            }
-            return new Vertical(a0, b0, m);
-        }
-
         if (m == 0) {
             if (n != 0) {
                 return new Horizontal(a0, b0, n);
@@ -61,14 +43,53 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Segment.NULL;
         }
 
+        if (n == 1) {
+            if (m == 1) {
+                if (a.get(1).equals(b.get(1))) {
+                    return new Diagonal(a0, b0, 1);
+                }
+                Segment result = new Vertical(a0, b0, 1);
+                result.horizontal(1);
+                return result;
+            }
+
+            T t = a.get(1);
+            Segment result;
+            for (int i=1; i<=m; i++) {
+                if (t.equals(b.get(i))) {
+                    if (i == 1) {
+                        result = new Diagonal(a0, b0, 1);
+                        result.vertical(m-1);
+                        return result;
+                    } else if (i == m) {
+                        result = new Vertical(a0, b0, m-1);
+                        result.diagonal(1);
+                        return result;
+                    } else {
+                        result = new Vertical(a0, b0, i-1);
+                        result.diagonal(1).vertical(m - i);
+                        return result;
+                    }
+                }
+            }
+            result = new Vertical(a0, b0, m);
+            result.horizontal(n);
+            return result;
+        }
+
         if (m == 1) {
             T t = b.get(1);
             for (int i=1; i<=n; i++) {
                 if (t.equals(a.get(i))) {
+                    Segment result;
                     if (i == 1) {
-                        return new Diagonal(a0, b0, 1).horizontal(n-1);
+                        result = new Diagonal(a0, b0, 1);
+                        result.horizontal(n-1);
+                        return result;
                     } else if (i == n) {
-                        return new Horizontal(a0, b0, n-1).diagonal(1);
+                        result = new Horizontal(a0, b0, n-1);
+                        result.diagonal(1);
+                        return result;
                     }
                     Horizontal horizontal = new Horizontal(a0, b0, i-1);
                     horizontal.diagonal(1).horizontal(n-i);
@@ -83,7 +104,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         if (d == 0) {
             return Segment.NULL;
         }
-        if (d < n) {
+        if (segment != Segment.NULL) {
             Segment before =
                 lcs(a.subList(1, segment.getXStart() + 1 - a0),
                         b.subList(1, segment.getYStart() + 1 - b0));
@@ -98,23 +119,23 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     Segment findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
-        final int max = (int) Math.ceil((n + m) / 2.0);
+        final int max = (n + m + 1) / 2;
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
-        final BidirectionalVector vf = new BidirectionalVector(max);
-        final BidirectionalVector vb = new BidirectionalVector(max);
+        final BidirectionalVector vf = new BidirectionalVector(max+1);
+        final BidirectionalVector vb = new BidirectionalVector(max+1);
 
         vb.set(delta-1, n);
 
-        int kk, xf, xr;
+        int kk, xf, xr, start, end;
         for (int d = 0; d <= max; d++) {
-            final int dMinusOne = d - 1;
+            start = delta - (d - 1);
+            end = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
                 xf = findFurthestReachingDPath(d, k, a, n, b, m, vf);
-                if (oddDelta &&
-                        (delta - dMinusOne) <= k && k <= (delta + dMinusOne)) {
-                    if (vb.get(k) <= xf) {
+                if (oddDelta && isIn(k, start, end)) {
+                    if (xf > 0 && vb.get(k) <= xf) {
                         return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
                     }
                 }
@@ -123,7 +144,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
                 xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
-                if (!oddDelta && -delta <= kk && kk <= delta) {
+                if (!oddDelta && isIn(k, -d, +d)) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
                         return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
                     }
@@ -190,8 +211,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             reverse = true;
         }
 
-
-        return createSegment(reverse, d, x0+xStart, y0+yStart,
+        return createSegment(x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
@@ -250,32 +270,62 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             reverse = false;
         }
 
-        return createSegment(reverse, d, x0+xStart, y0+yStart,
+        return createSegment(x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
+    }
+
+    private static boolean isIn(int value, int startInterval, int endInterval) {
+        if (startInterval < endInterval) {
+            if (value < startInterval) {
+                return false;
+            }
+            if (value > endInterval) {
+                return false;
+            }
+        }
+        else {
+            if (value > startInterval) {
+                return false;
+            }
+            if (value < endInterval) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
      * @return the common subsequence elements.
      */
-    // TODO use a better visitor way to extract the list without the need to create a temporary list
     private List<T> extractLcs(Segment snakes, VList<T> a) {
         System.out.println("SOLUTION:");
         List<T> list = new ArrayList<>();
+        int x = 0;
+        boolean error = false;
         for (Segment segment : snakes) {
-            System.out.println(segment);
+            if (segment.getXStart() != x) {
+                System.out.println("ERROR");
+                error = true;
+            }
+            System.out.println(segment.toString());
             segment.addEquals(list, a);
+            x = segment.getXEnd();
+        }
+        if (error) {
+            throw new AssertionError();
         }
         return list;
     }
 
-    @Deprecated
-    private Segment createSegment(boolean reverse, int d,
+    private Segment createSegment(
                 int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
-//        return new Snake(reverse, d, xStart, yStart, xMid, yMid, xEnd, yEnd);
-        Segment segment = Segment.create(xStart, yStart, xMid, yMid);
-        segment.add(xEnd, yEnd);
-        System.out.println(segment.toString());
-        return segment;
+        if (xMid != xStart || yMid != yStart) {
+            Segment segment = Segment.create(xStart, yStart, xMid, yMid);
+            segment.add(xEnd, yEnd);
+            return segment;
+        } else {
+            return Segment.create(xStart,yStart, xEnd, yEnd);
+        }
     }
 
     static abstract class Segment implements Iterable<Segment>, Serializable {
@@ -316,20 +366,19 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         Segment vertical(int distance) {
             next = new Vertical(getXEnd(), getYEnd(), distance);
-            return this;
+            return next;
         }
 
         Segment horizontal(int distance) {
             next = new Horizontal(getXEnd(), getYEnd(), distance);
-            return this;
+            return next;
         }
 
         Segment diagonal(int distance) {
             next = new Diagonal(getXEnd(), getYEnd(), distance);
-            return this;
+            return next;
         }
 
-        @Deprecated // to be removed
         static Segment create(int xStart, int yStart, int xEnd, int yEnd) {
             int steps = xEnd - xStart;
             if (steps > 0) {
@@ -363,7 +412,6 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return head;
         }
 
-        @Deprecated
         public Segment add(int nextX, int nextY) {
             final int xEnd = getXEnd();
             final int yEnd = getYEnd();
@@ -387,8 +435,6 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return this;
         }
 
-
-
         @Override
         public Iterator<Segment> iterator() {
             return new Iterator<Segment>() {
@@ -411,10 +457,10 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         static String toString(Segment s) {
             Segment current = s;
             StringBuilder buf = new StringBuilder("[");
-            buf.append(s.toSingleString());
+            buf.append(s.toString());
             while(current.next != null && current.next != NULL) {
                 current = current.next;
-                buf.append(", ").append(current.toSingleString());
+                buf.append(", ").append(current.toString());
             }
             buf.append("]");
             return buf.toString();
@@ -425,17 +471,6 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             if (this == NULL) {
                 return "Segment{NULL}";
             }
-            if (next != null && next.next == null) {
-                return "Snake{d=" + getSteps() +
-                        ", xStart=" + x + ", yStart=" + y +
-                        ", xMid=" + getXEnd() + ", yMid=" + getYEnd() +
-                        ", xEnd=" + next.getXEnd() +
-                        ", yEnd=" + next.getYEnd() + '}';
-            }
-            return toSingleString();
-        }
-
-        private String toSingleString() {
             return getClass().getSimpleName() +
                     "{ steps=" + steps +
                     ", xStart=" + x + ", yStart=" + y +
