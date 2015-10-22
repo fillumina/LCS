@@ -24,7 +24,7 @@ public class BidirectionalVector {
     public int get(int x) {
         int index = halfSize + x;
         if (index < 0 || index >= array.length) {
-            return 0;
+            return -1;
         }
         return array[index];
     }
