@@ -7,11 +7,11 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class DLinearSpaceMyersLcsTest extends AbstractLcsTest {
+public class MLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<Character> getLcsAlgorithm() {
-        return new DLinearSpaceMyersLcs<>();
+        return new MLinearSpaceMyersLcs<>();
     }
 
 }

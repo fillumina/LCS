@@ -9,10 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Only the diagonal of the snake is used, other dimensions are passed via
+ * an integer array.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class DLinearSpaceMyersLcs<T> implements Lcs<T> {
+public class MLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

@@ -8,103 +8,103 @@ import org.junit.Test;
  */
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkHUMAN() {
         lcs("HUMAN", "CHIMPANZEE")
                 .assertResult("HMAN");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkABCABBA() {
         lcs("ABCABBA", "CBABAC")
                 .assertResult("CABA", "BABA", "CBBA");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkPYTHON() {
         lcs("PYTHON", "PONY")
                 .assertResult("PON");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkSPRINGTIME() {
         lcs("SPRINGTIME", "PIONEER")
                 .assertResult("PINE");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkHORSEBACK() {
         lcs("HORSEBACK", "SNOWFLAKE")
                 .assertResult("OAE", "OAK", "SAK");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkMAELSTROM() {
         lcs("MAELSTROM", "BECALM")
                 .assertResult("ELM", "ALM");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldWorkHEROICALLY() {
         lcs("HEROICALLY", "SCHOLARLY")
                 .assertResult("HOLLY", "HOALY");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnAnEmptyString() {
         lcs("ABCDEF", "GHIJKLMN")
                 .assertResult("");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtBeginning() {
         lcs("ABCDEF", "A")
                 .assertResult("A");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtEnd() {
         lcs("ABCDEF", "F")
                 .assertResult("F");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtMiddle() {
         lcs("ABCDEF", "C")
                 .assertResult("C");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnEmptyResultForEmptyList() {
         lcs("ABCDEF", "")
                 .assertResult("");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtBeginningReversed() {
         lcs("A", "ABCDEF")
                 .assertResult("A");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtEndReversed() {
         lcs("F", "ABCDEF")
                 .assertResult("F");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtMiddleReversed() {
         lcs("C", "ABCDEF")
                 .assertResult("C");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnEmptyResultForEmptyListReversed() {
         lcs("", "ABCDEF")
                 .assertResult("");
     }
 
-    @Test
+    @Test(timeout = 100L)
     public void shouldReturnEmptyListForBothEmptyList() {
         lcs("", "")
                 .assertResult("");

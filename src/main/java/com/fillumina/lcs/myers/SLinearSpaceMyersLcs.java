@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Myers algorithm that uses segments instead of snakes. They are more
+ * abstract.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

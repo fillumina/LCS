@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Myers algorithm that uses forward and backward snake.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
