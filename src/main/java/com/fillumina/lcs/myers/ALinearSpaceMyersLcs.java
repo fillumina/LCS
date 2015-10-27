@@ -131,8 +131,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             start = delta - (d - 1);
             end = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
-                findFurthestReachingDPath(d, k, a, a0, n, b, b0, m, vf, snake);
-                xf = snake[2];
+                xf = findFurthestReachingDPath(
+                        d, k, a, a0, n, b, b0, m, vf, snake);
                 if (oddDelta && isIn(k, start, end)) {
                     if (xf > 0 && vb.get(k) <= xf) {
                         return findLastSnake(k, snake, a0, b0, vf, endpoint);
@@ -142,8 +142,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
-                findFurthestReachingDPathReverse(d, kk, a, a0, n, b, b0, m, delta, vb, snake);
-                xr = snake[2];
+                xr = findFurthestReachingDPathReverse(
+                        d, kk, a, a0, n, b, b0, m, delta, vb, snake);
                 if (!oddDelta && isIn(k, -d, +d)) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
                         return findLastSnakeReverse(kk, a0, b0, vb,
@@ -155,7 +155,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.NULL;
     }
 
-    private void findFurthestReachingDPath(int d, int k,
+    private int findFurthestReachingDPath(int d, int k,
             List<T> a, int a0, int n,
             List<T> b, int b0, int m,
             BidirectionalVector v,
@@ -180,6 +180,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         v.set(k, x);
         snake[2] = x;
+        return x;
     }
 
     private Match findLastSnake(int k, int[] snake, int a0, int b0,
@@ -197,7 +198,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.create(a0+xMid, b0+yMid, xEnd-xMid);
     }
 
-    private void findFurthestReachingDPathReverse(int d, int k,
+    private int findFurthestReachingDPathReverse(int d, int k,
             List<T> a, int a0, int n,
             List<T> b, int b0, int m,
             int delta, BidirectionalVector v,
@@ -224,6 +225,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         if (x >= 0) {
             v.set(k, x);
         }
+        return x;
     }
 
     private Match findLastSnakeReverse(int k, int a0, int b0,
@@ -231,15 +233,15 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             int[] endpoint, int[] snake) {
 
         final int kShift = snake[0];
-        final int xEnd = v.get(k + kShift);
-        final int yEnd = xEnd - k - kShift;
+        final int xStart = v.get(k + kShift);
+        final int yStart = xStart - k - kShift;
         final int xMid = snake[1];
 //        final int yMid = xMid - k;
-        final int xStart = snake[2];
-        final int yStart = xStart - k;
+        final int xEnd = snake[2];
+        final int yEnd = xEnd - k;
 
-        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-        return Match.create(a0+xStart, b0+yStart, xMid-xStart);
+        absoluteBoundaries(endpoint, a0+xEnd, b0+yEnd, a0+xStart, b0+yStart);
+        return Match.create(a0+xEnd, b0+yEnd, xMid-xEnd);
     }
 
     private static boolean isIn(int value, int startInterval, int endInterval) {
@@ -433,5 +435,29 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private static boolean touchingEnd(int x, int y, int[] endpoint) {
         return xEnd(endpoint) >= x && yEnd(endpoint) >= y;
+    }
+
+    private void setK(int[] snake, int k) {
+        snake[0] = k;
+    }
+
+    private void setXMid(int[] snake, int xMid) {
+        snake[1] = xMid;
+    }
+
+    private void setXEnd(int[] snake, int xEnd) {
+        snake[2] = xEnd;
+    }
+
+    private int getK(int[] snake) {
+        return snake[0];
+    }
+
+    private int getXMid(int[] snake) {
+        return snake[1];
+    }
+
+    private int getXEnd(int[] snake) {
+        return snake[2];
     }
 }
