@@ -1,6 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.util.VList;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.util.BidirectionalVector;
 import java.io.Serializable;
@@ -17,16 +16,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
-        final VList<T> va = new VList<>(a);
-        final VList<T> vb = new VList<>(b);
-        Match snakes = lcs(va, 0, va.size(),
-                vb, 0, vb.size(),
+        Match snakes = lcs(a, 0, a.size(),
+                b, 0, b.size(),
                 createEndpoint());
-        return extractLcs(snakes, va);
+        return extractLcs(snakes, a);
     }
 
-    Match lcs(VList<T> a, int a0, int n,
-            VList<T> b, int b0, int m,
+    Match lcs(List<T> a, int a0, int n,
+            List<T> b, int b0, int m,
             int[] endpoint) {
 
         if (n == 0) {
@@ -42,17 +39,17 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (n == 1) {
             if (m == 1) {
-                if (a.get(a0+1).equals(b.get(b0+1))) {
+                if (a.get(a0).equals(b.get(b0))) {
                     return diagonal(endpoint, a0, b0, 1);
                 }
                 return relativeBoundaries(endpoint, a0, b0, 1, 1);
             }
 
             relativeBoundaries(endpoint, a0, b0, 1, m);
-            T t = a.get(a0+1);
-            for (int i = b0+1; i <= b0+m; i++) {
+            T t = a.get(a0);
+            for (int i = b0; i < b0+m; i++) {
                 if (t.equals(b.get(i))) {
-                    return new Match(a0, i-1, 1);
+                    return new Match(a0, i, 1);
                 }
             }
             return Match.NULL;
@@ -60,10 +57,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (m == 1) {
             relativeBoundaries(endpoint, a0, b0, n, 1);
-            T t = b.get(b0+1);
-            for (int i = a0+1; i <= a0+n; i++) {
+            T t = b.get(b0);
+            for (int i = a0; i < a0+n; i++) {
                 if (t.equals(a.get(i))) {
-                    return new Match(i-1, b0, 1);
+                    return new Match(i, b0, 1);
                 }
             }
             return Match.NULL;
@@ -116,8 +113,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.chain(before, diagonal, after);
     }
 
-    Match findMiddleSnake(VList<T> a, int a0, int n,
-            VList<T> b, int b0, int m,
+    Match findMiddleSnake(List<T> a, int a0, int n,
+            List<T> b, int b0, int m,
             int[] endpoint) {
         final int max = (n + m + 1) / 2;
         final int delta = n - m;
@@ -160,8 +157,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     // TODO inline those calls?
     private int findFurthestReachingDPath(int d, int k,
-            VList<T> a, int a0, int n,
-            VList<T> b, int b0, int m,
+            List<T> a, int a0, int n,
+            List<T> b, int b0, int m,
             BidirectionalVector v) {
         int x, y;
 
@@ -174,7 +171,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         y = x - k;
         while (x >= 0 && y >= 0 && x < n && y < m &&
-                a.get(a0+x + 1).equals(b.get(b0+y + 1))) {
+                a.get(a0+x).equals(b.get(b0+y))) {
             x++;
             y++;
         }
@@ -184,7 +181,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private Match findLastSnake(int d, int k, int x, int a0, int b0,
             BidirectionalVector v,
-            VList<T> a, VList<T> b,
+            List<T> a, List<T> b,
             int[] endpoint) {
         int y = x - k;
 
@@ -211,8 +208,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         if (xMid == xEnd && yMid == yEnd) {
             xMid = xStart;
             yMid = yStart;
-            while (xStart > 0 && yStart > 0 && a.get(a0+xStart).equals(b.
-                    get(b0+yStart))) {
+            while (xStart > 0 && yStart > 0 && a.get(a0+xStart-1).equals(b.
+                    get(b0+yStart-1))) {
                 xStart--;
                 yStart--;
             }
@@ -227,8 +224,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     private int findFurthestReachingDPathReverse(int d, int k,
-            VList<T> a, int a0, int n,
-            VList<T> b, int b0, int m,
+            List<T> a, int a0, int n,
+            List<T> b, int b0, int m,
             int delta, BidirectionalVector v) {
         int x, y;
 
@@ -241,7 +238,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         y = x - k;
         while (x > 0 && y > 0 && x <= n && y <= m &&
-                a.get(a0+x).equals(b.get(b0+y))) {
+                a.get(a0+x-1).equals(b.get(b0+y-1))) {
             x--;
             y--;
         }
@@ -253,7 +250,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private Match findLastSnakeReverse(int d, int k, int xe, int a0, int b0,
             BidirectionalVector v, int delta,
-            VList<T> a, int n, VList<T> b, int m,
+            List<T> a, int n, List<T> b, int m,
             int[] endpoint) {
         final int xStart = xe;
         final int yStart = xe - k;
@@ -276,8 +273,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         if (xMid == xStart && yMid == yStart) {
             xMid = xEnd;
             yMid = yEnd;
-            while (xEnd < n && yEnd < m && a.get(a0+xEnd + 1).equals(b.
-                    get(b0+yEnd + 1))) {
+            while (xEnd < n && yEnd < m && a.get(a0+xEnd).equals(b.
+                    get(b0+yEnd))) {
                 xEnd++;
                 yEnd++;
             }
@@ -313,7 +310,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     /**
      * @return the common subsequence elements.
      */
-    private List<T> extractLcs(Match snakes, VList<T> a) {
+    private List<T> extractLcs(Match snakes, List<T> a) {
         System.out.println("SOLUTION:");
         List<T> list = new ArrayList<>();
         for (Match segment : snakes) {
@@ -343,8 +340,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         @Deprecated
-        <T> void addEquals(List<T> list, VList<T> a) {
-            for (int i = x + 1; i <= x + steps; i++) {
+        <T> void addEquals(List<T> list, List<T> a) {
+            for (int i = x; i < x + steps; i++) {
                 list.add(a.get(i));
             }
         }
