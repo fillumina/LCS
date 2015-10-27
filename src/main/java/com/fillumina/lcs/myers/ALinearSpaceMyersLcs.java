@@ -28,8 +28,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     Match lcs(VList<T> a, int a0, int n,
             VList<T> b, int b0, int m,
             int[] endpoint) {
-//        final int n = aEnd - a0;
-//        final int m = bEnd - b0;
 
         if (a0 != a.zero() || b0 != b.zero()) {
             throw new AssertionError();
@@ -38,9 +36,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         if (n != a.size() || m != b.size()) {
             throw new AssertionError();
         }
-
-        assert a0 == a.zero();
-        assert b0 == b.zero();
 
         if (n == 0) {
             if (m != 0) {
@@ -94,7 +89,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         final int[] middleSnakeEndpoint = createEndpoint();
-        final Match diagonal = findMiddleSnake(a, n, b, m, middleSnakeEndpoint);
+        final Match diagonal = findMiddleSnake(a, a0, n, b, b0, m, middleSnakeEndpoint);
         final boolean fromStart = touchingStart(a0, b0, middleSnakeEndpoint);
         final boolean toEnd = touchingEnd(a0+n, b0+m, middleSnakeEndpoint);
 
@@ -140,7 +135,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.chain(before, diagonal, after);
     }
 
-    Match findMiddleSnake(VList<T> a, int n, VList<T> b, int m,
+    Match findMiddleSnake(VList<T> a, int a0, int n, VList<T> b, int b0, int m,
             int[] endpoint) {
         final int max = (n + m + 1) / 2;
         final int delta = n - m;
@@ -160,7 +155,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 xf = findFurthestReachingDPath(d, k, a, n, b, m, vf);
                 if (oddDelta && isIn(k, start, end)) {
                     if (xf > 0 && vb.get(k) <= xf) {
-                        return findLastSnake(d, k, xf, a.zero(), b.zero(), vf, a,
+                        return findLastSnake(d, k, xf, a0, b0, vf, a,
                                 b, endpoint);
                     }
                 }
@@ -172,8 +167,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         vb);
                 if (!oddDelta && isIn(k, -d, +d)) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
-                        return findLastSnakeReverse(d, kk, xr, a.zero(), b.
-                                zero(), vb, delta, a, n, b, m, endpoint);
+                        return findLastSnakeReverse(d, kk, xr, a0, b0,
+                                vb, delta, a, n, b, m, endpoint);
                     }
                 }
             }
