@@ -36,11 +36,8 @@ public class DLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Match.NULL;
         }
 
-        if (m == 0) {
-            if (n != 0) {
-                return horizontal(endpoint, a0, b0, n);
-            }
-            return Match.NULL;
+        if (m == 0 /* && n != 0 */) {
+            return horizontal(endpoint, a0, b0, n);
         }
 
         if (n == 1) {
@@ -83,32 +80,44 @@ public class DLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Match.NULL;
         }
 
-        int[] middleSnakeEndpoint = createEndpoint();
-        Match diagonal = findMiddleSnake(a, n, b, m, middleSnakeEndpoint);
-        int d = diagonal.getSteps();
-        if (d == 0) {
+        final int[] middleSnakeEndpoint = createEndpoint();
+        final Match diagonal = findMiddleSnake(a, n, b, m, middleSnakeEndpoint);
+        final boolean fromStart = touchingStart(a0, b0, middleSnakeEndpoint);
+        final boolean toEnd = touchingEnd(a0+n, b0+m, middleSnakeEndpoint);
+
+        if (fromStart && toEnd) {
             relativeBoundaries(endpoint, a0, a0, n, m);
             return diagonal;
         }
-        int[] beforeEndpoint = createEndpoint();
-        int[] afterEndpoint = createEndpoint();
 
-        Match before = (touchingStart(a0, b0, middleSnakeEndpoint)) ?
+        int[] beforeEndpoint = null, afterEndpoint = null;
+
+        Match before = fromStart ?
                 Match.NULL :
                 lcs(a.subList(1, xStart(middleSnakeEndpoint) + 1 - a0),
                         b.subList(1, yStart(middleSnakeEndpoint) + 1 - b0),
-                        beforeEndpoint);
+                        beforeEndpoint = createEndpoint());
 
-        Match after = (touchingEnd(a0+n, b0+m, middleSnakeEndpoint)) ?
+        Match after = toEnd ?
                 Match.NULL :
                 lcs(a.subList(xEnd(middleSnakeEndpoint) + 1 - a0, n + 1),
                         b.subList(yEnd(middleSnakeEndpoint) + 1 - b0, m + 1),
-                        afterEndpoint);
+                        afterEndpoint = createEndpoint());
 
+        if (fromStart) {
+            absoluteBoundaries(endpoint,
+                    xStart(middleSnakeEndpoint), yStart(middleSnakeEndpoint),
+                    xEnd(afterEndpoint), yEnd(afterEndpoint));
+            return Match.chain(diagonal, after);
+        } else if (toEnd) {
+            absoluteBoundaries(endpoint,
+                    xStart(beforeEndpoint), yStart(beforeEndpoint),
+                    xEnd(middleSnakeEndpoint), yEnd(middleSnakeEndpoint));
+            return Match.chain(before, diagonal);
+        }
         absoluteBoundaries(endpoint,
                 xStart(beforeEndpoint), yStart(beforeEndpoint),
                 xEnd(afterEndpoint), yEnd(afterEndpoint));
-
         return Match.chain(before, diagonal, after);
     }
 
@@ -335,29 +344,6 @@ public class DLinearSpaceMyersLcs<T> implements Lcs<T> {
             this.steps = steps;
         }
 
-        int getXStart() {
-            return x;
-        }
-
-        int getYStart() {
-            return y;
-        }
-
-        int getSteps() {
-            if (next == null) {
-                return steps;
-            }
-            return steps + next.steps;
-        }
-
-        int getXEnd() {
-            return x + steps;
-        }
-
-        int getYEnd() {
-            return y + steps;
-        }
-
         @Deprecated
         <T> void addEquals(List<T> list, VList<T> a) {
             for (int i = x + 1; i <= x + steps; i++) {
@@ -421,9 +407,7 @@ public class DLinearSpaceMyersLcs<T> implements Lcs<T> {
             }
             return getClass().getSimpleName() +
                     "{ steps=" + steps +
-                    ", xStart=" + x + ", yStart=" + y +
-                    ", xEnd=" + getXEnd() +
-                    ", yEnd=" + getYEnd() + '}';
+                    ", xStart=" + x + ", yStart=" + '}';
         }
     }
 
