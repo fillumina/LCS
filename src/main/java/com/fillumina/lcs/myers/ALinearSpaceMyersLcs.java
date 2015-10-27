@@ -79,21 +79,17 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         int[] beforeEndpoint = null, afterEndpoint = null;
 
         Match before = fromStart ?
-                Match.NULL :
-                lcs(a,//a.subList(1, xStart(middleSnakeEndpoint) + 1 - a0),
-                        a0, xStart(middleSnakeEndpoint) - a0,
-                        b,//b.subList(1, yStart(middleSnakeEndpoint) + 1 - b0),
-                        b0, yStart(middleSnakeEndpoint) - b0,
+                null :
+                lcs(a, a0, xStart(middleSnakeEndpoint) - a0,
+                        b, b0, yStart(middleSnakeEndpoint) - b0,
                         beforeEndpoint = createEndpoint());
 
         Match after = toEnd ?
-                Match.NULL :
-                lcs(a,//a.subList(xEnd(middleSnakeEndpoint) + 1 - a0, n + 1),
-                        xEnd(middleSnakeEndpoint),
-                        a0 + n - (xEnd(middleSnakeEndpoint)),
-                        b,//b.subList(yEnd(middleSnakeEndpoint) + 1 - b0, m + 1),
-                        yEnd(middleSnakeEndpoint),
-                        b0 + m - (yEnd(middleSnakeEndpoint)),
+                null :
+                lcs(a, xEnd(middleSnakeEndpoint),
+                        a0 + n - xEnd(middleSnakeEndpoint),
+                        b, yEnd(middleSnakeEndpoint),
+                        b0 + m - yEnd(middleSnakeEndpoint),
                         afterEndpoint = createEndpoint());
 
         if (fromStart) {
@@ -101,12 +97,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     xStart(middleSnakeEndpoint), yStart(middleSnakeEndpoint),
                     xEnd(afterEndpoint), yEnd(afterEndpoint));
             return Match.chain(diagonal, after);
+
         } else if (toEnd) {
             absoluteBoundaries(endpoint,
                     xStart(beforeEndpoint), yStart(beforeEndpoint),
                     xEnd(middleSnakeEndpoint), yEnd(middleSnakeEndpoint));
             return Match.chain(before, diagonal);
         }
+
         absoluteBoundaries(endpoint,
                 xStart(beforeEndpoint), yStart(beforeEndpoint),
                 xEnd(afterEndpoint), yEnd(afterEndpoint));
@@ -120,6 +118,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
+        final int[] snake = new int[3];
+
         // TODO find a way to allocate those only once and reuse them indexed
         final BidirectionalVector vf = new BidirectionalVector(max + 1);
         final BidirectionalVector vb = new BidirectionalVector(max + 1);
@@ -131,23 +131,23 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             start = delta - (d - 1);
             end = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
-                xf = findFurthestReachingDPath(d, k, a, a0, n, b, b0, m, vf);
+                findFurthestReachingDPath(d, k, a, a0, n, b, b0, m, vf, snake);
+                xf = snake[2];
                 if (oddDelta && isIn(k, start, end)) {
                     if (xf > 0 && vb.get(k) <= xf) {
-                        return findLastSnake(d, k, xf, a0, b0, vf, a,
-                                b, endpoint);
+                        return findLastSnake(k, snake, a0, b0, vf, endpoint);
                     }
                 }
             }
 
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
-                xr = findFurthestReachingDPathReverse(d, kk, a, a0, n, b, b0, m, delta,
-                        vb);
+                findFurthestReachingDPathReverse(d, kk, a, a0, n, b, b0, m, delta, vb, snake);
+                xr = snake[2];
                 if (!oddDelta && isIn(k, -d, +d)) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
-                        return findLastSnakeReverse(d, kk, xr, a0, b0,
-                                vb, delta, a, n, b, m, endpoint);
+                        return findLastSnakeReverse(kk, a0, b0, vb,
+                                endpoint, snake);
                     }
                 }
             }
@@ -155,20 +155,23 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.NULL;
     }
 
-    // TODO inline those calls?
-    private int findFurthestReachingDPath(int d, int k,
+    private void findFurthestReachingDPath(int d, int k,
             List<T> a, int a0, int n,
             List<T> b, int b0, int m,
-            BidirectionalVector v) {
+            BidirectionalVector v,
+            int[] snake) {
         int x, y;
 
         int next = v.get(k + 1);
         int prev = v.get(k - 1);
         if (k == -d || (k != d && prev < next)) {
-            x = next;
+            x = next;       // down
+            snake[0] = 1;
         } else {
-            x = prev + 1;
+            x = prev + 1;   // right
+            snake[0] = -1;
         }
+        snake[1] = x;
         y = x - k;
         while (x >= 0 && y >= 0 && x < n && y < m &&
                 a.get(a0+x).equals(b.get(b0+y))) {
@@ -176,116 +179,67 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             y++;
         }
         v.set(k, x);
-        return x;
+        snake[2] = x;
     }
 
-    private Match findLastSnake(int d, int k, int x, int a0, int b0,
+    private Match findLastSnake(int k, int[] snake, int a0, int b0,
             BidirectionalVector v,
-            List<T> a, List<T> b,
             int[] endpoint) {
-        int y = x - k;
-
-        int xEnd = x;
-        int yEnd = y;
-
-        int next = v.get(k + 1);
-        int prev = v.get(k - 1);
-        int xStart, yStart, xMid, yMid;
-        if (k == -d || (k != d && prev < next)) {
-            xStart = next;
-            yStart = next - k - 1;
-            xMid = xStart;
-        } else {
-            xStart = prev;
-            yStart = prev - k + 1;
-            xMid = xStart + 1;
-        }
-
-        yMid = xMid - k;
-
-        boolean reverse = false;
-
-        if (xMid == xEnd && yMid == yEnd) {
-            xMid = xStart;
-            yMid = yStart;
-            while (xStart > 0 && yStart > 0 && a.get(a0+xStart-1).equals(b.
-                    get(b0+yStart-1))) {
-                xStart--;
-                yStart--;
-            }
-            reverse = true;
-        }
+        final int kShift = snake[0];
+        final int xStart = v.get(k + kShift);
+        final int yStart = xStart - k - kShift;
+        final int xMid = snake[1];
+        final int yMid = xMid - k;
+        final int xEnd = snake[2];
+        final int yEnd = xEnd - k;
 
         absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-        if (reverse) {
-            return Match.create(a0+xStart, b0+yStart, xMid-xStart);
-        }
         return Match.create(a0+xMid, b0+yMid, xEnd-xMid);
     }
 
-    private int findFurthestReachingDPathReverse(int d, int k,
+    private void findFurthestReachingDPathReverse(int d, int k,
             List<T> a, int a0, int n,
             List<T> b, int b0, int m,
-            int delta, BidirectionalVector v) {
+            int delta, BidirectionalVector v,
+            int[] snake) {
         int x, y;
 
         final int next = v.get(k + 1); // left
         final int prev = v.get(k - 1); // up
         if (k == d + delta || (k != -d + delta && prev < next)) {
             x = prev;   // up
+            snake[0] = -1;
         } else {
             x = next - 1;   // left
+            snake[0] = +1;
         }
+        snake[1] = x;
         y = x - k;
         while (x > 0 && y > 0 && x <= n && y <= m &&
                 a.get(a0+x-1).equals(b.get(b0+y-1))) {
             x--;
             y--;
         }
+        snake[2] = x;
         if (x >= 0) {
             v.set(k, x);
         }
-        return x;
     }
 
-    private Match findLastSnakeReverse(int d, int k, int xe, int a0, int b0,
-            BidirectionalVector v, int delta,
-            List<T> a, int n, List<T> b, int m,
-            int[] endpoint) {
-        final int xStart = xe;
-        final int yStart = xe - k;
-        int xEnd, yEnd, xMid, yMid;
+    private Match findLastSnakeReverse(int k, int a0, int b0,
+            BidirectionalVector v,
+            int[] endpoint, int[] snake) {
 
-        final int next = v.get(k + 1);
-        final int prev = v.get(k - 1);
-        if (k == d + delta || (k != -d + delta && prev != 0 && prev < next)) {
-            xEnd = prev;
-            yEnd = prev - k + 1;
-            xMid = xEnd;
-        } else {
-            xEnd = next;
-            yEnd = next - k - 1;
-            xMid = xEnd - 1;
-        }
-        yMid = xMid - k;
-
-        boolean reverse = true;
-        if (xMid == xStart && yMid == yStart) {
-            xMid = xEnd;
-            yMid = yEnd;
-            while (xEnd < n && yEnd < m && a.get(a0+xEnd).equals(b.
-                    get(b0+yEnd))) {
-                xEnd++;
-                yEnd++;
-            }
-            reverse = false;
-        }
+        final int kShift = snake[0];
+        final int xEnd = v.get(k + kShift);
+        final int yEnd = xEnd - k - kShift;
+        final int xMid = snake[1];
+//        final int yMid = xMid - k;
+        final int xStart = snake[2];
+        final int yStart = xStart - k;
 
         absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-        if (reverse) {
-            return Match.create(a0+xStart, b0+yStart, xMid-xStart);
-        }
-        return Match.create(a0+xMid, b0+yMid, xEnd-xMid);
+        return Match.create(a0+xStart, b0+yStart, xMid-xStart);
     }
 
     private static boolean isIn(int value, int startInterval, int endInterval) {
