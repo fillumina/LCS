@@ -134,9 +134,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             final List<T> b, final int b0, final int m,
             final int[] endpoint) {
         final int fullSize = n + m + 1;
-        final int max = (fullSize >> 1) + 1;
+        final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
         final int delta = n - m;
-        final boolean oddDelta = (delta & 1) == 1;
+        final boolean oddDelta = (delta & 1) == 1; // delta is odd
 
         final int[][] vv = new int[2][fullSize+1];
 //        final int[] vf = vv[0];
@@ -148,7 +148,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         vb.set(delta - 1, n);
 
         boolean isPrev;
-        int kk, xf, yf, xr, yr, start, end, kprev, knext, prev, next, kShift, xStart,yStart, xMid, xEnd;
+        int kk, x, y, start, end, prev, next, xStart, yStart, xMid;
         for (int d = 0; d < max; d++) {
             start = delta - (d - 1);
             end = delta + (d - 1);
@@ -158,34 +158,27 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 prev = vf.get(k - 1);
                 isPrev = k == -d || (k != d && prev < next);
                 if (isPrev) {
-                    xf = next;       // down
-                    //kShift = 1;
+                    x = next;       // down
                 } else {
-                    xf = prev + 1;   // right
-                    //kShift = -1;
+                    x = prev + 1;   // right
                 }
 
-                xMid = xf;
-                yf = xf - k;
-                while (xf >= 0 && yf >= 0 && xf < n && yf < m &&
-                        a.get(a0+xf).equals(b.get(b0+yf))) {
-                    xf++;
-                    yf++;
+                xMid = x;
+                y = x - k;
+                while (x >= 0 && y >= 0 && x < n && y < m &&
+                        a.get(a0+x).equals(b.get(b0+y))) {
+                    x++;
+                    y++;
                 }
-                vf.set(k, xf);
+                vf.set(k, x);
 
                 if (oddDelta && isIn(k, start, end)) {
-                    if (xf > 0 && vb.get(k) <= xf) {
+                    if (x > 0 && vb.get(k) <= x) {
                         xStart = isPrev ? next : prev + 1;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
-//                        final int xStart = vf.get(k + kShift);
-//                        final int yStart = xStart - k - kShift;
-                        final int yMid = xMid - k;
-                        xEnd = xf;
-                        final int yEnd = xEnd - k;
 
-                        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-                        return Match.create(a0+xMid, b0+yMid, xEnd-xMid);
+                        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
+                        return Match.create(a0+xMid, b0+(xMid-k), x-xMid);
                     }
                 }
             }
@@ -197,39 +190,33 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 prev = vb.get(kk - 1); // up
                 isPrev = kk == d + delta || (kk != -d + delta && prev < next);
                 if (isPrev) {
-                    xr = prev;   // up
-                    //kShift = -1;
+                    x = prev;   // up
                 } else {
-                    xr = next - 1;   // left
-                    //kShift = 1;
+                    x = next - 1;   // left
                 }
 
-                xMid = xr;
-                yr = xr - kk;
-                while (xr > 0 && yr > 0 && xr <= n && yr <= m &&
-                        a.get(a0+xr-1).equals(b.get(b0+yr-1))) {
-                    xr--;
-                    yr--;
+                xMid = x;
+                y = x - kk;
+                while (x > 0 && y > 0 && x <= n && y <= m &&
+                        a.get(a0+x-1).equals(b.get(b0+y-1))) {
+                    x--;
+                    y--;
                 }
 
-                if (xr >= 0) {
-                    vb.set(kk, xr);
+                if (x >= 0) {
+                    vb.set(kk, x);
                 }
 
                 if (!oddDelta && isIn(k, -d, +d)) {
-                    if (xr >= 0 && xr <= vf.get(kk)) {
+                    if (x >= 0 && x <= vf.get(kk)) {
                         xStart = isPrev ? prev : next - 1;
                         yStart = xStart - (kk + (isPrev ? -1 : 1));
-//                        xStart = vb.get(kk + kShift);
-//                        yStart = xStart - kk - kShift;
-                        xEnd = xr; //getXEnd(snake);
-                        final int yEnd = xEnd - kk;
 
-                        final int a0XEnd = a0 + xEnd;
-                        final int b0YEnd = b0 + yEnd;
+                        final int a0XEnd = a0 + x;
+                        final int b0YEnd = b0 + (x - kk);
 
                         absoluteBoundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
-                        return Match.create(a0XEnd, b0YEnd, xMid-xEnd);
+                        return Match.create(a0XEnd, b0YEnd, xMid-x);
                     }
                 }
             }
