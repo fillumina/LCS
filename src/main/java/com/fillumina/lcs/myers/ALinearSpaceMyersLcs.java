@@ -3,7 +3,6 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.Lcs;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -138,24 +137,21 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1; // delta is odd
 
-        final int[][] vv = new int[2][fullSize+1];
-//        final int[] vf = vv[0];
-//        final int[] vb = vv[1];
-        final BidirectionalVector vf = new BidirectionalVector(vv[0], max);
-        final BidirectionalVector vb = new BidirectionalVector(vv[1], max);
+        final int[][] vv = new int[2][fullSize+4];
+        final int[] vf = vv[0];
+        final int[] vb = vv[1];
 
-//        vb[max + delta - 1] = n;
-        vb.set(delta - 1, n);
+        vb[max + delta - 1] = n;
 
-        boolean isPrev;
+        boolean isPrev, isVBounded;
         int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid;
         for (int d = 0; d < max; d++) {
             kStart = delta - (d - 1);
             kEnd = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
 
-                next = vf.get(k + 1);
-                prev = vf.get(k - 1);
+                next = vf[max + k + 1];
+                prev = vf[max + k - 1];
                 isPrev = k == -d || (k != d && prev < next);
                 if (isPrev) {
                     x = next;       // down
@@ -170,10 +166,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     x++;
                     y++;
                 }
-                vf.set(k, x);
+                vf[max + k] = x;
 
                 if (oddDelta && isIn(k, kStart, kEnd)) {
-                    if (x > 0 && vb.get(k) <= x) {
+                    if (x > 0 && vb[max + k] <= x) {
                         xStart = isPrev ? next : prev + 1;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
 
@@ -186,8 +182,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
 
-                next = vb.get(kk + 1); // left
-                prev = vb.get(kk - 1); // up
+                isVBounded = -max <= kk-1 && kk+1 <= max;
+
+                next = isVBounded ? vb[max + kk + 1] : -1;
+                prev = isVBounded ? vb[max + kk - 1] : -1;
                 isPrev = kk == d + delta || (kk != -d + delta && prev < next);
                 if (isPrev) {
                     x = prev;   // up
@@ -203,12 +201,12 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     y--;
                 }
 
-                if (x >= 0) {
-                    vb.set(kk, x);
+                if (x >= 0 && -max < kk && kk < max) {
+                    vb[max + kk] = x;
                 }
 
                 if (!oddDelta && isIn(k, -d, +d)) {
-                    if (x >= 0 && x <= vf.get(kk)) {
+                    if (x >= 0 && -max < kk && kk < max && x <= vf[max + kk]) {
                         xStart = isPrev ? prev : next - 1;
                         yStart = xStart - (kk + (isPrev ? -1 : 1));
 
@@ -247,10 +245,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
      * @return the common subsequence elements.
      */
     private List<T> extractLcs(Match snakes, List<T> a) {
-        System.out.println("SOLUTION:");
+//        System.out.println("SOLUTION:");
         List<T> list = new ArrayList<>();
         for (Match segment : snakes) {
-            System.out.println(segment.toString());
+//            System.out.println(segment.toString());
             segment.addEquals(list, a);
         }
         return list;
@@ -439,38 +437,4 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return xEnd(endpoint) >= x && yEnd(endpoint) >= y;
     }
 
-    public static class BidirectionalVector {
-        private final int[] array;
-        private final int halfSize;
-
-        public BidirectionalVector(final int[] array, final int halfSize) {
-            this.halfSize = halfSize;
-            this.array = array;
-        }
-
-        public int get(int x) {
-            final int index = halfSize + x;
-            try {
-                return array[index];
-            } catch (ArrayIndexOutOfBoundsException e) {
-//                throw new AssertionError();
-                return -1;
-            }
-        }
-
-        public void set(int x, int value) {
-            final int index = halfSize + x;
-            try {
-                array[index] = value;
-            } catch (ArrayIndexOutOfBoundsException e) {
-                // do nothing
-//                throw new AssertionError();
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "" + halfSize + ":" + Arrays.toString(array);
-        }
-    }
 }
