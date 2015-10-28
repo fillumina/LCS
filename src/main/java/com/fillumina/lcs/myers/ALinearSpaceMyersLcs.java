@@ -1,9 +1,9 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.util.BidirectionalVector;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +22,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return extractLcs(snakes, a);
     }
 
+    /** Recognizes equals heads and tails so to speed up the calculations. */
     public Match lcsTails(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m) {
         final int min = Math.min(n, m);
@@ -132,15 +133,16 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     Match findMiddleSnake(List<T> a, int a0, int n,
             List<T> b, int b0, int m,
             int[] endpoint) {
-        final int max = (n + m + 1) / 2;
+        final int fullSize = n + m + 1;
+        final int max = fullSize >> 1;
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
         final int[] snake = new int[3];
 
-        // TODO find a way to allocate those only once and reuse them indexed
-        final BidirectionalVector vf = new BidirectionalVector(max + 1);
-        final BidirectionalVector vb = new BidirectionalVector(max + 1);
+        final int[][] vv = new int[2][fullSize+1];
+        final BidirectionalVector vf = new BidirectionalVector(vv[0], max+1);
+        final BidirectionalVector vb = new BidirectionalVector(vv[1], max+1);
 
         vb.set(delta - 1, n);
 
@@ -502,5 +504,38 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private int getXEnd(int[] snake) {
         return snake[2];
+    }
+
+    public static class BidirectionalVector {
+        private final int[] array;
+        private final int halfSize;
+
+        public BidirectionalVector(final int[] array, final int halfSize) {
+            this.halfSize = halfSize;
+            this.array = array;
+        }
+
+        public int get(int x) {
+            final int index = halfSize + x;
+            try {
+                return array[index];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return -1;
+            }
+        }
+
+        public void set(int x, int value) {
+            final int index = halfSize + x;
+            try {
+                array[index] = value;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // do nothing
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "" + halfSize + ":" + Arrays.toString(array);
+        }
     }
 }
