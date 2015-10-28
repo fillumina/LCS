@@ -137,21 +137,21 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1; // delta is odd
 
-        final int[][] vv = new int[2][fullSize+4];
+        final int[][] vv = new int[2][fullSize+4]; // this can be externalized
         final int[] vf = vv[0];
         final int[] vb = vv[1];
 
         vb[max + delta - 1] = n;
 
         boolean isPrev, isVBounded;
-        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid;
+        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid, maxk;
         for (int d = 0; d < max; d++) {
             kStart = delta - (d - 1);
             kEnd = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
-
-                next = vf[max + k + 1];
-                prev = vf[max + k - 1];
+                maxk = max + k;
+                next = vf[maxk + 1];
+                prev = vf[maxk - 1];
                 isPrev = k == -d || (k != d && prev < next);
                 if (isPrev) {
                     x = next;       // down
@@ -166,9 +166,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     x++;
                     y++;
                 }
-                vf[max + k] = x;
+                vf[maxk] = x;
 
-                if (oddDelta && isIn(k, kStart, kEnd) && x > 0 && vb[max + k] <= x) {
+                if (oddDelta && isIn(k, kStart, kEnd) && x > 0 && vb[maxk] <= x) {
                     xStart = isPrev ? next : prev + 1;
                     yStart = xStart - (k + (isPrev ? 1 : -1));
 
@@ -182,8 +182,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
                 isVBounded = -max <= kk-1 && kk+1 <= max;
 
-                next = isVBounded ? vb[max + kk + 1] : -1;
-                prev = isVBounded ? vb[max + kk - 1] : -1;
+                maxk = max + kk;
+                next = isVBounded ? vb[maxk + 1] : -1;
+                prev = isVBounded ? vb[maxk - 1] : -1;
                 isPrev = kk == d + delta || (kk != -d + delta && prev < next);
                 if (isPrev) {
                     x = prev;   // up
@@ -200,10 +201,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
 
                 if (x >= 0 && -max < kk && kk < max) {
-                    vb[max + kk] = x;
+                    vb[maxk] = x;
                 }
 
-                if (!oddDelta && isIn(kk, -d, +d) && x >= 0 && x <= vf[max + kk]) {
+                if (!oddDelta && isIn(kk, -d, +d) && x >= 0 && x <= vf[maxk]) {
                     xStart = isPrev ? prev : next - 1;
                     yStart = xStart - (kk + (isPrev ? -1 : 1));
 
