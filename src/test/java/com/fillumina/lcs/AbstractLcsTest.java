@@ -56,7 +56,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("");
     }
 
-    @Test(timeout = 100L)
+    @Test//(timeout = 100L)
     public void shouldReturnTheOnlyMatchAtBeginning() {
         lcs("ABCDEF", "A")
                 .assertResult("A");
@@ -108,5 +108,23 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     public void shouldReturnEmptyListForBothEmptyList() {
         lcs("", "")
                 .assertResult("");
+    }
+
+    @Test(timeout = 100L)
+    public void shouldGetTheLeftDiagonal() {
+        lcs("123AAAAAAA", "123BBBBBBB")
+                .assertResult("123");
+    }
+
+    @Test(timeout = 100L)
+    public void shouldGetTheRightDiagonal() {
+        lcs("AAAAAAA123", "BBBBBBB123")
+                .assertResult("123");
+    }
+
+    @Test//(timeout = 100L)
+    public void shouldGetTheBothEndsDiagonals() {
+        lcs("123AAAAAAA123", "123BBBBBBB123")
+                .assertResult("123123");
     }
 }
