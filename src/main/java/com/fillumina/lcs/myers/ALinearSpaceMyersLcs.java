@@ -148,10 +148,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         vb.set(delta - 1, n);
 
         boolean isPrev;
-        int kk, x, y, start, end, prev, next, xStart, yStart, xMid;
+        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid;
         for (int d = 0; d < max; d++) {
-            start = delta - (d - 1);
-            end = delta + (d - 1);
+            kStart = delta - (d - 1);
+            kEnd = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
 
                 next = vf.get(k + 1);
@@ -172,7 +172,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
                 vf.set(k, x);
 
-                if (oddDelta && isIn(k, start, end)) {
+                if (oddDelta && isIn(k, kStart, kEnd)) {
                     if (x > 0 && vb.get(k) <= x) {
                         xStart = isPrev ? next : prev + 1;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
