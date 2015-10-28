@@ -134,20 +134,22 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             List<T> b, int b0, int m,
             int[] endpoint) {
         final int fullSize = n + m + 1;
-        final int max = fullSize >> 1;
+        final int max = (fullSize >> 1) + 1;
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
         final int[] snake = new int[3];
 
         final int[][] vv = new int[2][fullSize+1];
-        final BidirectionalVector vf = new BidirectionalVector(vv[0], max+1);
-        final BidirectionalVector vb = new BidirectionalVector(vv[1], max+1);
+//        final int[] vf = vv[0];
+//        final int[] vb = vv[1];
+        final BidirectionalVector vf = new BidirectionalVector(vv[0], max);
+        final BidirectionalVector vb = new BidirectionalVector(vv[1], max);
 
         vb.set(delta - 1, n);
 
         int kk, xf, xr, start, end;
-        for (int d = 0; d <= max; d++) {
+        for (int d = 0; d < max; d++) {
             start = delta - (d - 1);
             end = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
