@@ -138,8 +138,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
-//        final int[] snake = new int[3];
-
         final int[][] vv = new int[2][fullSize+1];
 //        final int[] vf = vv[0];
 //        final int[] vb = vv[1];
@@ -149,7 +147,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 //        vb[max + delta - 1] = n;
         vb.set(delta - 1, n);
 
-        int kk, xf, yf, xr, yr, start, end, prev, next, kShift, xMid, xEnd;
+        boolean isPrev;
+        int kk, xf, yf, xr, yr, start, end, kprev, knext, prev, next, kShift, xStart,yStart, xMid, xEnd;
         for (int d = 0; d < max; d++) {
             start = delta - (d - 1);
             end = delta + (d - 1);
@@ -157,14 +156,13 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
                 next = vf.get(k + 1);
                 prev = vf.get(k - 1);
-                if (k == -d || (k != d && prev < next)) {
+                isPrev = k == -d || (k != d && prev < next);
+                if (isPrev) {
                     xf = next;       // down
-
-                    kShift = 1;
+                    //kShift = 1;
                 } else {
                     xf = prev + 1;   // right
-
-                    kShift = -1;
+                    //kShift = -1;
                 }
 
                 xMid = xf;
@@ -178,9 +176,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
                 if (oddDelta && isIn(k, start, end)) {
                     if (xf > 0 && vb.get(k) <= xf) {
-
-                        final int xStart = vf.get(k + kShift);
-                        final int yStart = xStart - k - kShift;
+                        xStart = isPrev ? next : prev + 1;
+                        yStart = xStart - (k + (isPrev ? 1 : -1));
+//                        final int xStart = vf.get(k + kShift);
+//                        final int yStart = xStart - k - kShift;
                         final int yMid = xMid - k;
                         xEnd = xf;
                         final int yEnd = xEnd - k;
@@ -196,14 +195,13 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
                 next = vb.get(kk + 1); // left
                 prev = vb.get(kk - 1); // up
-                if (kk == d + delta || (kk != -d + delta && prev < next)) {
+                isPrev = kk == d + delta || (kk != -d + delta && prev < next);
+                if (isPrev) {
                     xr = prev;   // up
-
-                    kShift = -1;
+                    //kShift = -1;
                 } else {
                     xr = next - 1;   // left
-
-                    kShift = 1;
+                    //kShift = 1;
                 }
 
                 xMid = xr;
@@ -220,8 +218,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
                 if (!oddDelta && isIn(k, -d, +d)) {
                     if (xr >= 0 && xr <= vf.get(kk)) {
-                        final int xStart = vb.get(kk + kShift);
-                        final int yStart = xStart - kk - kShift;
+                        xStart = isPrev ? prev : next - 1;
+                        yStart = xStart - (kk + (isPrev ? -1 : 1));
+//                        xStart = vb.get(kk + kShift);
+//                        yStart = xStart - kk - kShift;
                         xEnd = xr; //getXEnd(snake);
                         final int yEnd = xEnd - kk;
 
