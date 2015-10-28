@@ -21,7 +21,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return extractLcs(snakes, a);
     }
 
-    /** Recognizes equals heads and tails so to speed up the calculations. */
+    /** Recognizes equal heads and tails so to speed up the calculations. */
     public Match lcsTails(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m) {
         final int min = Math.min(n, m);
@@ -168,14 +168,12 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
                 vf[max + k] = x;
 
-                if (oddDelta && isIn(k, kStart, kEnd)) {
-                    if (x > 0 && vb[max + k] <= x) {
-                        xStart = isPrev ? next : prev + 1;
-                        yStart = xStart - (k + (isPrev ? 1 : -1));
+                if (oddDelta && isIn(k, kStart, kEnd) && x > 0 && vb[max + k] <= x) {
+                    xStart = isPrev ? next : prev + 1;
+                    yStart = xStart - (k + (isPrev ? 1 : -1));
 
-                        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
-                        return Match.create(a0+xMid, b0+(xMid-k), x-xMid);
-                    }
+                    absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
+                    return Match.create(a0+xMid, b0+(xMid-k), x-xMid);
                 }
             }
 
@@ -205,17 +203,15 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     vb[max + kk] = x;
                 }
 
-                if (!oddDelta && isIn(k, -d, +d)) {
-                    if (x >= 0 && -max < kk && kk < max && x <= vf[max + kk]) {
-                        xStart = isPrev ? prev : next - 1;
-                        yStart = xStart - (kk + (isPrev ? -1 : 1));
+                if (!oddDelta && isIn(kk, -d, +d) && x >= 0 && x <= vf[max + kk]) {
+                    xStart = isPrev ? prev : next - 1;
+                    yStart = xStart - (kk + (isPrev ? -1 : 1));
 
-                        final int a0XEnd = a0 + x;
-                        final int b0YEnd = b0 + (x - kk);
+                    final int a0XEnd = a0 + x;
+                    final int b0YEnd = b0 + (x - kk);
 
-                        absoluteBoundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
-                        return Match.create(a0XEnd, b0YEnd, xMid-x);
-                    }
+                    absoluteBoundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
+                    return Match.create(a0XEnd, b0YEnd, xMid-x);
                 }
             }
         }
