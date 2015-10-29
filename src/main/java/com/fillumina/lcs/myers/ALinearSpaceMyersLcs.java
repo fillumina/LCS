@@ -91,10 +91,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         vb[max + delta - 1] = n;
 
         Match match = null;
-        int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1, xMid=-1;
+        int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1, xMid;
         { // unused variables out of scope so to have less garbage on the stack
             boolean isPrev, isVBounded;
-            int k, deltad, x, y, kStart, kEnd, prev, next, maxk;
+            int k, deltad, kStart, kEnd, prev, next, maxk;
             FOR:
             for (int d = 0; d < max; d++) {
                 for (k = -d; k <= d; k += 2) {
@@ -103,21 +103,21 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     prev = vf[maxk - 1];
                     isPrev = k == -d || (k != d && prev < next);
                     if (isPrev) {
-                        x = next;       // down
+                        xEnd = next;       // down
                     } else {
-                        x = prev + 1;   // right
+                        xEnd = prev + 1;   // right
                     }
 
-                    xMid = x;
-                    y = x - k;
-                    while (x >= 0 && y >= 0 && x < n && y < m &&
-                            a.get(a0+x).equals(b.get(b0+y))) {
-                        x++;
-                        y++;
+                    xMid = xEnd;
+                    yEnd = xEnd - k;
+                    while (xEnd >= 0 && yEnd >= 0 && xEnd < n && yEnd < m &&
+                            a.get(a0+xEnd).equals(b.get(b0+yEnd))) {
+                        xEnd++;
+                        yEnd++;
                     }
-                    vf[maxk] = x;
+                    vf[maxk] = xEnd;
 
-                    if (oddDelta && x > 0 && vb[maxk] <= x) {
+                    if (oddDelta && xEnd > 0 && vb[maxk] <= xEnd) {
                         if (delta < d) {
                             kStart = delta - (d - 1);
                             kEnd = delta + (d - 1);
@@ -129,11 +129,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
 
-                            xEnd = x;
-                            yEnd = x - k;
-
-                            if (x > xMid) {
-                                match = new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                            if (xEnd > xMid) {
+                                match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
                             }
                             break FOR;
                         }
@@ -149,33 +146,31 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     prev = isVBounded ? vb[maxk - 1] : -1;
                     isPrev = k == d + delta || (k != -d + delta && prev < next);
                     if (isPrev) {
-                        x = prev;   // up
+                        xStart = prev;   // up
                     } else {
-                        x = next - 1;   // left
+                        xStart = next - 1;   // left
                     }
 
-                    xMid = x;
-                    y = x - k;
-                    while (x > 0 && y > 0 && x <= n && y <= m &&
-                            a.get(a0+x-1).equals(b.get(b0+y-1))) {
-                        x--;
-                        y--;
+                    xMid = xStart;
+                    yStart = xStart - k;
+                    while (xStart > 0 && yStart > 0 &&
+                            xStart <= n && yStart <= m &&
+                            a.get(a0+xStart-1).equals(b.get(b0+yStart-1))) {
+                        xStart--;
+                        yStart--;
                     }
 
-                    if (x >= 0 && -max < k && k < max) {
-                        vb[maxk] = x;
+                    if (xStart >= 0 && -max < k && k < max) {
+                        vb[maxk] = xStart;
                     }
 
-                    // TODO check here
-                    if (!oddDelta && -d <= k && k <= d && x >= 0 && x <= vf[maxk]) {
-                        xStart = x;
-                        yStart = x - k;
-
+                    if (!oddDelta && -d <= k && k <= d &&
+                            xStart >= 0 && xStart <= vf[maxk]) {
                         xEnd = isPrev ? prev : next - 1;
                         yEnd = xEnd - (k + (isPrev ? -1 : 1));
 
-                        if (xMid > x) {
-                            match = new Match(a0+xStart, b0+yStart, xMid-x);
+                        if (xMid > xStart) {
+                            match = new Match(a0+xStart, b0+yStart, xMid-xStart);
                         }
                         break FOR;
                     }
