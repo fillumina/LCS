@@ -78,42 +78,11 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return Match.NULL;
         }
 
-        final int[] middleSnakeEndpoint = createEndpoint();
-        final Match diagonal = findMiddleSnake(a, a0, n, b, b0, m, middleSnakeEndpoint);
-
-        //TODO  move all this into findMiddleSnake()...
-        final boolean fromStart = a0 == xStart(middleSnakeEndpoint);
-        final boolean toEnd = xEnd(middleSnakeEndpoint) >= a0 + n;
-
-        if (fromStart && toEnd) {
-            return diagonal;
-        }
-
-        Match before = fromStart ?
-                null :
-                lcs(a, a0, xStart(middleSnakeEndpoint) - a0,
-                        b, b0, yStart(middleSnakeEndpoint) - b0);
-
-        Match after = toEnd ?
-                null :
-                lcs(a, xEnd(middleSnakeEndpoint),
-                        a0 + n - xEnd(middleSnakeEndpoint),
-                        b, yEnd(middleSnakeEndpoint),
-                        b0 + m - yEnd(middleSnakeEndpoint));
-
-        if (fromStart) {
-            return Match.chain(diagonal, after);
-
-        } else if (toEnd) {
-            return Match.chain(before, diagonal);
-        }
-
-        return Match.chain(before, diagonal, after);
+        return findMiddleSnake(a, a0, n, b, b0, m);
     }
 
     Match findMiddleSnake(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m,
-            final int[] endpoint) {
+            final List<T> b, final int b0, final int m) {
         final int fullSize = n + m + 1;
         final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
         final int delta = n - m;
@@ -125,101 +94,131 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         vb[max + delta - 1] = n;
 
-        boolean isPrev, isVBounded;
-        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xEnd, yEnd, xMid, maxk;
-        for (int d = 0; d < max; d++) {
-            for (int k = -d; k <= d; k += 2) {
-                maxk = max + k;
-                next = vf[maxk + 1];
-                prev = vf[maxk - 1];
-                isPrev = k == -d || (k != d && prev < next);
-                if (isPrev) {
-                    x = next;       // down
-                } else {
-                    x = prev + 1;   // right
-                }
-
-                xMid = x;
-                y = x - k;
-                while (x >= 0 && y >= 0 && x < n && y < m &&
-                        a.get(a0+x).equals(b.get(b0+y))) {
-                    x++;
-                    y++;
-                }
-                vf[maxk] = x;
-
-                if (oddDelta && x > 0 && vb[maxk] <= x) {
-                    if (delta < d) {
-                        kStart = delta - (d - 1);
-                        kEnd = delta + (d - 1);
+        Match match = Match.NULL; //TODO put it to null
+        int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1, xMid=-1;
+        { // put variables out of scope so to have less garbage on the stack
+            boolean isPrev, isVBounded;
+            int k, deltad, x, y, kStart, kEnd, prev, next, maxk;
+            FOR:
+            for (int d = 0; d < max; d++) {
+                for (k = -d; k <= d; k += 2) {
+                    maxk = max + k;
+                    next = vf[maxk + 1];
+                    prev = vf[maxk - 1];
+                    isPrev = k == -d || (k != d && prev < next);
+                    if (isPrev) {
+                        x = next;       // down
                     } else {
-                        kStart = delta + (d - 1);
-                        kEnd = delta - (d - 1);
+                        x = prev + 1;   // right
                     }
-                    if(kStart <= k && k <= kEnd) {
-                        xStart = isPrev ? next : prev + 1;
-                        yStart = xStart - (k + (isPrev ? 1 : -1));
 
-                        xEnd = x;
-                        yEnd = x - k;
+                    xMid = x;
+                    y = x - k;
+                    while (x >= 0 && y >= 0 && x < n && y < m &&
+                            a.get(a0+x).equals(b.get(b0+y))) {
+                        x++;
+                        y++;
+                    }
+                    vf[maxk] = x;
 
-                        boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-                        if (x > xMid) {
-                            return new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                    if (oddDelta && x > 0 && vb[maxk] <= x) {
+                        if (delta < d) {
+                            kStart = delta - (d - 1);
+                            kEnd = delta + (d - 1);
                         } else {
-                            return Match.NULL;
+                            kStart = delta + (d - 1);
+                            kEnd = delta - (d - 1);
+                        }
+                        if(kStart <= k && k <= kEnd) {
+                            xStart = isPrev ? next : prev + 1;
+                            yStart = xStart - (k + (isPrev ? 1 : -1));
+
+                            xEnd = x;
+                            yEnd = x - k;
+
+                            //boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
+                            if (x > xMid) {
+                                match = new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                            } else {
+                                match = Match.NULL;
+                            }
+                            break FOR;
                         }
                     }
                 }
-            }
 
-            for (int k = -d; k <= d; k += 2) {
-                kk = k + delta;
+                deltad = delta + d;
+                for (k = delta-d; k <= deltad; k += 2) {
+                    isVBounded = -max < k && k < max;
 
-                isVBounded = -max < kk && kk < max;
-
-                maxk = max + kk;
-                next = isVBounded ? vb[maxk + 1] : -1;
-                prev = isVBounded ? vb[maxk - 1] : -1;
-                isPrev = kk == d + delta || (kk != -d + delta && prev < next);
-                if (isPrev) {
-                    x = prev;   // up
-                } else {
-                    x = next - 1;   // left
-                }
-
-                xMid = x;
-                y = x - kk;
-                while (x > 0 && y > 0 && x <= n && y <= m &&
-                        a.get(a0+x-1).equals(b.get(b0+y-1))) {
-                    x--;
-                    y--;
-                }
-
-                if (x >= 0 && -max < kk && kk < max) {
-                    vb[maxk] = x;
-                }
-
-                if (!oddDelta && -d <= kk && kk <= d && x >= 0 && x <= vf[maxk]) {
-                    xStart = x;
-                    yStart = x - kk;
-
-                    xEnd = isPrev ? prev : next - 1;
-                    yEnd = xEnd - (kk + (isPrev ? -1 : 1));
-
-                    final int a0XEnd = a0 + x;
-                    final int b0YEnd = b0 + (x - kk);
-
-                    boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
-                    if (xMid > x) {
-                        return new Match(a0XEnd, b0YEnd, xMid-x);
+                    maxk = max + k;
+                    next = isVBounded ? vb[maxk + 1] : -1;
+                    prev = isVBounded ? vb[maxk - 1] : -1;
+                    isPrev = k == d + delta || (k != -d + delta && prev < next);
+                    if (isPrev) {
+                        x = prev;   // up
                     } else {
-                        return Match.NULL;
+                        x = next - 1;   // left
+                    }
+
+                    xMid = x;
+                    y = x - k;
+                    while (x > 0 && y > 0 && x <= n && y <= m &&
+                            a.get(a0+x-1).equals(b.get(b0+y-1))) {
+                        x--;
+                        y--;
+                    }
+
+                    if (x >= 0 && -max < k && k < max) {
+                        vb[maxk] = x;
+                    }
+
+                    if (!oddDelta && -d <= k && k <= d && x >= 0 && x <= vf[maxk]) {
+                        xStart = x;
+                        yStart = x - k;
+
+                        xEnd = isPrev ? prev : next - 1;
+                        yEnd = xEnd - (k + (isPrev ? -1 : 1));
+
+                        final int a0XEnd = a0 + x;
+                        final int b0YEnd = b0 + (x - k);
+
+                        //boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
+                        if (xMid > x) {
+                            match = new Match(a0XEnd, b0YEnd, xMid-x);
+                        } else {
+                            match = Match.NULL;
+                        }
+                        break FOR;
                     }
                 }
             }
         }
-        return Match.NULL;
+        if (xStart == -1) {
+            throw new AssertionError("BO");
+        }
+
+        final boolean fromStart = xStart == 0;
+        final boolean toEnd = xEnd == n;
+
+        if (fromStart && toEnd) {
+            return match;
+        }
+
+        Match before = fromStart ? null :
+                lcs(a, a0, xStart, b, b0, yStart);
+
+        Match after = toEnd ? null :
+                lcs(a, a0 + xEnd, n - xEnd, b, b0+ yEnd, m - yEnd);
+
+        if (fromStart) {
+            return Match.chain(match, after);
+
+        } else if (toEnd) {
+            return Match.chain(before, match);
+        }
+
+        return Match.chain(before, match, after);
     }
 
     public static class Match implements Iterable<Match>, Serializable {
@@ -338,37 +337,5 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     "{xStart=" + x + ", yStart=" + y + ", steps=" + steps +
                     ", lcs=" + lcs + '}';
         }
-    }
-
-    // methods to manage endpoints and snake in a slightly more meaningfully way
-    // (an object would have been a performance overkill)
-
-    private static int xStart(int[] endpoint) {
-        return endpoint[0];
-    }
-
-    private static int yStart(int[] endpoint) {
-        return endpoint[1];
-    }
-
-    private static int xEnd(int[] endpoint) {
-        return endpoint[2];
-    }
-
-    private static int yEnd(int[] endpoint) {
-        return endpoint[3];
-    }
-
-    private static int[] createEndpoint() {
-        return new int[4];
-    }
-
-    private static Match boundaries(int[] endpoint,
-            int xStart, int yStart, int xEnd, int yEnd) {
-        endpoint[0] = xStart;
-        endpoint[1] = yStart;
-        endpoint[2] = xEnd;
-        endpoint[3] = yEnd;
-        return Match.NULL;
     }
 }
