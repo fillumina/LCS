@@ -76,6 +76,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         final int[] middleSnakeEndpoint = createEndpoint();
         final Match diagonal = findMiddleSnake(a, a0, n, b, b0, m, middleSnakeEndpoint);
+
+        //TODO  move all this into findMiddleSnake()...
         final boolean fromStart = a0 == xStart(middleSnakeEndpoint);
         final boolean toEnd = xEnd(middleSnakeEndpoint) >= a0 + n;
 
@@ -226,15 +228,20 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     public static class Match implements Iterable<Match>, Serializable {
         private static final long serialVersionUID = 1L;
         @Deprecated // return null is faster!
-        public static final Match NULL = new Match(-1, -1, -1);
+        public static final Match NULL = new Match(-1, -1, 0);
         private final int x, y, steps;
-        private Match next;
-        private Match last;
+        private Match next, last;
+        private int lcs;
 
         private Match(int x, int y, int steps) {
             this.x = x;
             this.y = y;
             this.steps = steps;
+            this.lcs = steps;
+        }
+
+        public int getLcs() {
+            return lcs;
         }
 
         public int getX() {
@@ -256,10 +263,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         private static Match chain(Match... segments) {
-            switch (segments.length) {
-                case 0: return NULL;
-                case 1: return segments[1];
-            }
             Match head = NULL;
             Match current = null;
             for (Match s : segments) {
@@ -269,11 +272,15 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     } else {
                         current.next = s;
                     }
-                    while (current.last != null) {
-                        current = current.last;
-                    }
-                    while (current.next != null) {
-                        current = current.next;
+                    while(true) {
+                        if (current.last != null) {
+                            current = current.last;
+                        } else if (current.next != null) {
+                            current = current.next;
+                            head.lcs += current.lcs;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
@@ -320,7 +327,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 return "Match{NULL}";
             }
             return getClass().getSimpleName() +
-                    "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
+                    "{xStart=" + x + ", yStart=" + y + ", steps=" + steps +
+                    ", lcs=" + lcs + '}';
         }
     }
 
