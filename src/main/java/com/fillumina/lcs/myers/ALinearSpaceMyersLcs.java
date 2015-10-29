@@ -261,6 +261,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     public static class Match implements Iterable<Match>, Serializable {
         private static final long serialVersionUID = 1L;
+        @Deprecated // return null is faster!
         public static final Match NULL = new Match(-1, -1, -1);
         private final int x, y, steps;
         private Match next;
