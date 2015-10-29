@@ -22,11 +22,12 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        return lcsTails(a, 0, n, b, 0, m);
+        final Match match = lcsTails(a, 0, n, b, 0, m);
+        return match == null ? Match.NULL : match;
     }
 
     /** Recognizes equal heads and tails so to speed up the calculations. */
-    public Match lcsTails(final List<T> a, final int a0, final int n,
+    private Match lcsTails(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m) {
         final int min = Math.min(n, m);
         int d;
@@ -38,17 +39,17 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         int u, x0=a0+n-1, y0=b0+m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
         if (u != 0) {
-            return Match.chain(lcs(a, a0, n-u, b, b0, m-u),
+            return Match.chain(lcsRec(a, a0, n-u, b, b0, m-u),
                     new Match(a0+n-u, b0+m-u, u));
         }
-        return lcs(a, a0, n, b, b0, m);
+        return lcsRec(a, a0, n, b, b0, m);
     }
 
-    public Match lcs(final List<T> a, final int a0, final int n,
+    private Match lcsRec(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m) {
 
         if (n == 0 || m == 0) {
-            return Match.NULL;
+            return null;
         }
 
         if (n == 1) {
@@ -56,7 +57,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 if (a.get(a0).equals(b.get(b0))) {
                     return new Match(a0, b0, 1);
                 }
-                return Match.NULL;
+                return null;
             }
 
             T t = a.get(a0);
@@ -65,7 +66,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     return new Match(a0, i, 1);
                 }
             }
-            return Match.NULL;
+            return null;
         }
 
         if (m == 1) {
@@ -75,7 +76,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     return new Match(i, b0, 1);
                 }
             }
-            return Match.NULL;
+            return null;
         }
 
         final int fullSize = n + m + 1;
@@ -89,9 +90,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         vb[max + delta - 1] = n;
 
-        Match match = Match.NULL; //TODO put it to null
+        Match match = null;
         int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1, xMid=-1;
-        { // put variables out of scope so to have less garbage on the stack
+        { // unused variables out of scope so to have less garbage on the stack
             boolean isPrev, isVBounded;
             int k, deltad, x, y, kStart, kEnd, prev, next, maxk;
             FOR:
@@ -131,11 +132,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                             xEnd = x;
                             yEnd = x - k;
 
-                            //boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
                             if (x > xMid) {
                                 match = new Match(a0+xMid, b0+(xMid-k), x-xMid);
-                            } else {
-                                match = Match.NULL;
                             }
                             break FOR;
                         }
@@ -168,6 +166,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         vb[maxk] = x;
                     }
 
+                    // TODO check here
                     if (!oddDelta && -d <= k && k <= d && x >= 0 && x <= vf[maxk]) {
                         xStart = x;
                         yStart = x - k;
@@ -175,36 +174,27 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         xEnd = isPrev ? prev : next - 1;
                         yEnd = xEnd - (k + (isPrev ? -1 : 1));
 
-                        final int a0XEnd = a0 + x;
-                        final int b0YEnd = b0 + (x - k);
-
-                        //boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
                         if (xMid > x) {
-                            match = new Match(a0XEnd, b0YEnd, xMid-x);
-                        } else {
-                            match = Match.NULL;
+                            match = new Match(a0+xStart, b0+yStart, xMid-x);
                         }
                         break FOR;
                     }
                 }
             }
         }
-        if (xStart == -1) {
-            throw new AssertionError("BO");
-        }
 
-        final boolean fromStart = xStart == 0;
-        final boolean toEnd = xEnd == n;
+        final boolean fromStart = xStart <= 0;
+        final boolean toEnd = xEnd >= n;
 
         if (fromStart && toEnd) {
             return match;
         }
 
         Match before = fromStart ? null :
-                lcs(a, a0, xStart, b, b0, yStart);
+                lcsRec(a, a0, xStart, b, b0, yStart);
 
         Match after = toEnd ? null :
-                lcs(a, a0 + xEnd, n - xEnd, b, b0+ yEnd, m - yEnd);
+                lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd);
 
         if (fromStart) {
             return Match.chain(match, after);
@@ -218,7 +208,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     public static class Match implements Iterable<Match>, Serializable {
         private static final long serialVersionUID = 1L;
-        @Deprecated // return null is faster!
         public static final Match NULL = new Match(-1, -1, 0);
         private final int x, y, steps;
         private Match next, last;
@@ -231,6 +220,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             this.lcs = steps;
         }
 
+        /**
+         * <b>NOTE</b> that this value is accurate only for the first element
+         * of the iterable.
+         */
         public int getLcs() {
             return lcs;
         }
@@ -265,11 +258,11 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         private static Match chain(Match... segments) {
-            Match head = NULL;
+            Match head = null;
             Match current = null;
             for (Match s : segments) {
-                if (s != null && s != NULL) {
-                    if (head == NULL) {
+                if (s != null) {
+                    if (head == null) {
                         current = head = s;
                     } else {
                         current.next = s;
@@ -311,7 +304,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             };
         }
 
-        static String toString(Match s) {
+        /** @return a string representation of the entire iterable. */
+        public static String toString(Match s) {
             Match current = s;
             StringBuilder buf = new StringBuilder("[");
             buf.append(s.toString());
