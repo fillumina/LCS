@@ -34,36 +34,27 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         int u;
         for (u=0; u<min && a.get(a0+n-u-1).equals(b.get(b0+m-u-1)); u++);
         if (u != 0) {
-            return Match.chain(lcs(a, a0, n-u, b, b0, m-u, createEndpoint()),
+            return Match.chain(lcs(a, a0, n-u, b, b0, m-u),
                     new Match(a0+n-u, b0+m-u, u));
         }
-        return lcs(a, a0, n, b, b0, m, createEndpoint());
+        return lcs(a, a0, n, b, b0, m);
     }
 
     public Match lcs(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m,
-            final int[] endpoint) {
+            final List<T> b, final int b0, final int m) {
 
-        if (n == 0) {
-            if (m != 0) {
-                return vertical(endpoint, a0, b0, m);
-            }
+        if (n == 0 || m == 0) {
             return Match.NULL;
-        }
-
-        if (m == 0 /* && n != 0 */) {
-            return horizontal(endpoint, a0, b0, n);
         }
 
         if (n == 1) {
             if (m == 1) {
                 if (a.get(a0).equals(b.get(b0))) {
-                    return diagonal(endpoint, a0, b0, 1);
+                    return new Match(a0, b0, 1);
                 }
-                return relativeBoundaries(endpoint, a0, b0, 1, 1);
+                return Match.NULL;
             }
 
-            relativeBoundaries(endpoint, a0, b0, 1, m);
             T t = a.get(a0);
             for (int i = b0; i < b0+m; i++) {
                 if (t.equals(b.get(i))) {
@@ -74,7 +65,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         if (m == 1) {
-            relativeBoundaries(endpoint, a0, b0, n, 1);
             T t = b.get(b0);
             for (int i = a0; i < a0+n; i++) {
                 if (t.equals(a.get(i))) {
@@ -90,42 +80,28 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         final boolean toEnd = xEnd(middleSnakeEndpoint) >= a0 + n;
 
         if (fromStart && toEnd) {
-            relativeBoundaries(endpoint, a0, a0, n, m);
             return diagonal;
         }
-
-        int[] beforeEndpoint = null, afterEndpoint = null;
 
         Match before = fromStart ?
                 null :
                 lcs(a, a0, xStart(middleSnakeEndpoint) - a0,
-                        b, b0, yStart(middleSnakeEndpoint) - b0,
-                        beforeEndpoint = createEndpoint());
+                        b, b0, yStart(middleSnakeEndpoint) - b0);
 
         Match after = toEnd ?
                 null :
                 lcs(a, xEnd(middleSnakeEndpoint),
                         a0 + n - xEnd(middleSnakeEndpoint),
                         b, yEnd(middleSnakeEndpoint),
-                        b0 + m - yEnd(middleSnakeEndpoint),
-                        afterEndpoint = createEndpoint());
+                        b0 + m - yEnd(middleSnakeEndpoint));
 
         if (fromStart) {
-            absoluteBoundaries(endpoint,
-                    xStart(middleSnakeEndpoint), yStart(middleSnakeEndpoint),
-                    xEnd(afterEndpoint), yEnd(afterEndpoint));
             return Match.chain(diagonal, after);
 
         } else if (toEnd) {
-            absoluteBoundaries(endpoint,
-                    xStart(beforeEndpoint), yStart(beforeEndpoint),
-                    xEnd(middleSnakeEndpoint), yEnd(middleSnakeEndpoint));
             return Match.chain(before, diagonal);
         }
 
-        absoluteBoundaries(endpoint,
-                xStart(beforeEndpoint), yStart(beforeEndpoint),
-                xEnd(afterEndpoint), yEnd(afterEndpoint));
         return Match.chain(before, diagonal, after);
     }
 
@@ -371,48 +347,12 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return new int[4];
     }
 
-    private static Match relativeBoundaries(int[] endpoint,
-            int xStart, int yStart, int xStep, int yStep) {
-        endpoint[0] = xStart;
-        endpoint[1] = yStart;
-        endpoint[2] = xStart + xStep;
-        endpoint[3] = yStart + yStep;
-        return Match.NULL;
-    }
-
     private static Match absoluteBoundaries(int[] endpoint,
             int xStart, int yStart, int xEnd, int yEnd) {
         endpoint[0] = xStart;
         endpoint[1] = yStart;
         endpoint[2] = xEnd;
         endpoint[3] = yEnd;
-        return Match.NULL;
-    }
-
-    private static Match diagonal(int[] endpoint,
-            int xStart, int yStart, int step) {
-        endpoint[0] = xStart;
-        endpoint[1] = yStart;
-        endpoint[2] = xStart + step;
-        endpoint[3] = yStart + step;
-        return new Match(xStart, yStart, step);
-    }
-
-    private static Match horizontal(int[] endpoint,
-            int xStart, int yStart, int step) {
-        endpoint[0] = xStart;
-        endpoint[1] = yStart;
-        endpoint[2] = xStart + step;
-        endpoint[3] = yStart;
-        return Match.NULL;
-    }
-
-    private static Match vertical(int[] endpoint,
-            int xStart, int yStart, int step) {
-        endpoint[0] = xStart;
-        endpoint[1] = yStart;
-        endpoint[2] = xStart;
-        endpoint[3] = yStart + step;
         return Match.NULL;
     }
 }
