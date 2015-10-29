@@ -286,14 +286,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 current = head.last;
             }
             current.next = tail;
-            while(true) {
-                if (current.last != null) {
-                    current = current.last;
-                } else if (current.next != null) {
+            head.lcs += tail.lcs;
+            if (tail.last != null) {
+                current = tail.last;
+            } else {
+                current = tail;
+                while(current.next != null) {
                     current = current.next;
                     head.lcs += current.lcs;
-                } else {
-                    break;
                 }
             }
             if (current != head) {

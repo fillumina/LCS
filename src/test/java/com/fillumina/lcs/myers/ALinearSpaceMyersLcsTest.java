@@ -125,6 +125,6 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
         Match m = algo.lcsMain(listA, listB);
-        assertEquals(expectedLcs, m.getLcs());
+        assertEquals(Match.toString(m), expectedLcs, m.getLcs());
     }
 }
