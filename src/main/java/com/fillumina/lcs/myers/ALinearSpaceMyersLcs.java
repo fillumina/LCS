@@ -86,8 +86,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         final int[] middleSnakeEndpoint = createEndpoint();
         final Match diagonal = findMiddleSnake(a, a0, n, b, b0, m, middleSnakeEndpoint);
-        final boolean fromStart = touchingStart(a0, b0, middleSnakeEndpoint);
-        final boolean toEnd = touchingEnd(a0+n, b0+m, middleSnakeEndpoint);
+        final boolean fromStart = a0 == xStart(middleSnakeEndpoint);
+        final boolean toEnd = xEnd(middleSnakeEndpoint) >= a0 + n;
 
         if (fromStart && toEnd) {
             relativeBoundaries(endpoint, a0, a0, n, m);
@@ -426,13 +426,4 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         endpoint[3] = yStart + step;
         return Match.NULL;
     }
-
-    private static boolean touchingStart(int x, int y, int[] endpoint) {
-        return x == xStart(endpoint) && y == yStart(endpoint);
-    }
-
-    private static boolean touchingEnd(int x, int y, int[] endpoint) {
-        return xEnd(endpoint) >= x && yEnd(endpoint) >= y;
-    }
-
 }
