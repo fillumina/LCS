@@ -173,7 +173,11 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     yStart = xStart - (k + (isPrev ? 1 : -1));
 
                     absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
-                    return Match.create(a0+xMid, b0+(xMid-k), x-xMid);
+                    if (x > xMid) {
+                        return new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                    } else {
+                        return Match.NULL;
+                    }
                 }
             }
 
@@ -212,7 +216,11 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     final int b0YEnd = b0 + (x - kk);
 
                     absoluteBoundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
-                    return Match.create(a0XEnd, b0YEnd, xMid-x);
+                    if (xMid > x) {
+                        return new Match(a0XEnd, b0YEnd, xMid-x);
+                    } else {
+                        return Match.NULL;
+                    }
                 }
             }
         }
@@ -257,13 +265,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         private final int x, y, steps;
         private Match next;
         private Match last;
-
-        private static Match create(int x, int y, int steps) {
-            if (steps <= 0) {
-                return Match.NULL;
-            }
-            return new Match(x, y, steps);
-        }
 
         private Match(int x, int y, int steps) {
             this.x = x;
