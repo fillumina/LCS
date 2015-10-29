@@ -15,10 +15,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
+        Match matches = lcsMain(a, b);
+        return matches.extractLcsForFirstSequence(a);
+    }
+
+    public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        Match snakes = lcsTails(a, 0, n, b, 0, m);
-        return extractLcs(snakes, a);
+        return lcsTails(a, 0, n, b, 0, m);
     }
 
     /** Recognizes equal heads and tails so to speed up the calculations. */
@@ -212,19 +216,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return Match.NULL;
     }
 
-    /**
-     * @return the common subsequence elements.
-     */
-    private List<T> extractLcs(Match snakes, List<T> a) {
-//        System.out.println("SOLUTION:");
-        List<T> list = new ArrayList<>();
-        for (Match segment : snakes) {
-//            System.out.println(segment.toString());
-            segment.addEquals(list, a);
-        }
-        return list;
-    }
-
     public static class Match implements Iterable<Match>, Serializable {
         private static final long serialVersionUID = 1L;
         @Deprecated // return null is faster!
@@ -254,6 +245,17 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         public int getSteps() {
             return steps;
+        }
+
+        /**
+         * @return the common subsequence elements.
+         */
+        public <T> List<T> extractLcsForFirstSequence(List<T> a) {
+            List<T> list = new ArrayList<>();
+            for (Match segment : this) {
+                segment.addEquals(list, a);
+            }
+            return list;
         }
 
         private <T> void addEquals(List<T> list, List<T> a) {
