@@ -146,8 +146,13 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         boolean isPrev, isVBounded;
         int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid, maxk;
         for (int d = 0; d < max; d++) {
-            kStart = delta - (d - 1);
-            kEnd = delta + (d - 1);
+            if (delta < d) {
+                kStart = delta - (d - 1);
+                kEnd = delta + (d - 1);
+            } else {
+                kStart = delta + (d - 1);
+                kEnd = delta - (d - 1);
+            }
             for (int k = -d; k <= d; k += 2) {
                 maxk = max + k;
                 next = vf[maxk + 1];
@@ -168,7 +173,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
                 vf[maxk] = x;
 
-                if (oddDelta && isIn(k, kStart, kEnd) && x > 0 && vb[maxk] <= x) {
+                if (oddDelta && kStart <= k && k <= kEnd && x > 0 && vb[maxk] <= x) {
                     xStart = isPrev ? next : prev + 1;
                     yStart = xStart - (k + (isPrev ? 1 : -1));
 
@@ -184,7 +189,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
 
-                isVBounded = -max <= kk-1 && kk+1 <= max;
+                isVBounded = -max < kk && kk < max;
 
                 maxk = max + kk;
                 next = isVBounded ? vb[maxk + 1] : -1;
@@ -208,7 +213,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     vb[maxk] = x;
                 }
 
-                if (!oddDelta && isIn(kk, -d, +d) && x >= 0 && x <= vf[maxk]) {
+                if (!oddDelta && -d <= kk && kk <= d && x >= 0 && x <= vf[maxk]) {
                     xStart = isPrev ? prev : next - 1;
                     yStart = xStart - (kk + (isPrev ? -1 : 1));
 
@@ -225,25 +230,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             }
         }
         return Match.NULL;
-    }
-
-    private static boolean isIn(int value, int startInterval, int endInterval) {
-        if (startInterval < endInterval) {
-            if (value < startInterval) {
-                return false;
-            }
-            if (value > endInterval) {
-                return false;
-            }
-        } else {
-            if (value > startInterval) {
-                return false;
-            }
-            if (value < endInterval) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
