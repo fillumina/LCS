@@ -79,22 +79,23 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return null;
         }
 
-        final int fullSize = n + m + 1;
-        final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
-        final int delta = n - m;
-        final boolean oddDelta = (delta & 1) == 1; // delta is odd
-
-        final int[][] vv = new int[2][fullSize+4]; // this can be externalized
-        final int[] vf = vv[0];
-        final int[] vb = vv[1];
-
-        vb[max + delta - 1] = n;
-
         Match match = null;
-        int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1, xMid;
-        { // unused variables out of scope so to have less garbage on the stack
+        int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1;
+        
+        { // set variables out of scope so to have less garbage on the stack
+            final int fullSize = n + m + 1;
+            final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
+            final int delta = n - m;
+            final boolean oddDelta = (delta & 1) == 1; // delta is odd
+
+            final int[][] vv = new int[2][fullSize+4]; // this can be externalized
+            final int[] vf = vv[0];
+            final int[] vb = vv[1];
+
+            vb[max + delta - 1] = n;
+
             boolean isPrev, isVBounded;
-            int k, deltad, kStart, kEnd, prev, next, maxk;
+            int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
             FOR:
             for (int d = 0; d < max; d++) {
                 for (k = -d; k <= d; k += 2) {
