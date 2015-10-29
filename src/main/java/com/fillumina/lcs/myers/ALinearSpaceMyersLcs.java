@@ -31,8 +31,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return Match.chain(new Match(a0, b0, d),
                     lcsTails(a, a0+d, n-d, b, b0+d, m-d));
         }
-        int u;
-        for (u=0; u<min && a.get(a0+n-u-1).equals(b.get(b0+m-u-1)); u++);
+        int u, x0=a0+n-1, y0=b0+m-1;
+        for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
         if (u != 0) {
             return Match.chain(lcs(a, a0, n-u, b, b0, m-u),
                     new Match(a0+n-u, b0+m-u, u));
@@ -154,7 +154,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         xStart = isPrev ? next : prev + 1;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
 
-                        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
+                        boundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
                         if (x > xMid) {
                             return new Match(a0+xMid, b0+(xMid-k), x-xMid);
                         } else {
@@ -198,7 +198,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     final int a0XEnd = a0 + x;
                     final int b0YEnd = b0 + (x - kk);
 
-                    absoluteBoundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
+                    boundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
                     if (xMid > x) {
                         return new Match(a0XEnd, b0YEnd, xMid-x);
                     } else {
@@ -347,7 +347,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return new int[4];
     }
 
-    private static Match absoluteBoundaries(int[] endpoint,
+    private static Match boundaries(int[] endpoint,
             int xStart, int yStart, int xEnd, int yEnd) {
         endpoint[0] = xStart;
         endpoint[1] = yStart;
