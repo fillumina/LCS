@@ -78,11 +78,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return Match.NULL;
         }
 
-        return findMiddleSnake(a, a0, n, b, b0, m);
-    }
-
-    Match findMiddleSnake(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m) {
         final int fullSize = n + m + 1;
         final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
         final int delta = n - m;
