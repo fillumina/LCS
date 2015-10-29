@@ -126,7 +126,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         vb[max + delta - 1] = n;
 
         boolean isPrev, isVBounded;
-        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid, maxk;
+        int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xEnd, yEnd, xMid, maxk;
         for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {
                 maxk = max + k;
@@ -160,7 +160,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         xStart = isPrev ? next : prev + 1;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
 
-                        boundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
+                        xEnd = x;
+                        yEnd = x - k;
+
+                        boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
                         if (x > xMid) {
                             return new Match(a0+xMid, b0+(xMid-k), x-xMid);
                         } else {
@@ -198,13 +201,16 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
 
                 if (!oddDelta && -d <= kk && kk <= d && x >= 0 && x <= vf[maxk]) {
-                    xStart = isPrev ? prev : next - 1;
-                    yStart = xStart - (kk + (isPrev ? -1 : 1));
+                    xStart = x;
+                    yStart = x - kk;
+
+                    xEnd = isPrev ? prev : next - 1;
+                    yEnd = xEnd - (kk + (isPrev ? -1 : 1));
 
                     final int a0XEnd = a0 + x;
                     final int b0YEnd = b0 + (x - kk);
 
-                    boundaries(endpoint, a0XEnd, b0YEnd, a0+xStart, b0+yStart);
+                    boundaries(endpoint, a0+xStart, b0+yStart, a0+xEnd, b0+yEnd);
                     if (xMid > x) {
                         return new Match(a0XEnd, b0YEnd, xMid-x);
                     } else {
