@@ -43,19 +43,20 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         int u, x0=a0+n-1, y0=b0+m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
+        final int[][] vv = new int[2][n+m+5];
         if (u != 0) {
-            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u);
+            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u, vv);
             match = new Match(a0+n-u, b0+m-u, u);
             if (lcsMatch == null) {
                 return match;
             }
             return Match.chain(lcsMatch, match);
         }
-        return lcsRec(a, a0, n, b, b0, m);
+        return lcsRec(a, a0, n, b, b0, m, vv);
     }
 
     private Match lcsRec(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m) {
+            final List<T> b, final int b0, final int m, int[][]vv) {
 
         if (n == 0 || m == 0) {
             return null;
@@ -97,10 +98,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             final int delta = n - m;
             final boolean oddDelta = (delta & 1) == 1; // delta is odd
 
-            final int[][] vv = new int[2][fullSize+4]; // this can be externalized
             final int[] vf = vv[0];
             final int[] vb = vv[1];
 
+            vf[max + 1] = 0;
             vb[max + delta - 1] = n;
 
             boolean isPrev, isVBounded;
@@ -196,10 +197,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         Match before = fromStart ? null :
-                lcsRec(a, a0, xStart, b, b0, yStart);
+                lcsRec(a, a0, xStart, b, b0, yStart, vv);
 
         Match after = toEnd ? null :
-                lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd);
+                lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd, vv);
 
         if (match == null) {
             if (toEnd || after == null) {
