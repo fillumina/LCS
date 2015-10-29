@@ -146,13 +146,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         boolean isPrev, isVBounded;
         int kk, x, y, kStart, kEnd, prev, next, xStart, yStart, xMid, maxk;
         for (int d = 0; d < max; d++) {
-            if (delta < d) {
-                kStart = delta - (d - 1);
-                kEnd = delta + (d - 1);
-            } else {
-                kStart = delta + (d - 1);
-                kEnd = delta - (d - 1);
-            }
             for (int k = -d; k <= d; k += 2) {
                 maxk = max + k;
                 next = vf[maxk + 1];
@@ -173,15 +166,24 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 }
                 vf[maxk] = x;
 
-                if (oddDelta && kStart <= k && k <= kEnd && x > 0 && vb[maxk] <= x) {
-                    xStart = isPrev ? next : prev + 1;
-                    yStart = xStart - (k + (isPrev ? 1 : -1));
-
-                    absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
-                    if (x > xMid) {
-                        return new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                if (oddDelta && x > 0 && vb[maxk] <= x) {
+                    if (delta < d) {
+                        kStart = delta - (d - 1);
+                        kEnd = delta + (d - 1);
                     } else {
-                        return Match.NULL;
+                        kStart = delta + (d - 1);
+                        kEnd = delta - (d - 1);
+                    }
+                    if(kStart <= k && k <= kEnd) {
+                        xStart = isPrev ? next : prev + 1;
+                        yStart = xStart - (k + (isPrev ? 1 : -1));
+
+                        absoluteBoundaries(endpoint, a0+xStart, b0+yStart, a0+x, b0+(x-k));
+                        if (x > xMid) {
+                            return new Match(a0+xMid, b0+(xMid-k), x-xMid);
+                        } else {
+                            return Match.NULL;
+                        }
                     }
                 }
             }
