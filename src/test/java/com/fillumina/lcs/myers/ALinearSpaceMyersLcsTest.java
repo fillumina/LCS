@@ -61,7 +61,7 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
         countLcs("ABCDEF", "GHIJKLMN", 0);
     }
 
-    @Test//(timeout = 100L)
+    @Test(timeout = 100L)
     public void shouldLcs1ForTheOnlyMatchAtBeginning() {
         countLcs("ABCDEF", "A", 1);
     }
@@ -116,7 +116,7 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
         countLcs("AAAAAAA123", "BBBBBBB123", 3);
     }
 
-    @Test//(timeout = 100L)
+    @Test(timeout = 100L)
     public void shouldLcsTheBothEndsDiagonals() {
         countLcs("123AAAAAAA123", "123BBBBBBB123", 6);
     }

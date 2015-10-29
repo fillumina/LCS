@@ -122,7 +122,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("123");
     }
 
-    @Test//(timeout = 100L)
+    @Test(timeout = 100L)
     public void shouldGetTheBothEndsDiagonals() {
         lcs("123AAAAAAA123", "123BBBBBBB123")
                 .assertResult("123123");

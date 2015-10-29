@@ -30,17 +30,26 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     private Match lcsTails(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m) {
         final int min = Math.min(n, m);
+        Match match, lcsMatch;
         int d;
         for (d=0; d<min && a.get(a0+d).equals(b.get(b0+d)); d++);
         if (d != 0) {
-            return Match.chain(new Match(a0, b0, d),
-                    lcsTails(a, a0+d, n-d, b, b0+d, m-d));
+            match = new Match(a0, b0, d);
+            lcsMatch = lcsTails(a, a0+d, n-d, b, b0+d, m-d);
+            if (lcsMatch == null) {
+                return match;
+            }
+            return Match.chain(match, lcsMatch);
         }
         int u, x0=a0+n-1, y0=b0+m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
         if (u != 0) {
-            return Match.chain(lcsRec(a, a0, n-u, b, b0, m-u),
-                    new Match(a0+n-u, b0+m-u, u));
+            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u);
+            match = new Match(a0+n-u, b0+m-u, u);
+            if (lcsMatch == null) {
+                return match;
+            }
+            return Match.chain(lcsMatch, match);
         }
         return lcsRec(a, a0, n, b, b0, m);
     }
@@ -81,7 +90,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         Match match = null;
         int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1;
-        
+
         { // set variables out of scope so to have less garbage on the stack
             final int fullSize = n + m + 1;
             final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
@@ -145,7 +154,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     maxk = max + k;
                     next = isVBounded ? vb[maxk + 1] : -1;
                     prev = isVBounded ? vb[maxk - 1] : -1;
-                    isPrev = k == d + delta || (k != -d + delta && prev < next);
+                    isPrev = k == deltad || (k != delta-d && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
@@ -192,14 +201,25 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         Match after = toEnd ? null :
                 lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd);
 
-        if (fromStart) {
-            return Match.chain(match, after);
-
-        } else if (toEnd) {
+        if (match == null) {
+            if (toEnd || after == null) {
+                return before;
+            }
+            if (fromStart || before == null) {
+                return after;
+            }
+            return Match.chain(before, after);
+        }
+        if (toEnd || after == null) {
+            if (fromStart || before == null) {
+                return match;
+            }
             return Match.chain(before, match);
         }
-
-        return Match.chain(before, match, after);
+        if (fromStart || before == null) {
+            return Match.chain(match, after);
+        }
+        return Match.chain(before, Match.chain(match, after));
     }
 
     public static class Match implements Iterable<Match>, Serializable {
@@ -253,26 +273,27 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             }
         }
 
-        private static Match chain(Match... segments) {
-            Match head = null;
-            Match current = null;
-            for (Match s : segments) {
-                if (s != null) {
-                    if (head == null) {
-                        current = head = s;
-                    } else {
-                        current.next = s;
-                    }
-                    while(true) {
-                        if (current.last != null) {
-                            current = current.last;
-                        } else if (current.next != null) {
-                            current = current.next;
-                            head.lcs += current.lcs;
-                        } else {
-                            break;
-                        }
-                    }
+        private static Match chain(final Match head, final Match tail) {
+            assert head != null && tail != null;
+
+            Match current = head;
+            if (head.last == null) {
+                while(current.next != null) {
+                    current = current.next;
+                    head.lcs += current.lcs;
+                }
+            } else {
+                current = head.last;
+            }
+            current.next = tail;
+            while(true) {
+                if (current.last != null) {
+                    current = current.last;
+                } else if (current.next != null) {
+                    current = current.next;
+                    head.lcs += current.lcs;
+                } else {
+                    break;
                 }
             }
             if (current != head) {
