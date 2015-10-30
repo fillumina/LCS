@@ -56,7 +56,7 @@ public class VList<T> {
 
     @SuppressWarnings(value = "unchecked")
     public VList<T> subList(int fromIndex, int toIndex) {
-        if (fromIndex < 1 || toIndex < 1) {
+        if (fromIndex < 1 || toIndex < 0) {
             throw new IndexOutOfBoundsException(
                     "indexes cannot be less than 1, to=" + toIndex + ", from=" +
                             fromIndex + " " + toString());

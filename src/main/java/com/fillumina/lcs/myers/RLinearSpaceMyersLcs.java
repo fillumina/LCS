@@ -86,9 +86,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
-        if (snake.d == 0) {
-            return Snake.NULL;
-        }
         if (snake != Snake.NULL) {
             Snake before =
                 lcs(a.subList(1, snake.xStart + 1 - a0),

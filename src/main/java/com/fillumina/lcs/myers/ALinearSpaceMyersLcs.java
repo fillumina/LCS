@@ -55,7 +55,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         return lcsRec(a, a0, n, b, b0, m, vv);
     }
 
-    private Match lcsRec(final List<T> a, final int a0, final int n,
+    protected Match lcsRec(final List<T> a, final int a0, final int n,
             final List<T> b, final int b0, final int m, int[][]vv) {
 
         if (n == 0 || m == 0) {
@@ -261,7 +261,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
          * @return the common subsequence elements.
          */
         public <T> List<T> extractLcsForFirstSequence(List<T> a) {
-            List<T> list = new ArrayList<>();
+            List<T> list = new ArrayList<>(getLcs());
             for (Match segment : this) {
                 segment.addEquals(list, a);
             }
