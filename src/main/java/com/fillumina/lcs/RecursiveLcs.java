@@ -2,46 +2,37 @@ package com.fillumina.lcs;
 
 import java.util.ArrayList;
 import java.util.List;
-import static com.fillumina.lcs.util.ListUtils.*;
-import java.util.Collections;
 
 /**
  * Implementation of the Longest Common Subsequence algorithm.
+ * It's heavily using recursion so it's VERY memory hungry and time consuming.
  *
  */
 public class RecursiveLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
-        if (xs.isEmpty() || ys.isEmpty()) {
+        return lcs(xs, xs.size(), ys, ys.size());
+    }
+
+    public List<T> lcs(List<T> xs, int n, List<T> ys, int m) {
+        if (n == 0 || m == 0) {
             return new ArrayList<>();
         }
 
-        List<T> xb = allButLastElementSublist(xs);
-        T xe = getLastElement(xs);
-        List<T> yb = allButLastElementSublist(ys);
-        T ye = getLastElement(ys);
+        T xe = xs.get(n-1);
+        T ye = ys.get(m-1);
 
         if (xe.equals(ye)) {
-            return concatenate(lcs(xb, yb), xe);
+            List<T> result = lcs(xs, n-1, ys, m-1);
+            result.add(xe);
+            return result;
         } else {
-            return maxLenght(lcs(xs, yb), lcs(xb, ys));
+            return maxLenght(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));
         }
     }
 
-    private static <T> List<T> allButLastElementSublist(List<T> list) {
-        int size = list.size();
-        if (size == 0) {
-            return Collections.<T>emptyList();
-        }
-        return list.subList(0, size - 1);
+    public static <T> List<T> maxLenght(List<T> a, List<T> b) {
+        return (a.size() > b.size() ? a : b);
     }
-
-    private static <T> T getLastElement(List<T> list) {
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(list.size() - 1);
-    }
-
 }

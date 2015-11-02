@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class DirectHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class DirectHirschbergLinearSpaceLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

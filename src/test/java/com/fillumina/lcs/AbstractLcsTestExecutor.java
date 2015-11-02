@@ -106,11 +106,12 @@ public abstract class AbstractLcsTestExecutor
      * the body of the created
      * {@link Lcs#lcs(java.util.List, java.util.List)}.
      */
-    protected abstract Lcs<Character> getLcsAlgorithm();
+    protected abstract Lcs<?> getLcsAlgorithm();
 
+    @SuppressWarnings("unchecked")
     public Result lcs(final String xs, final String ys) {
         return new Result(
-                executeLcs(getLcsAlgorithm(), xs, ys),
+                executeLcs((Lcs)getLcsAlgorithm(), xs, ys),
                 new CountingResult(countingMap));
     }
 

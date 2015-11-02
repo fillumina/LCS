@@ -35,6 +35,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         for (d=0; d<min && a.get(a0+d).equals(b.get(b0+d)); d++);
         if (d != 0) {
             match = new Match(a0, b0, d);
+            if (d == min) {
+                return match;
+            }
             lcsMatch = lcsTails(a, a0+d, n-d, b, b0+d, m-d);
             if (lcsMatch == null) {
                 return match;
@@ -43,10 +46,10 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         int u, x0=a0+n-1, y0=b0+m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
-        final int[][] vv = new int[2][n+m+5];
+        final int[][] vv = new int[2][n+m+4];
         if (u != 0) {
-            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u, vv);
             match = new Match(a0+n-u, b0+m-u, u);
+            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u, vv);
             if (lcsMatch == null) {
                 return match;
             }
@@ -102,7 +105,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             final int[] vb = vv[1];
 
             vf[max + 1] = 0;
-            vb[max + delta - 1] = n;
+            try {
+                vb[max + delta - 1] = n;
 
             boolean isPrev, isVBounded;
             int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
@@ -139,6 +143,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         if(kStart <= k && k <= kEnd) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
+                            yStart = yStart < 0 ? 0 : yStart;
 
                             if (xEnd > xMid) {
                                 match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
@@ -179,6 +184,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                             xStart >= 0 && xStart <= vf[maxk]) {
                         xEnd = isPrev ? prev : next - 1;
                         yEnd = xEnd - (k + (isPrev ? -1 : 1));
+                        yEnd = yEnd < 0 ? 0 : yEnd;
 
                         if (xMid > xStart) {
                             match = new Match(a0+xStart, b0+yStart, xMid-xStart);
@@ -186,6 +192,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         break FOR;
                     }
                 }
+            }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new AssertionError("n=" + n + ", m=" + m +
+                        ", fullSize=" + fullSize +
+                        ", vb.length=" + vb.length +
+                        ", max=" + max +
+                        ", delta=" + delta + ", max+delta-1=" + (max+delta-1) +
+                        ", index=" + e.getMessage(), e);
             }
         }
 

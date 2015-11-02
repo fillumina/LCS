@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class MLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new MLinearSpaceMyersLcs<>();
     }
 

@@ -17,7 +17,7 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
     private ALinearSpaceMyersLcs<Character> algo = new ALinearSpaceMyersLcs<>();
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new ALinearSpaceMyersLcs<>();
     }
 

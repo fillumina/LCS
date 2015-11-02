@@ -1,5 +1,6 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

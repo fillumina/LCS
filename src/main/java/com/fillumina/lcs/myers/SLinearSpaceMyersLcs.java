@@ -107,14 +107,18 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             return Segment.NULL;
         }
         if (segment != Segment.NULL) {
-            Segment before =
-                lcs(a.subList(1, segment.getXStart() + 1 - a0),
+            final int xStart = segment.getXStart();
+            Segment before = xStart <= a0 ? null :
+                lcs(a.subList(1, xStart + 1 - a0),
                         b.subList(1, segment.getYStart() + 1 - b0));
 
             final Segment lastSegment = segment.getLastSegment();
-            Segment after =
-                lcs(a.subList(lastSegment.getXEnd() + 1 - a0, n + 1),
+
+            final int xEnd = lastSegment.getXEnd();
+            Segment after = xEnd - a0 > n ? null :
+                lcs(a.subList(xEnd + 1 - a0, n + 1),
                         b.subList(lastSegment.getYEnd() + 1 - b0, m + 1));
+
             return Segment.chain(before, segment, after);
         }
         return segment;

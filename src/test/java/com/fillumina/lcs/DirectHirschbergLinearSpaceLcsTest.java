@@ -6,11 +6,11 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class DirectHirschbergLinearSpaceAlgorithmLcsTest extends AbstractLcsTest {
+public class DirectHirschbergLinearSpaceLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
-        return new DirectHirschbergLinearSpaceAlgorithmLcs<Character>() {
+    protected Lcs<?> getLcsAlgorithm() {
+        return new DirectHirschbergLinearSpaceLcs<Character>() {
 
             @Override
             public List<Character> lcs(List<Character> xs,

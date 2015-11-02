@@ -13,13 +13,13 @@ public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
     private final Map<Operands<T>, List<T>> resultsMap = new HashMap<>();
 
     @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
+    public List<T> lcs(List<T> xs, int n, List<T> ys, int m) {
         Operands<T> o = new Operands<>(xs, ys);
         List<T> result = resultsMap.get(o);
         if (result != null) {
             return result;
         }
-        result = super.lcs(xs, ys);
+        result = super.lcs(xs, n, ys, m);
         resultsMap.put(o, result);
         return result;
     }

@@ -1,5 +1,7 @@
 package com.fillumina.lcs;
 
+import java.util.List;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
@@ -56,7 +58,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("");
     }
 
-    @Test//(timeout = 500L)
+    @Test(timeout = 500L)
     public void shouldReturnTheOnlyMatchAtBeginning() {
         lcs("ABCDEF", "A")
                 .assertResult("A");
@@ -126,5 +128,32 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     public void shouldGetTheBothEndsDiagonals() {
         lcs("123AAAAAAA123", "123BBBBBBB123")
                 .assertResult("123123");
+    }
+
+    @Test(timeout = 500L)
+    public void shouldGetFullDiagonals() {
+        lcs("1234567890", "1234567890")
+                .assertResult("1234567890");
+    }
+
+    /**
+     * @see <a href="https://neil.fraser.name/writing/diff/">
+     * Myers algorithm problems
+     * </a>
+     */
+    @Test(timeout = 500L)
+    public void shouldPassAccuracyTest() {
+        lcs("XAXCXABC", "ABCY")
+                .assertResult("ABC");
+    }
+
+    @Test(timeout = 1_000L)
+    public void shouldPassLengthTest() {
+        RandomSequenceGenerator generator =
+                new RandomSequenceGenerator(100,10);
+        @SuppressWarnings("unchecked")
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+                .lcs(generator.getA(), generator.getB());
+        assertEquals(generator.getLcsList(), lcsList);
     }
 }

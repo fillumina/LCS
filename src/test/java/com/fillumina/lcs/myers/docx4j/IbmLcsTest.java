@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class IbmLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new IbmLcs<Character>();
     }
 

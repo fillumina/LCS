@@ -15,7 +15,7 @@ public class WagnerFischerLcsTest {
         new AbstractLcsTestExecutor() {
 
             @Override
-            protected Lcs<Character> getLcsAlgorithm() {
+            protected Lcs<?> getLcsAlgorithm() {
                 return new WagnerFischerLcs<>();
             }
 

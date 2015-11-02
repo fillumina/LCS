@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new RLinearSpaceMyersLcs<>();
     }
 

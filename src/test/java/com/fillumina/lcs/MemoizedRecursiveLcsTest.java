@@ -11,7 +11,7 @@ import org.junit.Test;
 public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<Character> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new MemoizedRecursiveLcs<Character>() {
 
             @Override
