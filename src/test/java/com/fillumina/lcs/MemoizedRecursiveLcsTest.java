@@ -15,16 +15,15 @@ public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
         return new MemoizedRecursiveLcs<Character>() {
 
             @Override
-            public List<Character> lcs(List<Character> xs,
-                    List<Character> ys) {
+            public List<Character> lcs(List<Character> xs, int n,
+                    List<Character> ys, int m) {
                 count(xs, ys);
-                return super.lcs(xs, ys);
+                return super.lcs(xs, n, ys, m);
             }
         };
     }
 
     @Ignore
-    @Test
     public void shouldGetLowerCounterThanDirect() {
         lcs("HUMAN", "CHIMPANZEE")
                 .assertResult("HMAN")
