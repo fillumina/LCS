@@ -15,6 +15,15 @@ public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
         return new RLinearSpaceMyersLcs<>();
     }
 
+    public static void main(String[] args) {
+        System.out.println("testing random sequences...");
+        final RLinearSpaceMyersLcsTest test = new RLinearSpaceMyersLcsTest();
+        for (int i=0; i<100; i++) {
+            System.out.println("iteration: " + i);
+            test.shouldPassLengthTest();
+        }
+    }
+
     @Test
     public void shouldGetHUM() {
         lcs("HUM", "CHIM").assertResult("HM");

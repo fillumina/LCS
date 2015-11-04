@@ -1,6 +1,7 @@
 package com.fillumina.lcs.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -44,11 +45,11 @@ public class ListUtils {
         return Collections.unmodifiableList(l);
     }
 
-    public static String toString(final List<?> list) {
+    public static String toString(final Collection<?> collection) {
         StringBuilder buf = new StringBuilder();
         buf.append("[");
         boolean first = true;
-        for (Object o : list) {
+        for (Object o : collection) {
             if (first) {
                 first = false;
             } else {

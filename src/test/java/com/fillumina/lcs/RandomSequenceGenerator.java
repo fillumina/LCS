@@ -14,12 +14,9 @@ import java.util.TreeSet;
  */
 public class RandomSequenceGenerator {
 
-    private final int total;
-    private final int lcs;
-
-    private final List<Integer> lcsList;
-    private final List<Integer> a;
-    private final List<Integer> b;
+    private final int total, lcs;
+    private final long seed;
+    private final List<Integer> lcsList, a, b;
 
     public static void main(String[] args) {
         new PerformanceTest().executeWithIntermediateOutput();
@@ -46,6 +43,7 @@ public class RandomSequenceGenerator {
             final long seed) {
         this.total = total;
         this.lcs = lcs;
+        this.seed = seed;
 
         List<Integer> aList = new ArrayList<>(total);
         List<Integer> bList = new ArrayList<>(total);
@@ -112,7 +110,8 @@ public class RandomSequenceGenerator {
 
     @Override
     public String toString() {
-        return "RandomSequenceGenerator (lcs=" + lcs + "):\n" +
+        return "RandomSequenceGenerator (lcs= " + lcs +
+                ", seed= " + seed + "L ):\n" +
                 " a=" + ListUtils.toString(a) +
                 "\n b=" + ListUtils.toString(b) +
                 "\n";
