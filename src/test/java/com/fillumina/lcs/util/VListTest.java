@@ -48,6 +48,13 @@ public class VListTest {
     }
 
     @Test
+    public void shouldGetFromSublist() {
+        VList<Integer> sublist = wrapper.subList(2, 6);
+        assertEquals(2, sublist.get(1), 0);
+        assertEquals(5, sublist.get(4), 0);
+    }
+
+    @Test
     public void shouldGetAllOfASublist() {
         VList<Integer> sublist = wrapper.subList(2, 6);
         assertList(sublist, 2, 3, 4, 5);

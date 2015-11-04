@@ -45,11 +45,11 @@ public class ListUtils {
         return Collections.unmodifiableList(l);
     }
 
-    public static String toString(final Collection<?> collection) {
+    public static String toString(final Iterable<?> iterable) {
         StringBuilder buf = new StringBuilder();
         buf.append("[");
         boolean first = true;
-        for (Object o : collection) {
+        for (Object o : iterable) {
             if (first) {
                 first = false;
             } else {
@@ -58,6 +58,21 @@ public class ListUtils {
             buf.append(Objects.toString(o));
         }
         buf.append("]");
+        return buf.toString();
+    }
+
+    public static String toLines(final Iterable<?> iterable) {
+        StringBuilder buf = new StringBuilder();
+        boolean first = true;
+        for (Object o : iterable) {
+            if (first) {
+                first = false;
+            } else {
+                buf.append("\n");
+            }
+            buf.append(Objects.toString(o));
+        }
+        buf.append("\n");
         return buf.toString();
     }
 }

@@ -82,16 +82,22 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("");
     }
 
-    @Test(timeout = 500L)
+    @Test//(timeout = 500L)
     public void shouldReturnTheOnlyMatchAtBeginningReversed() {
         lcs("A", "ABCDEF")
                 .assertResult("A");
     }
 
-    @Test(timeout = 500L)
+    @Test//(timeout = 500L)
     public void shouldReturnTheOnlyMatchAtEndReversed() {
         lcs("F", "ABCDEF")
                 .assertResult("F");
+    }
+
+    @Test//(timeout = 500L)
+    public void shouldReturnTheOnlyMatchAtEndReversedOdd() {
+        lcs("E", "ABCDE")
+                .assertResult("E");
     }
 
     @Test(timeout = 500L)
@@ -174,8 +180,8 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     @Test(timeout = 1_000L)
     public void shouldPassLengthTest() {
         RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(60,10);
-//                new RandomSequenceGenerator(60,10,1446651212486L);
+//                new RandomSequenceGenerator(60,10);
+                new RandomSequenceGenerator(60,10,1446651212486L);
 
         System.out.println(generator.toString());
 

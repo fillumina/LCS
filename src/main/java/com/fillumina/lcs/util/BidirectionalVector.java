@@ -7,13 +7,14 @@ public class BidirectionalVector {
     private final int[] array;
     private final int halfSize;
 
+    public BidirectionalVector(int size) {
+        this(size, 0);
+    }
+
     public BidirectionalVector(int[] array) {
         this.halfSize = array.length >> 1;
         this.array = array;
-    }
-
-    public BidirectionalVector(int size) {
-        this(size, 0);
+//        Arrays.fill(array, -999);
     }
 
     /**
@@ -24,6 +25,7 @@ public class BidirectionalVector {
     public BidirectionalVector(int size, int constant) {
         this.array = new int[(size << 1) + 1];
         this.halfSize = size - constant;
+        //Arrays.fill(array, -999);
     }
 
     public int get(int x) {

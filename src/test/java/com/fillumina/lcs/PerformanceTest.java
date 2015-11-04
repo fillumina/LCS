@@ -2,7 +2,6 @@ package com.fillumina.lcs;
 
 import com.fillumina.lcs.myers.ALinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.MyersLcs;
-import com.fillumina.lcs.myers.SLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.docx4j.IbmLcs;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -83,8 +82,6 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new MLinearSpaceMyersLcs<Integer>()));
         tests.addTest("ALinearSpaceMyers",
                 new LcsRunnable(new ALinearSpaceMyersLcs<Integer>()));
-        tests.addTest("SLinearSpaceMyers",
-                new LcsRunnable(new SLinearSpaceMyersLcs<Integer>()));
         tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
 
