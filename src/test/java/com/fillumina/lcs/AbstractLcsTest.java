@@ -136,6 +136,30 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("1234567890");
     }
 
+    @Test(timeout = 500L)
+    public void shouldGetOuterExtremities() {
+        lcs("A123", "456A")
+                .assertResult("A");
+    }
+
+    @Test(timeout = 500L)
+    public void shouldGetInnerExtremities() {
+        lcs("123A", "A456")
+                .assertResult("A");
+    }
+
+    @Test(timeout = 500L)
+    public void shouldGetOuterExtremitiesInverted() {
+        lcs("A000", "000A")
+                .assertResult("000");
+    }
+
+    @Test(timeout = 500L)
+    public void shouldGetInnerExtremitiesInverted() {
+        lcs("000A", "A000")
+                .assertResult("000");
+    }
+
     /**
      * @see <a href="https://neil.fraser.name/writing/diff/">
      * Myers algorithm problems
@@ -150,10 +174,14 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     @Test(timeout = 1_000L)
     public void shouldPassLengthTest() {
         RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(100,10);
+                new RandomSequenceGenerator(60,10);
+
+        System.out.println(generator.toString());
+
         @SuppressWarnings("unchecked")
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
+
         assertEquals(generator.getLcsList(), lcsList);
     }
 }

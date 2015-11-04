@@ -12,13 +12,18 @@ public class BidirectionalVector {
         this.array = array;
     }
 
+    public BidirectionalVector(int size) {
+        this(size, 0);
+    }
+
     /**
      * @param size specify the positive size (the total size will be
      *             {@code size * 2 + 1}.
+     * @param constant is always subtracted to the given index
      */
-    public BidirectionalVector(int size) {
-        this.halfSize = size;
-        this.array = new int[(halfSize << 1) + 1];
+    public BidirectionalVector(int size, int constant) {
+        this.array = new int[(size << 1) + 1];
+        this.halfSize = size - constant;
     }
 
     public int get(int x) {

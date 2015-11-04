@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The indexes are passed along the calls so to avoid using sublists.
@@ -46,7 +47,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         int u, x0=a0+n-1, y0=b0+m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
-        final int[][] vv = new int[2][n+m+4];
+        final int[][] vv = new int[2][n+m+5];
         if (u != 0) {
             match = new Match(a0+n-u, b0+m-u, u);
             lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u, vv);
@@ -63,6 +64,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (n == 0 || m == 0) {
             return null;
+        }
+
+        if (n < 0 || m < 0) {
+            throw new AssertionError("n=" + n + ", m=" + m);
+        }
+
+        if (a0 < 0 || b0 < 0) {
+            throw new AssertionError("a0=" + a0 + ", b0=" + b0);
         }
 
         if (n == 1) {
@@ -92,12 +101,14 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return null;
         }
 
+        boolean isEnded = false;
         Match match = null;
         int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1;
 
         { // set variables out of scope so to have less garbage on the stack
             final int fullSize = n + m + 1;
             final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
+            //final int halfvv = (n + m + 5) >> 2;
             final int delta = n - m;
             final boolean oddDelta = (delta & 1) == 1; // delta is odd
 
@@ -106,7 +117,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
 
             vf[max + 1] = 0;
             try {
-                vb[max + delta - 1] = n;
+                vb[max /*+ delta*/ - 1] = n;
 
             boolean isPrev, isVBounded;
             int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
@@ -132,7 +143,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                     vf[maxk] = xEnd;
 
-                    if (oddDelta && xEnd > 0 && vb[maxk] <= xEnd) {
+                    if (oddDelta && xEnd > 0 && maxk > delta && vb[maxk - delta] <= xEnd) {
                         if (delta < d) {
                             kStart = delta - (d - 1);
                             kEnd = delta + (d - 1);
@@ -143,11 +154,12 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         if(kStart <= k && k <= kEnd) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
-                            yStart = yStart < 0 ? 0 : yStart;
+                            yStart = yEnd < yStart ? yEnd : yStart;
 
                             if (xEnd > xMid) {
                                 match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
                             }
+                            isEnded = true;
                             break FOR;
                         }
                     }
@@ -157,7 +169,7 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                 for (k = delta-d; k <= deltad; k += 2) {
                     isVBounded = -max < k && k < max;
 
-                    maxk = max + k;
+                    maxk = max + k - delta;
                     next = isVBounded ? vb[maxk + 1] : -1;
                     prev = isVBounded ? vb[maxk - 1] : -1;
                     isPrev = k == deltad || (k != delta-d && prev < next);
@@ -181,19 +193,21 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
 
                     if (!oddDelta && -d <= k && k <= d &&
-                            xStart >= 0 && xStart <= vf[maxk]) {
+                            xStart >= 0 && xStart <= vf[maxk + delta]) {
                         xEnd = isPrev ? prev : next - 1;
                         yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                        yEnd = yEnd < 0 ? 0 : yEnd;
+                        yEnd = yEnd < yStart ? yStart : yEnd;
 
                         if (xMid > xStart) {
                             match = new Match(a0+xStart, b0+yStart, xMid-xStart);
                         }
+
+                        isEnded = true;
                         break FOR;
                     }
                 }
             }
-            } catch (ArrayIndexOutOfBoundsException e) {
+            } catch (Exception e) {
                 throw new AssertionError("n=" + n + ", m=" + m +
                         ", fullSize=" + fullSize +
                         ", vb.length=" + vb.length +
@@ -203,8 +217,25 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             }
         }
 
-        final boolean fromStart = xStart <= 0;
-        final boolean toEnd = xEnd >= n;
+        if (!isEnded) {
+            return null;
+        }
+
+        final String log = "xStart=" + (a0+xStart) +
+                ", xEnd=" + (a0+xEnd) +
+                ", yStart=" + (b0+yStart) +
+                ", yEnd=" + (b0+yEnd) +
+                ", a0=" + a0 +
+                ", n=" + n +
+                ", b0=" + b0 +
+                ", m=" + m +
+                ", match=" + Objects.toString(match);
+
+        System.out.println("MATCH=" + Objects.toString(match));
+        System.out.println("LOG=" + log);
+
+        final boolean fromStart = xStart < 0;
+        final boolean toEnd = xEnd >= n || xEnd == 0;
 
         if (fromStart && toEnd) {
             return match;
@@ -213,25 +244,39 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         Match before = fromStart ? null :
                 lcsRec(a, a0, xStart, b, b0, yStart, vv);
 
-        Match after = toEnd ? null :
+        Match after;
+        try {
+            after = toEnd || n-xEnd == 0 || m-yEnd == 0 ? null :
                 lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd, vv);
+        } catch (StackOverflowError e) {
+            final String log1 = "xStart=" + xStart +
+                    ", xEnd=" + xEnd +
+                    ", yStart=" + yStart +
+                    ", yEnd=" + yEnd +
+                    ", a0=" + a0 +
+                    ", b0=" + b0 +
+                    ", n=" + n +
+                    ", m=" + m +
+                    ", match=" + Objects.toString(match);
+            throw new AssertionError(log1, e);
+        }
 
         if (match == null) {
-            if (toEnd || after == null) {
+            if (after == null) {
                 return before;
             }
-            if (fromStart || before == null) {
+            if (before == null) {
                 return after;
             }
             return Match.chain(before, after);
         }
-        if (toEnd || after == null) {
-            if (fromStart || before == null) {
+        if (after == null) {
+            if (before == null) {
                 return match;
             }
             return Match.chain(before, match);
         }
-        if (fromStart || before == null) {
+        if (before == null) {
             return Match.chain(match, after);
         }
         return Match.chain(before, Match.chain(match, after));

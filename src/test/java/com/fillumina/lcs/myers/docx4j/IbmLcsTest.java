@@ -13,7 +13,7 @@ public class IbmLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new IbmLcs<Character>();
+        return new IbmLcs<>();
     }
 
 }

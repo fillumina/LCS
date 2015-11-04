@@ -3,6 +3,7 @@ package com.fillumina.lcs.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The methods in this class doesn't modify the arguments.
@@ -41,5 +42,21 @@ public class ListUtils {
         List<T> l = new ArrayList<>(list);
         Collections.reverse(l);
         return Collections.unmodifiableList(l);
+    }
+
+    public static String toString(final List<?> list) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("[");
+        boolean first = true;
+        for (Object o : list) {
+            if (first) {
+                first = false;
+            } else {
+                buf.append(", ");
+            }
+            buf.append(Objects.toString(o));
+        }
+        buf.append("]");
+        return buf.toString();
     }
 }

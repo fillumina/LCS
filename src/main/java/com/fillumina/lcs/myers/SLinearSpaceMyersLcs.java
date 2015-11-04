@@ -193,7 +193,11 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
         int next = v.get(k + 1);
         int prev = v.get(k - 1);
         int xStart, yStart, xMid, yMid;
-        if (k == -d || (k != d && prev < next)) {
+        if (k == -d) {
+            xStart = next;
+            yStart = next - k;
+            xMid = xStart;
+        } else if (k != d && prev < next) {
             xStart = next;
             yStart = next - k - 1;
             xMid = xStart;
@@ -254,7 +258,11 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         final int next = v.get(k + 1);
         final int prev = v.get(k - 1);
-        if (k == d+delta || (k != -d+delta && prev != 0 && prev < next)) {
+        if (k == d+delta) {
+            xEnd = prev;
+            yEnd = prev - k;
+            xMid = xEnd;
+        } else if (k != -d+delta && prev != 0 && prev < next) {
             xEnd = prev;
             yEnd = prev - k + 1;
             xMid = xEnd;
@@ -318,7 +326,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             x = segment.getXEnd();
         }
         if (error) {
-            throw new AssertionError();
+            //throw new AssertionError();
         }
         return list;
     }
@@ -397,7 +405,7 @@ public class SLinearSpaceMyersLcs<T> implements Lcs<T> {
             if (steps > 0) {
                 return new Vertical(xStart, yStart, steps);
             }
-            throw new IllegalArgumentException();
+            return Segment.NULL;
         }
 
         static Segment chain(Segment... segments) {

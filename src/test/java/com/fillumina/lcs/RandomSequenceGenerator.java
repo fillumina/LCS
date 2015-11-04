@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,10 +25,23 @@ public class RandomSequenceGenerator {
         new PerformanceTest().executeWithIntermediateOutput();
     }
 
+    /**
+     *
+     * @param total length of the sequences
+     * @param lcs   lenght of the longest common sequence
+     */
     public RandomSequenceGenerator(final int total, final int lcs) {
         this(total, lcs, System.currentTimeMillis());
     }
 
+    /**
+     *
+     * @param total length of the sequences
+     * @param lcs   lenght of the longest common sequence
+     * @param seed  seed of the random number generator. Equal seeds mean
+     *              same random sequence is repeated (useful for debugging
+     *              a specific situation).
+     */
     public RandomSequenceGenerator(final int total, final int lcs,
             final long seed) {
         this.total = total;
@@ -59,7 +73,7 @@ public class RandomSequenceGenerator {
 
     private static List<Integer> createLcsList(final List<Integer> lcsList,
             final int lcs) {
-        for (int i = 0; i < lcs; i++) {
+        for (int i = 1; i <= lcs; i++) {
             lcsList.add(-i);
         }
         return Collections.unmodifiableList(lcsList);
@@ -94,5 +108,13 @@ public class RandomSequenceGenerator {
 
     public List<Integer> getB() {
         return b;
+    }
+
+    @Override
+    public String toString() {
+        return "RandomSequenceGenerator (lcs=" + lcs + "):\n" +
+                " a=" + ListUtils.toString(a) +
+                "\n b=" + ListUtils.toString(b) +
+                "\n";
     }
 }

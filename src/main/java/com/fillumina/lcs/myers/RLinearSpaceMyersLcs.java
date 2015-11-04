@@ -4,8 +4,10 @@ import com.fillumina.lcs.util.VList;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.util.BidirectionalVector;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Myers algorithm that uses forward and backward snake.
@@ -99,12 +101,13 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
-        final int max = (n + m + 1) / 2;
+        assert (m + n) / 2 == (int)Math.ceil((n + m ) / 2) : "m=" + m + ", n=" + n;
+        final int max = (m + n) / 2;
         final int delta = n - m;
         final boolean oddDelta = (delta & 1) == 1;
 
-        final BidirectionalVector vf = new BidirectionalVector(max + 1);
-        final BidirectionalVector vb = new BidirectionalVector(max + 1);
+        final BidirectionalVector vf = new BidirectionalVector(max + 1); //ok
+        final BidirectionalVector vb = new BidirectionalVector(max + 1, delta);
 
         vb.set(delta-1, n);
 
@@ -187,7 +190,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         int next = v.get(k + 1);
         int prev = v.get(k - 1);
         int xStart, yStart, xMid, yMid;
-        if (k == -d || (k != d && prev < next)) {
+        if (k == -d) {
+            xStart = next;
+            yStart = next - k;
+            xMid = xStart;
+        } else if (k != d && prev < next) {
             xStart = next;
             yStart = next - k - 1;
             xMid = xStart;
@@ -247,7 +254,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         final int next = v.get(k + 1);
         final int prev = v.get(k - 1);
-        if (k == d+delta || (k != -d+delta && prev != 0 && prev < next)) {
+        if (k == d+delta) {
+            xEnd = prev;
+            yEnd = prev - k;
+            xMid = xEnd;
+        } else if (k != -d+delta && prev != 0 && prev < next) {
             xEnd = prev;
             yEnd = prev - k + 1;
             xMid = xEnd;
@@ -292,7 +303,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             x = snake.xEnd;
         }
         if (error) {
-            throw new AssertionError("uncomplete chain");
+            //throw new AssertionError("uncomplete chain");
         }
         return list;
     }
@@ -340,9 +351,17 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             return head;
         }
 
+        public boolean isDiagonal() {
+            if (reverse) {
+                return xStart + 1 <= xMid;
+            } else {
+                return xMid + 1 <= xEnd;
+            }
+        }
+
         public <T> void addEquals(List<T> result, VList<T> a) {
             if (reverse) {
-                for (int x=xStart + 1; x<=xMid; x++) {
+                for (int x=xStart + 1; x <= xMid; x++) {
                     result.add(a.get(x));
                 }
             } else {
@@ -380,7 +399,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                     ", d=" + d +
                     ", xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
-                    ", yEnd=" + yEnd + '}';
+                    ", yEnd=" + yEnd +
+                    (isDiagonal() ? " diagonal " : "") + '}';
         }
     }
 }
