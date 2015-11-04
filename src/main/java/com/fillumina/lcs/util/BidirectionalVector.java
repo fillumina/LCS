@@ -25,7 +25,7 @@ public class BidirectionalVector {
     public BidirectionalVector(int size, int constant) {
         this.array = new int[(size << 1) + 1];
         this.halfSize = size - constant;
-        //Arrays.fill(array, -999);
+        Arrays.fill(array, -999);
     }
 
     public int get(int x) {

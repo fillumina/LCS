@@ -33,19 +33,28 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         final int a0 = a.zero();
         final int b0 = b.zero();
 
+        if (n == 0) {
+            return snake(false, a0, b0, a0, b0+m, a0, b0+m);
+        }
+        if (m == 0) {
+            return snake(false, a0, b0, a0+n, b0, a0+n, b0);
+        }
+
         Snake snake = findMiddleSnake(a, n, b, m);
+
         if (snake.xStart == a0 && snake.xEnd == (a0 + n) &&
                 snake.yStart == b0 && snake.yEnd == (b0 + m)) {
             return snake;
         }
+
         Snake before =
             lcs(a.subList(1, snake.xStart + 1 - a0),
                     b.subList(1, snake.yStart + 1 - b0));
         Snake after =
             lcs(a.subList(snake.xEnd + 1 - a0, n + 1),
                     b.subList(snake.yEnd + 1 - b0, m + 1));
-        return Snake.chain(before, snake, after);
 
+        return Snake.chain(before, snake, after);
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
@@ -57,6 +66,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         final BidirectionalVector vf = new BidirectionalVector(max + 1);
         final BidirectionalVector vb = new BidirectionalVector(max + 1, delta);
 
+        vf.set(1, 0);
+        vb.set(0, n);
         vb.set(delta-1, n);
 
         int kk, xf, xr, start, end;
@@ -66,7 +77,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             for (int k = -d; k <= d; k += 2) {
                 xf = findFurthestReachingDPath(d, k, a, n, b, m, vf);
                 if (!evenDelta && isIn(k, start, end)) {
-                    if (xf > 0 && vb.get(k) <= xf) {
+                    assert vb.get(k) != -999 : "k=" + k;
+                    if (/*xf > 0 &&*/ vb.get(k) <= xf) {
                         return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
                     }
                 }
@@ -76,6 +88,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 kk = k + delta;
                 xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
                 if (evenDelta && isIn(kk, -d, d)) {
+                    assert vf.get(kk) != -999 : "kk=" + kk;
                     if (xr >= 0 && xr <= vf.get(kk)) {
                         return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
                     }
@@ -141,15 +154,15 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         int xStart, yStart, xMid, yMid;
         if (k == -d) {
             xStart = next;
-            yStart = next - k;
+            yStart = xStart - k;
             xMid = xStart;
         } else if (k != d && prev < next) {
             xStart = next;
-            yStart = next - k - 1;
+            yStart = xStart - k - 1;
             xMid = xStart;
         } else {
             xStart = prev;
-            yStart = prev - k + 1;
+            yStart = xStart - k + 1;
             xMid = xStart + 1;
         }
 
@@ -273,6 +286,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         if (!snakeSet.add(s)) {
             throw new AssertionError("Snake already set: " + s.toString());
         }
+        System.out.println("created: " + s);
         return s;
     }
 
