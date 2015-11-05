@@ -2,9 +2,9 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.util.VList;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.util.BidirectionalVector;
 import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -58,8 +58,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
-        final int total = m + n;
-        final int max = (int)Math.ceil(total/2.0);
+        final int max = (int)Math.ceil((m + n)/2.0);
         final int delta = n - m;
         final boolean evenDelta = (delta & 1) == 0;
 
@@ -76,22 +75,16 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             end = delta + (d - 1);
             for (int k = -d; k <= d; k += 2) {
                 xf = findFurthestReachingDPath(d, k, a, n, b, m, vf);
-                if (!evenDelta && isIn(k, start, end)) {
-                    assert vb.get(k) != -999 : "k=" + k;
-                    if (/*xf > 0 &&*/ vb.get(k) <= xf) {
-                        return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
-                    }
+                if (!evenDelta && isIn(k, start, end) && vb.get(k) <= xf) {
+                    return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
                 }
             }
 
             for (int k = -d; k <= d; k += 2) {
                 kk = k + delta;
                 xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
-                if (evenDelta && isIn(kk, -d, d)) {
-                    assert vf.get(kk) != -999 : "kk=" + kk;
-                    if (xr >= 0 && xr <= vf.get(kk)) {
-                        return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
-                    }
+                if (evenDelta && isIn(kk, -d, d) && xr >= 0 && xr <= vf.get(kk)) {
+                    return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
                 }
             }
         }
@@ -121,11 +114,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private int findFurthestReachingDPath(int d, int k,
             VList<T> a, int n, VList<T> b, int m,
-            BidirectionalVector v) {
+            BidirectionalVector vf) {
         int x, y;
 
-        int next = v.get(k + 1);
-        int prev = v.get(k - 1);
+        int next = vf.get(k + 1);
+        int prev = vf.get(k - 1);
         if (k == -d || (k != d && prev < next)) {
             x = next;
         } else {
@@ -137,20 +130,20 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             x++;
             y++;
         }
-        v.set(k, x);
+        vf.set(k, x);
         return x;
     }
 
     private Snake findLastSnake(int d, int k, int x, int x0, int y0,
-            BidirectionalVector v,
+            BidirectionalVector vf,
             VList<T> a, VList<T> b) {
         int y = x - k;
 
         int xEnd = x;
         int yEnd = y;
 
-        int next = v.get(k + 1);
-        int prev = v.get(k - 1);
+        int next = vf.get(k + 1);
+        int prev = vf.get(k - 1);
         int xStart, yStart, xMid, yMid;
         if (k == -d) {
             xStart = next;
@@ -185,11 +178,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     private int findFurthestReachingDPathReverse(int d, int k,
             VList<T> a, int n, VList<T> b, int m,
-            int delta, BidirectionalVector v) {
+            int delta, BidirectionalVector vb) {
         int x, y;
 
-        final int next = v.get(k + 1); // left
-        final int prev = v.get(k - 1); // up
+        final int next = vb.get(k + 1); // left
+        final int prev = vb.get(k - 1); // up
         if (k == d+delta || (k != -d+delta && prev < next)) {
             x = prev;   // up
         } else {
@@ -202,20 +195,20 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             y--;
         }
         if (x >= 0) {
-            v.set(k, x);
+            vb.set(k, x);
         }
         return x;
     }
 
     private Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
-            BidirectionalVector v, int delta,
+            BidirectionalVector vb, int delta,
             VList<T> a, int n, VList<T> b, int m) {
         final int xStart = xe;
         final int yStart = xe - k;
         int xEnd, yEnd, xMid, yMid;
 
-        final int next = v.get(k + 1);
-        final int prev = v.get(k - 1);
+        final int next = vb.get(k + 1);
+        final int prev = vb.get(k - 1);
         if (k == d+delta) {
             xEnd = prev;
             yEnd = prev - k;
@@ -255,7 +248,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         int x=0;
         boolean error=false;
         for (Snake snake : snakes) {
-            System.out.print(snake);
+//            System.out.print(snake);
             if (!snakeSet.remove(snake)) {
                 throw new AssertionError("snake not present: " + snake.toString());
             }
@@ -264,7 +257,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             }
             tmp.clear();
             snake.addEquals(tmp, a);
-            System.out.println(" --> " + ListUtils.toString(tmp));
+//            System.out.println(" --> " + ListUtils.toString(tmp));
             list.addAll(tmp);
             x = snake.xEnd;
         }
@@ -286,7 +279,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         if (!snakeSet.add(s)) {
             throw new AssertionError("Snake already set: " + s.toString());
         }
-        System.out.println("created: " + s);
         return s;
     }
 
@@ -385,4 +377,48 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                     (isDiagonal() ? " diagonal " : "") + '}';
         }
     }
+
+    public static class BidirectionalVector {
+        private final int[] array;
+        private final int halfSize;
+
+        public BidirectionalVector(int size) {
+            this(size, 0);
+        }
+
+        /**
+         * @param size specify the positive size (the total size will be
+         *             {@code size * 2 + 1}.
+         * @param constant is always subtracted to the given index
+         */
+        public BidirectionalVector(int size, int constant) {
+            int length = size + Math.abs(constant);
+            this.array = new int[(length << 1) + 1];
+            this.halfSize = length - constant;
+            Arrays.fill(array, -999);
+        }
+
+        public int get(int x) {
+            int index = halfSize + x;
+            if (index < 0 || index >= array.length) {
+                throw new AssertionError(x);
+            }
+            return array[index];
+        }
+
+        public void set(int x, int value) {
+            int index = halfSize + x;
+            if (index < 0 || index >= array.length) {
+                throw new AssertionError(x);
+            }
+            array[index] = value;
+        }
+
+        @Override
+        public String toString() {
+            return "" + halfSize + ":" + Arrays.toString(array);
+        }
+
+    }
+
 }

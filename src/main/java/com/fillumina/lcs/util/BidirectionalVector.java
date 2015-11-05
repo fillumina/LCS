@@ -23,8 +23,9 @@ public class BidirectionalVector {
      * @param constant is always subtracted to the given index
      */
     public BidirectionalVector(int size, int constant) {
-        this.array = new int[(size << 1) + 1];
-        this.halfSize = size - constant;
+        int length = size + Math.abs(constant);
+        this.array = new int[(length << 1) + 1];
+        this.halfSize = length - constant;
         Arrays.fill(array, -999);
     }
 

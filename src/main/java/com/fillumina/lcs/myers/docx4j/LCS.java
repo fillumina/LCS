@@ -75,12 +75,12 @@ public abstract class LCS {
         int backBoundL1 = length1 - 1;
         int backBoundL2 = length2 - 1;
 
-//        while (backBoundL1 >= forwardBound && backBoundL2 >= forwardBound
-//                && isRangeEqual(backBoundL1, backBoundL2)) {
-//            setLcs(backBoundL1, backBoundL2);
-//            backBoundL1--;
-//            backBoundL2--;
-//        }
+        while (backBoundL1 >= forwardBound && backBoundL2 >= forwardBound
+                && isRangeEqual(backBoundL1, backBoundL2)) {
+            setLcs(backBoundL1, backBoundL2);
+            backBoundL1--;
+            backBoundL2--;
+        }
 
         length = forwardBound
                 + length1

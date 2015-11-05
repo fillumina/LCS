@@ -28,7 +28,7 @@ public class RandomSequenceGenerator {
      * @param lcs   lenght of the longest common sequence
      */
     public RandomSequenceGenerator(final int total, final int lcs) {
-        this(total, lcs, System.currentTimeMillis());
+        this(total, lcs, System.nanoTime());
     }
 
     /**
