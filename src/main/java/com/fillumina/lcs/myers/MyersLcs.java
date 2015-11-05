@@ -41,6 +41,8 @@ public class MyersLcs<T> implements Lcs<T> {
         BidirectionalArray vv = new BidirectionalArray(max);
         BidirectionalVector v = new BidirectionalVector(max);
 
+        v.set(1, 0);
+
         int next, prev, x, y;
         for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {

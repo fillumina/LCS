@@ -53,20 +53,20 @@ public class BidirectionalArray {
         StringBuilder buf = new StringBuilder("\n      ");
         final int l = array[0].length;
         for (int i=0; i<l; i++) {
-            buf.append(equalize(3, "" + (i - l/2)));
+            buf.append(pad(3, "" + (i - l/2)));
         }
         buf.append("\n    +").append(repeat(3 * (l + 1),'-')).append('\n');
         for (int i=0; i<array.length; i++) {
-            buf.append(equalize(3, "" + i)).append(" | ");
+            buf.append(pad(3, "" + i)).append(" | ");
             for (int j=0; j<array[i].length; j++) {
-                buf.append(equalize(3, "" + array[i][j]));
+                buf.append(pad(3, "" + array[i][j]));
             }
             buf.append('\n');
         }
         return buf.toString();
     }
 
-    private static String equalize(int size, String s) {
+    private static String pad(int size, String s) {
         final int l = s.length();
         if (l >= size) {
             return s;

@@ -11,6 +11,11 @@ import org.junit.Test;
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test(timeout = 500L)
+    public void shouldGetTheOnlyElement() {
+        lcs("A", "A").assertResult("A");
+    }
+
+    @Test(timeout = 500L)
     public void shouldWorkHUMAN() {
         lcs("HUMAN", "CHIMPANZEE")
                 .assertResult("HMAN");
@@ -132,7 +137,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test(timeout = 500L)
     public void shouldGetTheBothEndsDiagonals() {
-        lcs("123AAAAAAA123", "123BBBBBBB123")
+        lcs("123AAA123", "123BBB123")
                 .assertResult("123123");
     }
 
