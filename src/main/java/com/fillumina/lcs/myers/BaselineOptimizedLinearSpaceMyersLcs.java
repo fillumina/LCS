@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The indexes are passed along the calls so to avoid using sublists.
@@ -22,18 +23,19 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
     public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        final Match match = lcsTails(a, n, b, m);
+        final Match match = lcsTails((T[])a.toArray(new Object[n]), n,
+                (T[])b.toArray(new Object[m]), m);
 //        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
         return match == null ? Match.NULL : match;
     }
 
     /** Recognizes equals head and tail so to speed up the calculations. */
-    private Match lcsTails(final List<T> a, final int n,
-            final List<T> b, final int m) {
+    private Match lcsTails(final T[] a, final int n,
+            final T[] b, final int m) {
         final int min = n < m ? n : m;
         Match matchDown = null, matchUp = null, lcsMatch = null;
         int d;
-        for (d=0; d<min && a.get(d).equals(b.get(d)); d++);
+        for (d=0; d<min && Objects.equals(a[d],b[d]); d++);
         if (d != 0) {
             matchDown = new Match(0, 0, d);
             if (d == min) {
@@ -41,7 +43,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             }
         }
         int u, x0=n-1, y0=m-1;
-        for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
+        for (u=0; u<min && Objects.equals(a[x0-u],b[y0-u]); u++);
         if (u != 0) {
             matchUp = new Match(n-u, m-u, u);
         }
@@ -53,8 +55,8 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         return chain(matchDown, lcsMatch, matchUp);
     }
 
-    protected Match lcsRec(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m, int[][]vv) {
+    protected Match lcsRec(final T[] a, final int a0, final int n,
+            final T[] b, final int b0, final int m, int[][]vv) {
 
         if (n == 0 || m == 0) {
             return null;
@@ -70,15 +72,15 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         if (n == 1) {
             if (m == 1) {
-                if (a.get(a0).equals(b.get(b0))) {
+                if (Objects.equals(a[a0],b[b0])) {
                     return new Match(a0, b0, 1);
                 }
                 return null;
             }
 
-            T t = a.get(a0);
+            T t = a[a0];
             for (int i = b0; i < b0+m; i++) {
-                if (t.equals(b.get(i))) {
+                if (Objects.equals(t,b[i])) {
                     return new Match(a0, i, 1);
                 }
             }
@@ -86,9 +88,9 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         if (m == 1) {
-            T t = b.get(b0);
+            T t = b[b0];
             for (int i = a0; i < a0+n; i++) {
-                if (t.equals(a.get(i))) {
+                if (Objects.equals(t,a[i])) {
                     return new Match(i, b0, 1);
                 }
             }
@@ -132,7 +134,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
                     xMid = xEnd;
                     while (xEnd >= 0 && yEnd >= 0 && xEnd < n && yEnd < m &&
-                            a.get(a0+xEnd).equals(b.get(b0+yEnd))) {
+                            Objects.equals(a[a0+xEnd],b[b0+yEnd])) {
                         xEnd++;
                         yEnd++;
                     }
@@ -182,7 +184,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     xMid = xStart;
                     while (xStart > 0 && yStart > 0 &&
                             xStart <= n && yStart <= m &&
-                            a.get(a0+xStart-1).equals(b.get(b0+yStart-1))) {
+                            Objects.equals(a[a0+xStart-1],b[b0+yStart-1])) {
                         xStart--;
                         yStart--;
                     }

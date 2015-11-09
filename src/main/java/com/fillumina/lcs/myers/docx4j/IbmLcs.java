@@ -4,6 +4,8 @@ import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.TreeSet;
 
 /**
  *
@@ -22,42 +24,38 @@ public class IbmLcs<T> implements Lcs<T> {
 
     public static class LcsImpl extends LCS {
 
-        private final List<?> a, b;
-        private List<Integer> solutionIndexes;
+        private final Object[] a, b;
+        private TreeSet<Integer> solutionIndexes;
 
         public LcsImpl(List<?> a, List<?> b) {
-            this.a = a;
-            this.b = b;
+            this.a = a.toArray(new Object[a.size()]);
+            this.b = b.toArray(new Object[b.size()]);
         }
 
         public List<?> getSolution() {
             if (solutionIndexes == null) {
                 return Collections.EMPTY_LIST;
             }
-            Collections.sort(solutionIndexes);
-            List<Object> list = new ArrayList<>();
+            List<Object> list = new ArrayList<>(solutionIndexes.size());
             for (int index : solutionIndexes) {
-                list.add(a.get(index));
+                list.add(a[index]);
             }
             return list;
         }
 
         @Override
         protected int getLength2() {
-            return b == null ? 0 : b.size();
+            return b.length;
         }
 
         @Override
         protected int getLength1() {
-            return a == null ? 0 : a.size();
+            return a.length;
         }
 
         @Override
         protected boolean isRangeEqual(int i1, int i2) {
-            if (a == null || b == null) {
-                return false;
-            }
-            return a.get(i1).equals(b.get(i2));
+            return Objects.equals(a[i1], b[i2]);
         }
 
         @Override
@@ -67,7 +65,7 @@ public class IbmLcs<T> implements Lcs<T> {
 
         @Override
         protected void initializeLcs(int lcsLength) {
-            solutionIndexes = new ArrayList<>(lcsLength);
+            solutionIndexes = new TreeSet<>();
         }
     }
 }
