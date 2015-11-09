@@ -3,27 +3,29 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.AbstractLcsTest;
 import com.fillumina.lcs.CharacterLcsTestHelper;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.ALinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.myers.OptimizedLinearSpaceMyersLcs.Match;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
+public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private ALinearSpaceMyersLcs<Character> algo = new ALinearSpaceMyersLcs<>();
+    private OptimizedLinearSpaceMyersLcs<Character> algo = new OptimizedLinearSpaceMyersLcs<>();
 
     public static void main(String[] args) {
-        new ALinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new BaselineOptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10);
     }
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new ALinearSpaceMyersLcs<>();
+        return new OptimizedLinearSpaceMyersLcs<>();
     }
 
     @Test(timeout = 100L)

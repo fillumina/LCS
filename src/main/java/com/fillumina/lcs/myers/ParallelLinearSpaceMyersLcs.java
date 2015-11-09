@@ -1,7 +1,7 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.ALinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.myers.OptimizedLinearSpaceMyersLcs.Match;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +14,7 @@ import java.util.concurrent.RecursiveTask;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class ParallelLinearSpaceMyersLcs<T>
-        extends ALinearSpaceMyersLcs<T> {
+        extends OptimizedLinearSpaceMyersLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
