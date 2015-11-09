@@ -5,10 +5,7 @@ import com.fillumina.lcs.CharacterLcsTestHelper;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.OptimizedLinearSpaceMyersLcs.Match;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**

@@ -57,7 +57,7 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(500);
+        config.setBaseIterations(5000);
         config.setTimeout(1, TimeUnit.MINUTES);
     }
 
