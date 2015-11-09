@@ -3,7 +3,6 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.Lcs;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -24,8 +23,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        //final Match match = lcsTails(a, 0, n, b, 0, m);
-        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
+        final Match match = lcsTails(a, 0, n, b, 0, m);
+//        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
         return match == null ? Match.NULL : match;
     }
 
@@ -233,19 +232,6 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             return null;
         }
 
-        final String log = "xStart=" + (a0+xStart) +
-                ", yStart=" + (b0+yStart) +
-                ", xEnd=" + (a0+xEnd) +
-                ", yEnd=" + (b0+yEnd) +
-                ", a0=" + a0 +
-                ", n=" + n +
-                ", b0=" + b0 +
-                ", m=" + m +
-                ", match=" + Objects.toString(match);
-
-        System.out.println("MATCH=" + Objects.toString(match));
-        System.out.println("LOG=" + log);
-
         final boolean fromStart = xStart <= 0;
         final boolean toEnd = xEnd >= n; // || xEnd == 0;
 
@@ -260,22 +246,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         Match before = fromStart ? null :
                 lcsRec(a, a0, xStart, b, b0, yStart, vv);
 
-        Match after;
-        try {
-            after = toEnd || n-xEnd == 0 || m-yEnd == 0 ? null :
+        Match after = toEnd || n-xEnd == 0 || m-yEnd == 0 ? null :
                 lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd, vv);
-        } catch (StackOverflowError e) {
-            final String log1 = "xStart=" + xStart +
-                    ", xEnd=" + xEnd +
-                    ", yStart=" + yStart +
-                    ", yEnd=" + yEnd +
-                    ", a0=" + a0 +
-                    ", b0=" + b0 +
-                    ", n=" + n +
-                    ", m=" + m +
-                    ", match=" + Objects.toString(match);
-            throw new AssertionError(log1, e);
-        }
 
         if (match == null) {
             if (after == null) {
