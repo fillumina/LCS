@@ -22,41 +22,53 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
     public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        final Match match = lcsTails(a, 0, n, b, 0, m);
+        final Match match = lcsTails(a, n, b, m);
 //        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
         return match == null ? Match.NULL : match;
     }
 
-    /** Recognizes equal heads and tails so to speed up the calculations. */
-    private Match lcsTails(final List<T> a, final int a0, final int n,
-            final List<T> b, final int b0, final int m) {
-        final int min = Math.min(n, m);
-        Match match, lcsMatch;
+    /** Recognizes equals head and tail so to speed up the calculations. */
+    private Match lcsTails(final List<T> a, final int n,
+            final List<T> b, final int m) {
+        final int min = n < m ? n : m;
+        Match matchDown = null, matchUp = null, lcsMatch = null;
         int d;
-        for (d=0; d<min && a.get(a0+d).equals(b.get(b0+d)); d++);
+        for (d=0; d<min && a.get(d).equals(b.get(d)); d++);
         if (d != 0) {
-            match = new Match(a0, b0, d);
+            matchDown = new Match(0, 0, d);
             if (d == min) {
-                return match;
+                return matchDown;
             }
-            lcsMatch = lcsTails(a, a0+d, n-d, b, b0+d, m-d);
-            if (lcsMatch == null) {
-                return match;
-            }
-            return Match.chain(match, lcsMatch);
         }
-        int u, x0=a0+n-1, y0=b0+m-1;
+        int u, x0=n-1, y0=m-1;
         for (u=0; u<min && a.get(x0-u).equals(b.get(y0-u)); u++);
-        final int[][] vv = new int[2][n+m+5];
         if (u != 0) {
-            match = new Match(a0+n-u, b0+m-u, u);
-            lcsMatch = lcsRec(a, a0, n-u, b, b0, m-u, vv);
-            if (lcsMatch == null) {
-                return match;
-            }
-            return Match.chain(lcsMatch, match);
+            matchUp = new Match(n-u, m-u, u);
         }
-        return lcsRec(a, a0, n, b, b0, m, vv);
+
+        if (u + d != min) {
+            lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u, new int[2][n+m+5]);
+        }
+
+        if (d > 0) {
+            if (u > 0) {
+                if (lcsMatch != null) {
+                    return Match.chain(matchDown, Match.chain(lcsMatch, matchUp));
+                }
+                return Match.chain(matchDown, matchUp);
+            }
+            if (lcsMatch != null) {
+                return Match.chain(matchDown, lcsMatch);
+            }
+            return matchDown;
+        }
+        if (u > 0) {
+            if (lcsMatch != null) {
+                return Match.chain(lcsMatch, matchUp);
+            }
+            return matchUp;
+        }
+        return lcsMatch;
     }
 
     protected Match lcsRec(final List<T> a, final int a0, final int n,

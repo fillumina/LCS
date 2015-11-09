@@ -50,25 +50,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u, new int[2][n+m+5]);
         }
 
-        if (d > 0) {
-            if (u > 0) {
-                if (lcsMatch != null) {
-                    return Match.chain(matchDown, Match.chain(lcsMatch, matchUp));
-                }
-                return Match.chain(matchDown, matchUp);
-            }
-            if (lcsMatch != null) {
-                return Match.chain(matchDown, lcsMatch);
-            }
-            return matchDown;
-        }
-        if (u > 0) {
-            if (lcsMatch != null) {
-                return Match.chain(lcsMatch, matchUp);
-            }
-            return matchUp;
-        }
-        return lcsMatch;
+        return chain(matchDown, lcsMatch, matchUp);
     }
 
     protected Match lcsRec(final List<T> a, final int a0, final int n,
@@ -260,6 +242,10 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         Match after = toEnd || n-xEnd == 0 || m-yEnd == 0 ? null :
                 lcsRec(a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd, vv);
 
+        return chain(before, match, after);
+    }
+
+    private static Match chain(Match before, Match match, Match after) {
         if (match == null) {
             if (after == null) {
                 return before;
