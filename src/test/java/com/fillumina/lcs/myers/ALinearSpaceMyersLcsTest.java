@@ -7,6 +7,7 @@ import com.fillumina.lcs.myers.ALinearSpaceMyersLcs.Match;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -17,7 +18,7 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
     private ALinearSpaceMyersLcs<Character> algo = new ALinearSpaceMyersLcs<>();
 
     public static void main(String[] args) {
-        new ALinearSpaceMyersLcsTest().mainRun();
+        new ALinearSpaceMyersLcsTest().randomLcs(60, 10);
     }
 
     @Override

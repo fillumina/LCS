@@ -27,7 +27,7 @@ public class RecursiveLcs<T> implements Lcs<T> {
         if (xe.equals(ye)) {
             return concatenate(lcs(xs, n-1, ys, m-1), xe);
         } else {
-            return maxLenght(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));
+            return getLongest(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));
         }
     }
 
@@ -38,7 +38,7 @@ public class RecursiveLcs<T> implements Lcs<T> {
         return list;
     }
 
-    static <T> List<T> maxLenght(List<T> a, List<T> b) {
+    static <T> List<T> getLongest(List<T> a, List<T> b) {
         return (a.size() > b.size() ? a : b);
     }
 

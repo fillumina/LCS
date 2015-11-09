@@ -108,6 +108,10 @@ public class RandomSequenceGenerator {
         return b;
     }
 
+    public long getSeed() {
+        return seed;
+    }
+
     @Override
     public String toString() {
         return "RandomSequenceGenerator (lcs= " + lcs +

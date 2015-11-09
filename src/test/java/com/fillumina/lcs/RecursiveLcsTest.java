@@ -3,6 +3,7 @@ package com.fillumina.lcs;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -47,5 +48,11 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
         assertEquals(generator.getLcsList(), lcsList);
+    }
+
+    @Test(timeout = 10_000L)
+    @Override
+    public void shouldPerformRandomLengthTests() {
+        randomLcs(7, 4);
     }
 }

@@ -2,8 +2,8 @@ package com.fillumina.lcs;
 
 import com.fillumina.lcs.myers.RLinearSpaceMyersLcsTest;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -11,21 +11,25 @@ import org.junit.Test;
  */
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
-    public void mainRun() {
+    public void randomLcs(int len, int lcs) {
         System.out.println("testing random sequences...");
+        @SuppressWarnings("unchecked")
+        final Lcs<Integer> algorithm = (Lcs<Integer>)getLcsAlgorithm();
         for (int i=0; i<100; i++) {
-            System.out.println("iteration: " + i);
             RandomSequenceGenerator generator =
-                    new RandomSequenceGenerator(60,10);
+                    new RandomSequenceGenerator(len,lcs);
+            System.out.print("iteration " + i + " ");
 
-            System.out.println(generator.toString());
-
-            @SuppressWarnings("unchecked")
-            List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+            List<Integer> lcsList = algorithm
                     .lcs(generator.getA(), generator.getB());
 
             assertEquals(generator.getLcsList(), lcsList);
         }
+    }
+
+    @Test(timeout = 10_000L)
+    public void shouldPerformRandomLengthTests() {
+        randomLcs(60, 10);
     }
 
     @Test(timeout = 500L)
