@@ -164,6 +164,12 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     }
 
     @Test(timeout = 500L)
+    public void shouldGetTheBothEndsPlusMiddleDiagonals() {
+        lcs("123A4A123", "123B4B123")
+                .assertResult("1234123");
+    }
+
+    @Test(timeout = 500L)
     public void shouldGetFullDiagonals() {
         lcs("1234567890", "1234567890")
                 .assertResult("1234567890");
