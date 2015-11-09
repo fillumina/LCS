@@ -16,12 +16,7 @@ public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     public static void main(String[] args) {
-        System.out.println("testing random sequences...");
-        final RLinearSpaceMyersLcsTest test = new RLinearSpaceMyersLcsTest();
-        for (int i=0; i<100; i++) {
-            System.out.println("iteration: " + i);
-            test.shouldPassLengthTest();
-        }
+        new RLinearSpaceMyersLcsTest().mainRun();
     }
 
     @Test

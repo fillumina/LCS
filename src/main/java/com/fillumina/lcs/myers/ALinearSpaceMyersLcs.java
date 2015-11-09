@@ -3,6 +3,7 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.Lcs;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
     public Match lcsMain(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
-        final Match match = lcsTails(a, 0, n, b, 0, m);
+        //final Match match = lcsTails(a, 0, n, b, 0, m);
+        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
         return match == null ? Match.NULL : match;
     }
 
@@ -74,57 +76,58 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             throw new AssertionError("a0=" + a0 + ", b0=" + b0);
         }
 
-        if (n == 1) {
-            if (m == 1) {
-                if (a.get(a0).equals(b.get(b0))) {
-                    return new Match(a0, b0, 1);
-                }
-                return null;
-            }
-
-            T t = a.get(a0);
-            for (int i = b0; i < b0+m; i++) {
-                if (t.equals(b.get(i))) {
-                    return new Match(a0, i, 1);
-                }
-            }
-            return null;
-        }
-
-        if (m == 1) {
-            T t = b.get(b0);
-            for (int i = a0; i < a0+n; i++) {
-                if (t.equals(a.get(i))) {
-                    return new Match(i, b0, 1);
-                }
-            }
-            return null;
-        }
+//        if (n == 1) {
+//            if (m == 1) {
+//                if (a.get(a0).equals(b.get(b0))) {
+//                    return new Match(a0, b0, 1);
+//                }
+//                return null;
+//            }
+//
+//            T t = a.get(a0);
+//            for (int i = b0; i < b0+m; i++) {
+//                if (t.equals(b.get(i))) {
+//                    return new Match(a0, i, 1);
+//                }
+//            }
+//            return null;
+//        }
+//
+//        if (m == 1) {
+//            T t = b.get(b0);
+//            for (int i = a0; i < a0+n; i++) {
+//                if (t.equals(a.get(i))) {
+//                    return new Match(i, b0, 1);
+//                }
+//            }
+//            return null;
+//        }
 
         boolean isEnded = false;
         Match match = null;
         int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1;
 
+        // find middle snake
         { // set variables out of scope so to have less garbage on the stack
-            final int fullSize = n + m + 1;
-            final int max = (fullSize >> 1) + 1; // ==> (fullSize / 2) + 1
-            //final int halfvv = (n + m + 5) >> 2;
+            final int max = (n + m + 1) / 2 + 1; //(int)Math.ceil((n + m)/2.0);
             final int delta = n - m;
-            final boolean oddDelta = (delta & 1) == 1; // delta is odd
+            final boolean evenDelta = (delta & 1) == 0;
 
             final int[] vf = vv[0];
             final int[] vb = vv[1];
 
-            vf[max + 1] = 0;
-            try {
-                vb[max /*+ delta*/ - 1] = n;
+            final int halfv = vf.length / 2;
 
-            boolean isPrev, isVBounded;
+            vf[halfv + 1] = 0;
+            vb[halfv - 1] = n;
+            vb[halfv - delta] = n;
+
+            boolean isPrev;
             int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
-            FOR:
-            for (int d = 0; d < max; d++) {
+            FIND_MIDDLE_SNAKE:
+            for (int d = 0; d <= max; d++) {
                 for (k = -d; k <= d; k += 2) {
-                    maxk = max + k;
+                    maxk = halfv + k;
                     next = vf[maxk + 1];
                     prev = vf[maxk - 1];
                     isPrev = k == -d || (k != d && prev < next);
@@ -133,9 +136,9 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     } else {
                         xEnd = prev + 1;   // right
                     }
+                    yEnd = xEnd - k;
 
                     xMid = xEnd;
-                    yEnd = xEnd - k;
                     while (xEnd >= 0 && yEnd >= 0 && xEnd < n && yEnd < m &&
                             a.get(a0+xEnd).equals(b.get(b0+yEnd))) {
                         xEnd++;
@@ -143,44 +146,48 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                     vf[maxk] = xEnd;
 
-                    if (oddDelta && xEnd > 0 && maxk > delta && vb[maxk - delta] <= xEnd) {
-                        if (delta < d) {
+                    if (!evenDelta /*&& xEnd > 0 && maxk >= delta && vb[maxk - delta] <= xEnd */) {
+                        if (d>1) {
                             kStart = delta - (d - 1);
                             kEnd = delta + (d - 1);
                         } else {
                             kStart = delta + (d - 1);
                             kEnd = delta - (d - 1);
                         }
-                        if(kStart <= k && k <= kEnd) {
-                            xStart = isPrev ? next : prev + 1;
-                            yStart = xStart - (k + (isPrev ? 1 : -1));
-                            yStart = yEnd < yStart ? yEnd : yStart;
+                        assert kStart <= kEnd : "kStart=" + kStart +" > kEnd=" + kEnd;
+                        if(kStart <= k && k <= kEnd &&
+                                xEnd >=0 && vb[maxk - delta] <= xEnd) {
 
                             if (xEnd > xMid) {
+                                xStart = isPrev ? next : prev + 1;
+                                yStart = xStart - (k + (isPrev ? 1 : -1));
+                                yStart = yEnd < yStart ? yEnd : yStart;
                                 match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
+                            } else {
+                                xStart = isPrev ? next : prev;
+                                yStart = xStart - (k + (isPrev ? 1 : -1));
                             }
                             isEnded = true;
-                            break FOR;
+                            break FIND_MIDDLE_SNAKE;
                         }
                     }
                 }
 
                 deltad = delta + d;
                 for (k = delta-d; k <= deltad; k += 2) {
-                    isVBounded = -max < k && k < max;
 
-                    maxk = max + k - delta;
-                    next = isVBounded ? vb[maxk + 1] : -1;
-                    prev = isVBounded ? vb[maxk - 1] : -1;
+                    maxk = halfv + k - delta;
+                    next = vb[maxk + 1];
+                    prev = vb[maxk - 1];
                     isPrev = k == deltad || (k != delta-d && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
                         xStart = next - 1;   // left
                     }
+                    yStart = xStart - k;
 
                     xMid = xStart;
-                    yStart = xStart - k;
                     while (xStart > 0 && yStart > 0 &&
                             xStart <= n && yStart <= m &&
                             a.get(a0+xStart-1).equals(b.get(b0+yStart-1))) {
@@ -188,32 +195,37 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
                         yStart--;
                     }
 
-                    if (xStart >= 0 && -max < k && k < max) {
+                    if (xStart >= 0 /*&& -max < k && k < max*/) {
                         vb[maxk] = xStart;
                     }
 
-                    if (!oddDelta && -d <= k && k <= d &&
-                            xStart >= 0 && xStart <= vf[maxk + delta]) {
-                        xEnd = isPrev ? prev : next - 1;
-                        yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                        yEnd = yEnd < yStart ? yStart : yEnd;
-
-                        if (xMid > xStart) {
-                            match = new Match(a0+xStart, b0+yStart, xMid-xStart);
+                    if (evenDelta) {
+                        if (d < 0) {
+                            kStart = d;
+                            kEnd = -d;
+                        } else {
+                            kStart = -d;
+                            kEnd = d;
                         }
+                        assert kStart <= kEnd : "kStart=" + kStart +" > kEnd=" + kEnd;
+                        if(kStart <= k && k <= kEnd &&
+                            xStart >= 0 && xStart <= vf[maxk + delta]) {
 
-                        isEnded = true;
-                        break FOR;
+                            if (xMid > xStart) {
+                                xEnd = isPrev ? prev : next - 1;
+                                yEnd = xEnd - (k + (isPrev ? -1 : 1));
+                                yEnd = yEnd < yStart ? yStart : yEnd;
+                                match = new Match(a0+xStart, b0+yStart, xMid-xStart);
+                            } else {
+                                xEnd = isPrev ? prev : next;
+                                yEnd = xEnd - (k + (isPrev ? -1 : 1));
+                            }
+
+                            isEnded = true;
+                            break FIND_MIDDLE_SNAKE;
+                        }
                     }
                 }
-            }
-            } catch (Exception e) {
-                throw new AssertionError("n=" + n + ", m=" + m +
-                        ", fullSize=" + fullSize +
-                        ", vb.length=" + vb.length +
-                        ", max=" + max +
-                        ", delta=" + delta + ", max+delta-1=" + (max+delta-1) +
-                        ", index=" + e.getMessage(), e);
             }
         }
 
@@ -222,8 +234,8 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         final String log = "xStart=" + (a0+xStart) +
-                ", xEnd=" + (a0+xEnd) +
                 ", yStart=" + (b0+yStart) +
+                ", xEnd=" + (a0+xEnd) +
                 ", yEnd=" + (b0+yEnd) +
                 ", a0=" + a0 +
                 ", n=" + n +
@@ -234,11 +246,15 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
         System.out.println("MATCH=" + Objects.toString(match));
         System.out.println("LOG=" + log);
 
-        final boolean fromStart = xStart < 0;
-        final boolean toEnd = xEnd >= n || xEnd == 0;
+        final boolean fromStart = xStart <= 0;
+        final boolean toEnd = xEnd >= n; // || xEnd == 0;
 
         if (fromStart && toEnd) {
             return match;
+        }
+
+        if (xStart == xEnd && yStart == yEnd) {
+            System.out.println("middle snake not found!");
         }
 
         Match before = fromStart ? null :

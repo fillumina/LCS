@@ -39,6 +39,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
+        System.out.println(snake);
 
         if (snake.xStart == a0 && snake.xEnd == (a0 + n) &&
                 snake.yStart == b0 && snake.yEnd == (b0 + m)) {
@@ -60,8 +61,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         final int delta = n - m;
         final boolean evenDelta = (delta & 1) == 0;
 
-        final BidirectionalVector vf = new BidirectionalVector(max + 1);
-        final BidirectionalVector vb = new BidirectionalVector(max + 1, delta);
+        final BidirectionalVector vf = new BidirectionalVector(max);
+        final BidirectionalVector vb = new BidirectionalVector(max, delta);
 
         vf.set(1, 0);
         vb.set(0, n);
@@ -91,7 +92,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return new NullSnake(a.zero(), b.zero(), a.zero()+n, b.zero()+m);
     }
 
-    // TODO make it an object with a status?
     private static boolean isIn(int value, int startInterval, int endInterval) {
         if (startInterval < endInterval) {
             if (value < startInterval) {

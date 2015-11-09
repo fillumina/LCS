@@ -16,6 +16,10 @@ public class ALinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     private ALinearSpaceMyersLcs<Character> algo = new ALinearSpaceMyersLcs<>();
 
+    public static void main(String[] args) {
+        new ALinearSpaceMyersLcsTest().mainRun();
+    }
+
     @Override
     protected Lcs<?> getLcsAlgorithm() {
         return new ALinearSpaceMyersLcs<>();
