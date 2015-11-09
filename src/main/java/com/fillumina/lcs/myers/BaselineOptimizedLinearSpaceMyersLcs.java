@@ -62,14 +62,6 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             return null;
         }
 
-        if (n < 0 || m < 0) {
-            throw new AssertionError("n=" + n + ", m=" + m);
-        }
-
-        if (a0 < 0 || b0 < 0) {
-            throw new AssertionError("a0=" + a0 + ", b0=" + b0);
-        }
-
         if (n == 1) {
             if (m == 1) {
                 if (Objects.equals(a[a0],b[b0])) {
@@ -193,49 +185,31 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         vb[maxk] = xStart;
                     }
 
-                    if (evenDelta) {
-                        if (d < 0) {
-                            kStart = d;
-                            kEnd = -d;
+                    if (evenDelta && -d <= k && k <= d &&
+                        xStart >= 0 && xStart <= vf[maxk + delta]) {
+
+                        if (xMid > xStart) {
+                            xEnd = isPrev ? prev : next - 1;
+                            yEnd = xEnd - (k + (isPrev ? -1 : 1));
+                            yEnd = yEnd < yStart ? yStart : yEnd;
+                            match = new Match(a0+xStart, b0+yStart, xMid-xStart);
                         } else {
-                            kStart = -d;
-                            kEnd = d;
+                            xEnd = isPrev ? prev : next;
+                            yEnd = xEnd - (k + (isPrev ? -1 : 1));
                         }
-                        assert kStart <= kEnd : "kStart=" + kStart +" > kEnd=" + kEnd;
-                        if(kStart <= k && k <= kEnd &&
-                            xStart >= 0 && xStart <= vf[maxk + delta]) {
 
-                            if (xMid > xStart) {
-                                xEnd = isPrev ? prev : next - 1;
-                                yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                                yEnd = yEnd < yStart ? yStart : yEnd;
-                                match = new Match(a0+xStart, b0+yStart, xMid-xStart);
-                            } else {
-                                xEnd = isPrev ? prev : next;
-                                yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            }
-
-                            isEnded = true;
-                            break FIND_MIDDLE_SNAKE;
-                        }
+                        isEnded = true;
+                        break FIND_MIDDLE_SNAKE;
                     }
                 }
             }
         }
 
-        if (!isEnded) {
-            return null;
-        }
-
         final boolean fromStart = xStart <= 0;
-        final boolean toEnd = xEnd >= n; // || xEnd == 0;
+        final boolean toEnd = xEnd >= n;
 
         if (fromStart && toEnd) {
             return match;
-        }
-
-        if (xStart == xEnd && yStart == yEnd) {
-            System.out.println("middle snake not found!");
         }
 
         Match before = fromStart ? null :
@@ -247,8 +221,8 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         return chain(before, match, after);
     }
 
-    private static Match chain(Match before, Match match, Match after) {
-        if (match == null) {
+    private static Match chain(Match before, Match middle, Match after) {
+        if (middle == null) {
             if (after == null) {
                 return before;
             }
@@ -259,14 +233,14 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         if (after == null) {
             if (before == null) {
-                return match;
+                return middle;
             }
-            return Match.chain(before, match);
+            return Match.chain(before, middle);
         }
         if (before == null) {
-            return Match.chain(match, after);
+            return Match.chain(middle, after);
         }
-        return Match.chain(before, Match.chain(match, after));
+        return Match.chain(before, Match.chain(middle, after));
     }
 
     public static class Match implements Iterable<Match>, Serializable {
@@ -324,12 +298,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             assert head != null && tail != null;
 
             Match current = head;
-            if (head.last == null) {
-                while(current.next != null) {
-                    current = current.next;
-                    head.lcs += current.lcs;
-                }
-            } else {
+            if (head.last != null) {
                 current = head.last;
             }
             current.next = tail;
@@ -338,14 +307,8 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                 current = tail.last;
             } else {
                 current = tail;
-                while(current.next != null) {
-                    current = current.next;
-                    head.lcs += current.lcs;
-                }
             }
-            if (current != head) {
-                head.last = current;
-            }
+            head.last = current;
             return head;
         }
 
