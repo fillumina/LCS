@@ -76,32 +76,32 @@ public class ALinearSpaceMyersLcs<T> implements Lcs<T> {
             throw new AssertionError("a0=" + a0 + ", b0=" + b0);
         }
 
-//        if (n == 1) {
-//            if (m == 1) {
-//                if (a.get(a0).equals(b.get(b0))) {
-//                    return new Match(a0, b0, 1);
-//                }
-//                return null;
-//            }
-//
-//            T t = a.get(a0);
-//            for (int i = b0; i < b0+m; i++) {
-//                if (t.equals(b.get(i))) {
-//                    return new Match(a0, i, 1);
-//                }
-//            }
-//            return null;
-//        }
-//
-//        if (m == 1) {
-//            T t = b.get(b0);
-//            for (int i = a0; i < a0+n; i++) {
-//                if (t.equals(a.get(i))) {
-//                    return new Match(i, b0, 1);
-//                }
-//            }
-//            return null;
-//        }
+        if (n == 1) {
+            if (m == 1) {
+                if (a.get(a0).equals(b.get(b0))) {
+                    return new Match(a0, b0, 1);
+                }
+                return null;
+            }
+
+            T t = a.get(a0);
+            for (int i = b0; i < b0+m; i++) {
+                if (t.equals(b.get(i))) {
+                    return new Match(a0, i, 1);
+                }
+            }
+            return null;
+        }
+
+        if (m == 1) {
+            T t = b.get(b0);
+            for (int i = a0; i < a0+n; i++) {
+                if (t.equals(a.get(i))) {
+                    return new Match(i, b0, 1);
+                }
+            }
+            return null;
+        }
 
         boolean isEnded = false;
         Match match = null;
