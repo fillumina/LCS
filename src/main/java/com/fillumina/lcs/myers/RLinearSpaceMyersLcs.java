@@ -5,10 +5,8 @@ import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Myers algorithm that uses forward and backward snake. This is not designed
@@ -34,10 +32,10 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         final int b0 = b.zero();
 
         if (n == 0) {
-            return snake(false, a0, b0, a0, b0+m, a0, b0+m);
+            return new ForwardSnake(a0, b0, a0, b0+m, a0, b0+m);
         }
         if (m == 0) {
-            return snake(false, a0, b0, a0+n, b0, a0+n, b0);
+            return new ForwardSnake(a0, b0, a0+n, b0, a0+n, b0);
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
@@ -58,7 +56,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
     Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
-        final int max = (int)Math.ceil((m + n)/2.0);
+        final int max = (n + m + 1) / 2 + 1; //(int)Math.ceil((m + n)/2.0);
         final int delta = n - m;
         final boolean evenDelta = (delta & 1) == 0;
 
@@ -84,14 +82,16 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 kk = k + delta;
                 xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
                 if (evenDelta && isIn(kk, -d, d) && xr >= 0 && xr <= vf.get(kk)) {
-                    return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(), vb, delta, a, n, b, m);
+                    return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(),
+                            vb, delta, a, n, b, m);
                 }
             }
         }
 
-        return nullSnake(a.zero(), b.zero(), n, m);
+        return new NullSnake(a.zero(), b.zero(), a.zero()+n, b.zero()+m);
     }
 
+    // TODO make it an object with a status?
     private static boolean isIn(int value, int startInterval, int endInterval) {
         if (startInterval < endInterval) {
             if (value < startInterval) {
@@ -161,7 +161,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         yMid = xMid - k;
 
-        boolean reverse = false;
         if (xMid == xEnd && yMid == yEnd) {
             xMid = xStart;
             yMid = yStart;
@@ -169,10 +168,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 xStart--;
                 yStart--;
             }
-            reverse = true;
+            return new ReverseSnake(x0+xStart, y0+yStart,
+                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
         }
 
-        return snake(reverse, x0+xStart, y0+yStart,
+        return new ForwardSnake(x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
@@ -224,7 +224,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
         yMid = xMid - k;
 
-        boolean reverse = true;
         if (xMid == xStart && yMid == yStart) {
             xMid = xEnd;
             yMid = yEnd;
@@ -232,10 +231,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 xEnd++;
                 yEnd++;
             }
-            reverse = false;
+            return new ForwardSnake(x0+xStart, y0+yStart,
+                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
         }
 
-        return snake(reverse, x0+xStart, y0+yStart,
+        return new ReverseSnake(x0+xStart, y0+yStart,
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
@@ -249,9 +249,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         boolean error=false;
         for (Snake snake : snakes) {
 //            System.out.print(snake);
-            if (!snakeSet.remove(snake)) {
-                throw new AssertionError("snake not present: " + snake.toString());
-            }
             if (snake.xStart != x) {
                 error = true;
             }
@@ -261,10 +258,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             list.addAll(tmp);
             x = snake.xEnd;
         }
-        if (!snakeSet.isEmpty()) {
-            throw new AssertionError("snakes not linked:\n" +
-                    ListUtils.toString(snakeSet));
-        }
         if (error) {
             throw new AssertionError("uncomplete chain:\n" +
                     ListUtils.toLines(snakes));
@@ -272,36 +265,12 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return list;
     }
 
-    Set<Snake> snakeSet = new HashSet<>();
-    private Snake snake(boolean reverse,
-                int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
-        Snake s = new Snake(reverse, xStart, yStart, xMid, yMid, xEnd, yEnd);
-        if (!snakeSet.add(s)) {
-            throw new AssertionError("Snake already set: " + s.toString());
-        }
-        return s;
-    }
-
-    private Snake nullSnake(int xStart, int yStart, int n, int m) {
-        final int xEnd = xStart + n;
-        final int yEnd = yStart + m;
-        return snake(false, xStart, yStart, xEnd, yEnd, xEnd, yEnd);
-    }
-
-    /**
-     * A snake is a sequence of equal
-     * elements starting from mid to end and preceeded by a vertical or
-     * horizontal edge going from start to mid.
-     */
-    // TODO implement a reverse snake
-    static class Snake implements Iterable<Snake> {
+    public static abstract class Snake implements Iterable<Snake> {
         public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
-        private final boolean reverse;
         private Snake next;
 
-        private Snake(boolean reverse,
+        private Snake(
                 int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
-            this.reverse = reverse;
             this.xStart = xStart;
             this.yStart = yStart;
             this.xMid = xMid;
@@ -329,25 +298,9 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
             return head;
         }
 
-        public boolean isDiagonal() {
-            if (reverse) {
-                return xStart + 1 <= xMid;
-            } else {
-                return xMid + 1 <= xEnd;
-            }
-        }
+        abstract public boolean isDiagonal();
 
-        public <T> void addEquals(List<T> result, VList<T> a) {
-            if (reverse) {
-                for (int x=xStart + 1; x <= xMid; x++) {
-                    result.add(a.get(x));
-                }
-            } else {
-                for (int x = xMid + 1; x <= xEnd; x++) {
-                    result.add(a.get(x));
-                }
-            }
-        }
+        abstract public <T> void addEquals(List<T> result, VList<T> a);
 
         @Override
         public Iterator<Snake> iterator() {
@@ -370,12 +323,70 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         @Override
         public String toString() {
-            return "Snake{" + (reverse ? "reverse" : "forward") +
-                    ", xStart=" + xStart + ", yStart=" + yStart +
+            return getClass().getSimpleName() +
+                    "{xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
                     ", yEnd=" + yEnd +
                     (isDiagonal() ? " diagonal " : "") + '}';
         }
+    }
+
+    private static class NullSnake extends Snake {
+
+        public NullSnake(int xStart, int yStart, int xEnd, int yEnd) {
+            super(xStart, yStart, xStart, yStart, xEnd, yEnd);
+        }
+
+        @Override
+        public boolean isDiagonal() {
+            return false;
+        }
+
+        @Override
+        public <T> void addEquals(List<T> result, VList<T> a) {
+            // do nothing
+        }
+    }
+
+    private static class ForwardSnake extends Snake {
+
+        public ForwardSnake(int xStart, int yStart, int xMid,
+                int yMid, int xEnd, int yEnd) {
+            super(xStart, yStart, xMid, yMid, xEnd, yEnd);
+        }
+
+        @Override
+        public boolean isDiagonal() {
+            return xMid + 1 <= xEnd;
+        }
+
+        @Override
+        public <T> void addEquals(List<T> result, VList<T> a) {
+            for (int x = xMid + 1; x <= xEnd; x++) {
+                result.add(a.get(x));
+            }
+        }
+    }
+
+    private static class ReverseSnake extends Snake {
+
+        public ReverseSnake(int xStart, int yStart, int xMid,
+                int yMid, int xEnd, int yEnd) {
+            super(xStart, yStart, xMid, yMid, xEnd, yEnd);
+        }
+
+        @Override
+        public boolean isDiagonal() {
+            return xStart + 1 <= xMid;
+        }
+
+        @Override
+        public <T> void addEquals(List<T> result, VList<T> a) {
+            for (int x=xStart + 1; x <= xMid; x++) {
+                result.add(a.get(x));
+            }
+        }
+
     }
 
     public static class BidirectionalVector {
