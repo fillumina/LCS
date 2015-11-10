@@ -84,11 +84,11 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs<Integer>()));
 //        tests.addTest("RLinearSpaceMyers",
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
-        tests.addTest("BaselineOptimizedLinearSpaceMyers",
-                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
+//        tests.addTest("BaselineOptimizedLinearSpaceMyers",
+//                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
         tests.addTest("OptimizedLinearSpaceMyers",
                 new LcsRunnable(new OptimizedLinearSpaceMyersLcs<Integer>()));
-//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
+        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
 
     @Override

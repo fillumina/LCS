@@ -16,16 +16,22 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
-        Match matches = lcsMain(a, b);
+        final Match matches = lcsMatch(a, b);
         return matches.extractLcsForFirstSequence(a);
     }
 
-    public Match lcsMain(final List<T> a, final List<T> b) {
+    public Match lcsMatch(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
+        @SuppressWarnings("unchecked")
         final Match match = lcsTails((T[])a.toArray(new Object[n]), n,
                 (T[])b.toArray(new Object[m]), m);
-//        final Match match = lcsRec(a, 0, n, b, 0, m, new int[2][n + m + 5]);
+        return match == null ? Match.NULL : match;
+    }
+
+
+    public Match lcsMatch(final T[] a, final T[] b) {
+        final Match match = lcsTails(a, a.length, b, b.length);
         return match == null ? Match.NULL : match;
     }
 
@@ -49,7 +55,6 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         if (u + d != min) {
-            // TODO size is too much!
             lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u,
                     new int[2][2 * (n + m + 1)]);
         }

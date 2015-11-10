@@ -128,7 +128,7 @@ public class OptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
     private void countLcs(String a, String b, int expectedLcs) {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
-        Match m = algo.lcsMain(listA, listB);
+        Match m = algo.lcsMatch(listA, listB);
         assertEquals(Match.toString(m), expectedLcs, m.getLcs());
     }
 }
