@@ -49,7 +49,9 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         if (u + d != min) {
-            lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u, new int[2][n+m+5]);
+            // TODO size is too much!
+            lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u,
+                    new int[2][2 * (n + m + 1)]);
         }
 
         return chain(matchDown, lcsMatch, matchUp);
@@ -89,7 +91,6 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             return null;
         }
 
-        boolean isEnded = false;
         Match match = null;
         int xStart=-1, yStart=-1, xEnd=-1, yEnd=-1;
 
@@ -105,8 +106,8 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             final int halfv = vf.length / 2;
 
             vf[halfv + 1] = 0;
-            vb[halfv - 1] = n;
-            vb[halfv - delta] = n;
+            vb[halfv + delta - 1] = n;
+            vb[halfv - delta - 1] = n;
 
             boolean isPrev;
             int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
@@ -142,7 +143,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         }
                         assert kStart <= kEnd : "kStart=" + kStart +" > kEnd=" + kEnd;
                         if(kStart <= k && k <= kEnd &&
-                                xEnd >=0 && vb[maxk - delta] <= xEnd) {
+                                xEnd >=0 && vb[maxk] <= xEnd) {
 
                             if (xEnd > xMid) {
                                 xStart = isPrev ? next : prev + 1;
@@ -153,19 +154,18 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                                 xStart = isPrev ? next : prev;
                                 yStart = xStart - (k + (isPrev ? 1 : -1));
                             }
-                            isEnded = true;
                             break FIND_MIDDLE_SNAKE;
                         }
                     }
                 }
 
-                deltad = delta + d;
-                for (k = delta-d; k <= deltad; k += 2) {
+                //deltad = delta + d;
+                for (k = delta-d; k <= delta+d; k += 2) {
 
-                    maxk = halfv + k - delta;
+                    maxk = halfv + k;
                     next = vb[maxk + 1];
                     prev = vb[maxk - 1];
-                    isPrev = k == deltad || (k != delta-d && prev < next);
+                    isPrev = k == d+delta || (k != delta-d && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
@@ -186,7 +186,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
 
                     if (evenDelta && -d <= k && k <= d &&
-                        xStart >= 0 && xStart <= vf[maxk + delta]) {
+                        xStart >= 0 && xStart <= vf[maxk]) {
 
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
@@ -198,7 +198,6 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
                         }
 
-                        isEnded = true;
                         break FIND_MIDDLE_SNAKE;
                     }
                 }

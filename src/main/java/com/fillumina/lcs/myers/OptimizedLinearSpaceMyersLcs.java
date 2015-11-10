@@ -3,7 +3,6 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.Lcs;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -134,7 +133,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                     vf[maxk] = xEnd;
 
-                    if (!evenDelta /*&& xEnd > 0 && maxk >= delta && vb[maxk - delta] <= xEnd */) {
+                    if (!evenDelta) {
                         if (d>1) {
                             kStart = delta - (d - 1);
                             kEnd = delta + (d - 1);
@@ -142,7 +141,6 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                             kStart = delta + (d - 1);
                             kEnd = delta - (d - 1);
                         }
-                        assert kStart <= kEnd : "kStart=" + kStart +" > kEnd=" + kEnd;
                         if(kStart <= k && k <= kEnd &&
                                 xEnd >=0 && vb[maxk] <= xEnd) {
 
@@ -160,13 +158,12 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                 }
 
-                //deltad = delta + d;
-                for (k = delta-d; k <= delta+d; k += 2) {
-
+                deltad = delta + d;
+                for (k = delta-d; k <= deltad; k += 2) {
                     maxk = halfv + k;
                     next = vb[maxk + 1];
                     prev = vb[maxk - 1];
-                    isPrev = k == d+delta || (k != delta-d && prev < next);
+                    isPrev = k == deltad || (k != delta-d && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
@@ -182,7 +179,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         yStart--;
                     }
 
-                    if (xStart >= 0 /*&& -max < k && k < max*/) {
+                    if (xStart >= 0) {
                         vb[maxk] = xStart;
                     }
 
