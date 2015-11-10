@@ -160,13 +160,13 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                 }
 
-                deltad = delta + d;
-                for (k = delta-d; k <= deltad; k += 2) {
+                //deltad = delta + d;
+                for (k = delta-d; k <= delta+d; k += 2) {
 
                     maxk = halfv + k;
                     next = vb[maxk + 1];
                     prev = vb[maxk - 1];
-                    isPrev = k == deltad || (k != delta-d && prev < next);
+                    isPrev = k == d+delta || (k != delta-d && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
