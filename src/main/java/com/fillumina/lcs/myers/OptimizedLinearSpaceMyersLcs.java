@@ -96,7 +96,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         // find middle snake
         { // set variables out of scope so to have less garbage on the stack
-            final int max = (n + m + 1) / 2 + 1; //(int)Math.ceil((n + m)/2.0);
+            final int max = (n + m + 1) / 2 + 1;
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
 
@@ -132,7 +132,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     yEnd = xEnd - k;
 
                     xMid = xEnd;
-                    while (xEnd >= 0 && yEnd >= 0 && xEnd < n && yEnd < m &&
+                    while (xEnd < n && yEnd < m &&
                             Objects.equals(a[a0+xEnd],b[b0+yEnd])) {
                         xEnd++;
                         yEnd++;
@@ -144,7 +144,6 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
-                            yStart = yEnd < yStart ? yEnd : yStart;
                             match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
                         } else {
                             xStart = isPrev ? next : prev;
@@ -171,7 +170,6 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
                     xMid = xStart;
                     while (xStart > 0 && yStart > 0 &&
-                            xStart <= n && yStart <= m &&
                             Objects.equals(a[a0+xStart-1],b[b0+yStart-1])) {
                         xStart--;
                         yStart--;
@@ -184,7 +182,6 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            yEnd = yEnd < yStart ? yStart : yEnd;
                             match = new Match(a0+xStart, b0+yStart, xMid-xStart);
                         } else {
                             xEnd = isPrev ? prev : next;
