@@ -110,9 +110,15 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             vb[halfv - delta - 1] = n;
 
             boolean isPrev;
-            int k, deltad, kStart, kEnd, prev, next, maxk, xMid;
+            int k, kDeltaStart, kDeltaEnd, prev, next, maxk, xMid;
+            int kStart = delta - 1;
+            int kEnd = delta + 1;
             FIND_MIDDLE_SNAKE:
             for (int d = 0; d <= max; d++) {
+                if (d > 1) {
+                    kStart = delta - (d - 1);
+                    kEnd = delta + (d - 1);
+                }
                 for (k = -d; k <= d; k += 2) {
                     maxk = halfv + k;
                     next = vf[maxk + 1];
@@ -133,37 +139,29 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                     }
                     vf[maxk] = xEnd;
 
-                    if (!evenDelta) {
-                        if (d>1) {
-                            kStart = delta - (d - 1);
-                            kEnd = delta + (d - 1);
-                        } else {
-                            kStart = delta + (d - 1);
-                            kEnd = delta - (d - 1);
-                        }
-                        if(kStart <= k && k <= kEnd &&
+                    if (!evenDelta && kStart <= k && k <= kEnd &&
                                 xEnd >=0 && vb[maxk] <= xEnd) {
-
-                            if (xEnd > xMid) {
-                                xStart = isPrev ? next : prev + 1;
-                                yStart = xStart - (k + (isPrev ? 1 : -1));
-                                yStart = yEnd < yStart ? yEnd : yStart;
-                                match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
-                            } else {
-                                xStart = isPrev ? next : prev;
-                                yStart = xStart - (k + (isPrev ? 1 : -1));
-                            }
-                            break FIND_MIDDLE_SNAKE;
+                        if (xEnd > xMid) {
+                            xStart = isPrev ? next : prev + 1;
+                            yStart = xStart - (k + (isPrev ? 1 : -1));
+                            yStart = yEnd < yStart ? yEnd : yStart;
+                            match = new Match(a0+xMid, b0+(xMid-k), xEnd-xMid);
+                        } else {
+                            xStart = isPrev ? next : prev;
+                            yStart = xStart - (k + (isPrev ? 1 : -1));
                         }
+                        break FIND_MIDDLE_SNAKE;
                     }
                 }
 
-                deltad = delta + d;
-                for (k = delta-d; k <= deltad; k += 2) {
+                kDeltaEnd = delta + d;
+                kDeltaStart = delta - d;
+                for (k = kDeltaStart; k <= kDeltaEnd; k += 2) {
+
                     maxk = halfv + k;
                     next = vb[maxk + 1];
                     prev = vb[maxk - 1];
-                    isPrev = k == deltad || (k != delta-d && prev < next);
+                    isPrev = k == kDeltaEnd || (k != kDeltaStart && prev < next);
                     if (isPrev) {
                         xStart = prev;   // up
                     } else {
@@ -178,10 +176,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         xStart--;
                         yStart--;
                     }
-
-                    if (xStart >= 0) {
-                        vb[maxk] = xStart;
-                    }
+                    vb[maxk] = xStart;
 
                     if (evenDelta && -d <= k && k <= d &&
                         xStart >= 0 && xStart <= vf[maxk]) {
