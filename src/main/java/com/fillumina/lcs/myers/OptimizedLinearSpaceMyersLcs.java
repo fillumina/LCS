@@ -42,15 +42,9 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         public InnerLcs(final T[] a, final T[] b) {
             this.a = a;
             this.b = b;
-            this.match = lcsTails(a.length, b.length);
-        }
+            final int n = a.length;
+            final int m = b.length;
 
-        private boolean equals(int x, int y) {
-            return Objects.equals(a[x], b[y]);
-        }
-
-        /** Recognizes equals head and tail so to speed up the calculations. */
-        private Match lcsTails(final int n, final int m) {
             final int min = n < m ? n : m;
             Match matchDown = null, matchUp = null, lcsMatch = null;
             int d;
@@ -58,7 +52,8 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             if (d != 0) {
                 matchDown = new Match(0, 0, d);
                 if (d == min) {
-                    return matchDown;
+                    match = matchDown;
+                    return;
                 }
             }
             int u, x0=n-1, y0=m-1;
@@ -72,7 +67,11 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
                         new int[2][2 * (n + m + 1)]);
             }
 
-            return chain(matchDown, lcsMatch, matchUp);
+            match = chain(matchDown, lcsMatch, matchUp);
+        }
+
+        private boolean equals(int x, int y) {
+            return Objects.equals(a[x], b[y]);
         }
 
         protected Match lcsRec(final int a0, final int n,
