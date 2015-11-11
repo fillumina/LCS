@@ -1,8 +1,9 @@
 package com.fillumina.lcs;
 
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
-import com.fillumina.lcs.myers.OptimizedLinearSpaceMyersLcs;
+import com.fillumina.lcs.myers.LinearSpaceMyersLcsHelper;
 import com.fillumina.lcs.myers.MyersLcs;
+import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcsHelper;
 import com.fillumina.lcs.myers.RLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.ReverseMyersLcs;
 import com.fillumina.lcs.myers.SpaceOptimizedMyersLcs;
@@ -21,8 +22,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 6000;
-    private static final int LCS = 5000;
+    private static final int TOTAL = 600;
+    private static final int LCS = 500;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -87,8 +88,8 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
 //        tests.addTest("BaselineOptimizedLinearSpaceMyers",
 //                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
-        tests.addTest("OptimizedLinearSpaceMyers",
-                new LcsRunnable(new OptimizedLinearSpaceMyersLcs<Integer>()));
+        tests.addTest("ParallelLinearSpaceMyers",
+                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper<Integer>()));
         tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
 

@@ -6,24 +6,24 @@ import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.RandomSequenceGenerator;
 import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
+public class LinearSpaceMyersLcsHelperTest extends AbstractLcsTest {
 
-    private OptimizedLinearSpaceMyersLcs<Character> algo = new OptimizedLinearSpaceMyersLcs<>();
+    private LinearSpaceMyersLcsHelper<Character> algo = new LinearSpaceMyersLcsHelper<>();
 
     public static void main(String[] args) {
-        new OptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new LinearSpaceMyersLcsHelperTest().randomLcs(60, 10);
     }
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new OptimizedLinearSpaceMyersLcs<>();
+        return new LinearSpaceMyersLcsHelper<>();
     }
 
     @Test(timeout = 100L)

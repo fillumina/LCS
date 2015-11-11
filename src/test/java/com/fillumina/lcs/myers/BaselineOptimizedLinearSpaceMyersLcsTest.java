@@ -9,7 +9,7 @@ import com.fillumina.lcs.Lcs;
  */
 public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private OptimizedLinearSpaceMyersLcs<Character> algo = new OptimizedLinearSpaceMyersLcs<>();
+    private LinearSpaceMyersLcsHelper<Character> algo = new LinearSpaceMyersLcsHelper<>();
 
     public static void main(String[] args) {
         new BaselineOptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10);
@@ -17,6 +17,6 @@ public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new OptimizedLinearSpaceMyersLcs<>();
+        return new LinearSpaceMyersLcsHelper<>();
     }
 }

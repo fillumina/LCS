@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
+public class LinearSpaceMyersLcsHelper<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
