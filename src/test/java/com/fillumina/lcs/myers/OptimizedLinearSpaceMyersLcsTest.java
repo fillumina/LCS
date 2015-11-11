@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.AbstractLcsTest;
 import com.fillumina.lcs.CharacterLcsTestHelper;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.OptimizedLinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
