@@ -11,32 +11,36 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
     public Match getMatch() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
+        return lcsTail(0, n, 0, m, new int[2][3 *(n+m+1)]);
+    }
+
+    private Match lcsTail(final int a0, final int n, final int b0, final int m,
+            int[][] vv) {
         final int min = n < m ? n : m;
         Match matchDown = null;
         Match matchUp = null;
         Match lcsMatch = null;
         int d;
-        for (d = 0; d < min && equals(d, d); d++) {
+        for (d = 0; d < min && equals(a0+d, b0+d); d++) {
             ;
         }
         if (d != 0) {
-            matchDown = new LinearLcsMatch(0, 0, d);
+            matchDown = new LinearLcsMatch(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
         }
         int u;
-        int x0 = n - 1;
-        int y0 = m - 1;
+        int x0 = a0 + n - 1;
+        int y0 = b0 + m - 1;
         for (u = 0; u < min && equals(x0 - u, y0 - u); u++) {
             ;
         }
         if (u != 0) {
-            matchUp = new LinearLcsMatch(n - u, m - u, u);
+            matchUp = new LinearLcsMatch(a0 + n - u, b0 + m - u, u);
         }
         if (u + d != min) {
-            lcsMatch = lcsRec(d, n - d - u, d, m - d - u,
-                    new int[2][2 * (n + m + 1)]);
+            lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
         }
         return Match.chain(matchDown, lcsMatch, matchUp);
     }
@@ -176,9 +180,9 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
         if (fromStart && toEnd) {
             return match;
         }
-        Match before = fromStart ? null : lcsRec(a0, xStart, b0, yStart, vv);
+        Match before = fromStart ? null : lcsTail(a0, xStart, b0, yStart, vv);
         Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null
-                : lcsRec(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
+                : lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return Match.chain(before, match, after);
     }
