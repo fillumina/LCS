@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.TreeSet;
 
 /**
  *
@@ -25,7 +24,7 @@ public class IbmLcs<T> implements Lcs<T> {
     public static class LcsImpl extends LCS {
 
         private final Object[] a, b;
-        private TreeSet<Integer> solutionIndexes;
+        private List<Integer> solutionIndexes;
 
         public LcsImpl(List<?> a, List<?> b) {
             this.a = a.toArray(new Object[a.size()]);
@@ -36,11 +35,18 @@ public class IbmLcs<T> implements Lcs<T> {
             if (solutionIndexes == null) {
                 return Collections.EMPTY_LIST;
             }
+            int size = solutionIndexes.size();
+            Collections.sort(solutionIndexes);
+            assert size == solutionIndexes.size();
             List<Object> list = new ArrayList<>(solutionIndexes.size());
-            for (int index : solutionIndexes) {
-                list.add(a[index]);
+            for (int i : solutionIndexes) {
+                list.add(a[i]);
             }
             return list;
+        }
+
+        public int getLcs() {
+            return solutionIndexes.size();
         }
 
         @Override
@@ -65,7 +71,7 @@ public class IbmLcs<T> implements Lcs<T> {
 
         @Override
         protected void initializeLcs(int lcsLength) {
-            solutionIndexes = new TreeSet<>();
+            solutionIndexes = new ArrayList<>(lcsLength);
         }
     }
 }

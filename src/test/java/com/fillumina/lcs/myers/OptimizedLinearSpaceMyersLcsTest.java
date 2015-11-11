@@ -3,10 +3,11 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.AbstractLcsTest;
 import com.fillumina.lcs.CharacterLcsTestHelper;
 import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.RandomSequenceGenerator;
 import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.List;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  *
@@ -131,4 +132,20 @@ public class OptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
         Match m = algo.lcsMatch(listA, listB);
         assertEquals(Match.toString(m), expectedLcs, m.getLcs());
     }
+
+    @Test(timeout = 1_000L)
+    public void shouldPassVeryLongTest() {
+        RandomSequenceGenerator generator =
+//                new RandomSequenceGenerator(60,10, 26641683514364L);
+                new RandomSequenceGenerator(6000,5000);
+
+        System.out.println(generator.toString());
+
+        @SuppressWarnings("unchecked")
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+                .lcs(generator.getA(), generator.getB());
+
+        assertEquals(generator.getLcsList(), lcsList);
+    }
+
 }

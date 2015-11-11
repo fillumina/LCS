@@ -21,8 +21,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 100;
-    private static final int LCS = 60;
+    private static final int TOTAL = 6000;
+    private static final int LCS = 5000;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -51,14 +51,15 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
         @Override
         public void run() {
-            assertEquals(lcsList, lcsAlgorithm.lcs(a, b));
+            assertEquals(lcsAlgorithm.getClass().getSimpleName(),
+                    lcsList, lcsAlgorithm.lcs(a, b));
         }
     }
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(5000);
-        config.setTimeout(1, TimeUnit.MINUTES);
+        config.setBaseIterations(500);
+        config.setTimeout(10, TimeUnit.MINUTES);
     }
 
     @Override

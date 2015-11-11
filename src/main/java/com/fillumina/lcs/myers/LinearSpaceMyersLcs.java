@@ -1,9 +1,7 @@
 package com.fillumina.lcs.myers;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  *
@@ -61,8 +59,7 @@ public abstract class LinearSpaceMyersLcs<T> {
                 }
                 return null;
             }
-            for (int i = b0; i < b0 + m;
-                    i++) {
+            for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
                     return new Match(a0, i, 1);
                 }
@@ -70,8 +67,7 @@ public abstract class LinearSpaceMyersLcs<T> {
             return null;
         }
         if (m == 1) {
-            for (int i = a0; i < a0 + n;
-                    i++) {
+            for (int i = a0; i < a0 + n; i++) {
                 if (equals(i, b0)) {
                     return new Match(i, b0, 1);
                 }
@@ -92,9 +88,11 @@ public abstract class LinearSpaceMyersLcs<T> {
             final int[] vf = vv[0];
             final int[] vb = vv[1];
             final int halfv = vf.length / 2;
+
             vf[halfv + 1] = 0;
             vb[halfv + delta - 1] = n;
             vb[halfv - delta - 1] = n;
+
             boolean isPrev;
             int k;
             int kDeltaStart;
@@ -105,15 +103,14 @@ public abstract class LinearSpaceMyersLcs<T> {
             int xMid;
             int kStart = delta - 1;
             int kEnd = delta + 1;
+
             FIND_MIDDLE_SNAKE:
-            for (int d = 0; d <= max;
-                    d++) {
+            for (int d = 0; d <= max; d++) {
                 if (d > 1) {
                     kStart = delta - (d - 1);
                     kEnd = delta + (d - 1);
                 }
-                for (k = -d; k <= d;
-                        k += 2) {
+                for (k = -d; k <= d; k += 2) {
                     maxk = halfv + k;
                     next = vf[maxk + 1];
                     prev = vf[maxk - 1];
@@ -130,7 +127,8 @@ public abstract class LinearSpaceMyersLcs<T> {
                         yEnd++;
                     }
                     vf[maxk] = xEnd;
-                    if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 && vb[maxk] <= xEnd) {
+                    if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
+                            vb[maxk] <= xEnd) {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
@@ -145,8 +143,7 @@ public abstract class LinearSpaceMyersLcs<T> {
                 }
                 kDeltaEnd = delta + d;
                 kDeltaStart = delta - d;
-                for (k = kDeltaStart; k <= kDeltaEnd;
-                        k += 2) {
+                for (k = kDeltaStart; k <= kDeltaEnd; k += 2) {
                     maxk = halfv + k;
                     next = vb[maxk + 1];
                     prev = vb[maxk - 1];
@@ -164,7 +161,8 @@ public abstract class LinearSpaceMyersLcs<T> {
                         yStart--;
                     }
                     vb[maxk] = xStart;
-                    if (evenDelta && -d <= k && k <= d && xStart >= 0 && xStart <= vf[maxk]) {
+                    if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
+                            xStart <= vf[maxk]) {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
@@ -230,6 +228,23 @@ public abstract class LinearSpaceMyersLcs<T> {
             this.lcs = steps;
         }
 
+        private static Match chain(final Match head, final Match tail) {
+            assert head != null && tail != null;
+            Match current = head;
+            if (head.last != null) {
+                current = head.last;
+            }
+            current.next = tail;
+            head.lcs += tail.lcs;
+            if (tail.last != null) {
+                current = tail.last;
+            } else {
+                current = tail;
+            }
+            head.last = current;
+            return head;
+        }
+
         /**
          * <b>NOTE</b> that this value is accurate only for the first
          * element of the iterable.
@@ -250,40 +265,37 @@ public abstract class LinearSpaceMyersLcs<T> {
             return steps;
         }
 
-        /**
-         * @return the common subsequence elements.
-         */
-        @Deprecated // a is not known here!
-        public <T> List<T> extractLcsFromFirstSequence(List<T> a) {
-            List<T> list = new ArrayList<>(getLcs());
-            for (Match segment : this) {
-                segment.addEquals(list, a);
-            }
-            return list;
-        }
+        public Iterable<Integer> lcsIndexes() {
+            return new Iterable<Integer>() {
+                @Override
+                public Iterator<Integer> iterator() {
+                    return new Iterator<Integer>() {
+                        Iterator<Match> i = Match.this.iterator();
+                        Match current;
+                        int step = 0;
 
-        private <T> void addEquals(List<T> list, List<T> a) {
-            for (int i = x; i < x + steps;
-                    i++) {
-                list.add(a.get(i));
-            }
-        }
+                        @Override
+                        public boolean hasNext() {
+                            while (current == null || current.steps == 0 ||
+                                    (step + 1) == current.steps) {
+                                if (i.hasNext()) {
+                                    current = i.next();
+                                    step = -1;
+                                } else {
+                                    return false;
+                                }
+                            }
+                            step++;
+                            return true;
+                        }
 
-        private static Match chain(final Match head, final Match tail) {
-            assert head != null && tail != null;
-            Match current = head;
-            if (head.last != null) {
-                current = head.last;
-            }
-            current.next = tail;
-            head.lcs += tail.lcs;
-            if (tail.last != null) {
-                current = tail.last;
-            } else {
-                current = tail;
-            }
-            head.last = current;
-            return head;
+                        @Override
+                        public Integer next() {
+                            return current.x + step;
+                        }
+                    };
+                }
+            };
         }
 
         @Override
@@ -325,7 +337,9 @@ public abstract class LinearSpaceMyersLcs<T> {
             if (this == NULL) {
                 return "Match{NULL}";
             }
-            return getClass().getSimpleName() + "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + ", lcs=" + lcs + '}';
+            return getClass().getSimpleName() +
+                    "{xStart=" + x + ", yStart=" + y +
+                    ", steps=" + steps + ", lcs=" + lcs + '}';
         }
     }
 

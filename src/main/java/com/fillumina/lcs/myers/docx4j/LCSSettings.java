@@ -25,7 +25,7 @@ package com.fillumina.lcs.myers.docx4j;
 public class LCSSettings {
 
     // the value of N*M when to start binding the run time
-    private double tooLong = 10000000.0;
+    private double tooLong = Double.MAX_VALUE;
 
     private double powLimit = 1.5;
 

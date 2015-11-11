@@ -2,6 +2,7 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,11 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
         final Match matches = lcsMatch(a, b);
-        return matches.extractLcsFromFirstSequence(a);
+        List<T> lcs = new ArrayList<>(matches.getLcs());
+        for (int index : matches.lcsIndexes()) {
+            lcs.add(a.get(index));
+        }
+        return lcs;
     }
 
     @SuppressWarnings("unchecked")
