@@ -45,6 +45,10 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             this.match = lcsTails(a.length, b.length);
         }
 
+        private boolean equals(int x, int y) {
+            return Objects.equals(a[x], b[y]);
+        }
+
         /** Recognizes equals head and tail so to speed up the calculations. */
         private Match lcsTails(final int n, final int m) {
             final int min = n < m ? n : m;
@@ -80,15 +84,15 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
             if (n == 1) {
                 if (m == 1) {
-                    if (Objects.equals(a[a0],b[b0])) {
+                    if (equals(a0,b0)) {
                         return new Match(a0, b0, 1);
                     }
                     return null;
                 }
 
-                T t = a[a0];
+//                T t = a[a0];
                 for (int i = b0; i < b0+m; i++) {
-                    if (Objects.equals(t,b[i])) {
+                    if (equals(a0,i)) {
                         return new Match(a0, i, 1);
                     }
                 }
@@ -96,9 +100,9 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
             }
 
             if (m == 1) {
-                T t = b[b0];
+//                T t = b[b0];
                 for (int i = a0; i < a0+n; i++) {
-                    if (Objects.equals(t,a[i])) {
+                    if (equals(i, b0)) {
                         return new Match(i, b0, 1);
                     }
                 }
@@ -147,7 +151,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
                         xMid = xEnd;
                         while (xEnd < n && yEnd < m &&
-                                Objects.equals(a[a0+xEnd],b[b0+yEnd])) {
+                                equals(a0+xEnd,b0+yEnd)) {
                             xEnd++;
                             yEnd++;
                         }
@@ -184,7 +188,7 @@ public class OptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
 
                         xMid = xStart;
                         while (xStart > 0 && yStart > 0 &&
-                                Objects.equals(a[a0+xStart-1],b[b0+yStart-1])) {
+                                equals(a0+xStart-1,b0+yStart-1)) {
                             xStart--;
                             yStart--;
                         }
