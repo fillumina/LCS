@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class RListHirschbergLinearSpaceAlgorithmLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new RListHirschbergLinearSpaceAlgorithmLcs<Character>() {
 
             @Override

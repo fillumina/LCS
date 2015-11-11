@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class CharacterLcsTestHelper {
 
-    public static String executeLcs(Lcs<Character> lcs, String a, String b) {
+    public static String executeLcs(ListLcs<Character> lcs, String a, String b) {
         List<Character> resultList = lcs.lcs(toList(a), toList(b));
         return toString(resultList);
     }

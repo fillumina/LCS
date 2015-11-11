@@ -12,7 +12,7 @@ public class HirschbergLinearSpaceAlgorithmLcsTest
         extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new HirschbergLinearSpaceAlgorithmLcs<Character>() {
 
             @Override

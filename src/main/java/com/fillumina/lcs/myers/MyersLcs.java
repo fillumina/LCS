@@ -3,10 +3,10 @@ package com.fillumina.lcs.myers;
 import com.fillumina.lcs.util.OneBasedVector;
 import com.fillumina.lcs.util.BidirectionalVector;
 import com.fillumina.lcs.util.BidirectionalArray;
-import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -23,7 +23,7 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs<T> implements Lcs<T> {
+public class MyersLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

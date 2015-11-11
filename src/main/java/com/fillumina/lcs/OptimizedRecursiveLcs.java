@@ -8,7 +8,7 @@ import static com.fillumina.lcs.util.ListUtils.*;
  * 
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedRecursiveLcs<T> implements Lcs<T> {
+public class OptimizedRecursiveLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

@@ -1,18 +1,18 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.Lcs;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * The indexes are passed along the calls so to avoid using sublists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
+public class BaselineOptimizedLinearSpaceMyersLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {

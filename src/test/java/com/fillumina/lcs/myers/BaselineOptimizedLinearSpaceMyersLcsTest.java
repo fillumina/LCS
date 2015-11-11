@@ -1,7 +1,7 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -16,7 +16,7 @@ public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new LinearSpaceMyersLcsHelper<>();
     }
 }

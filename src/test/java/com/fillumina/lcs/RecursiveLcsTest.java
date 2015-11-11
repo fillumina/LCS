@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class RecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new RecursiveLcs<Character>() {
 
             @Override
@@ -45,7 +45,7 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         RandomSequenceGenerator generator =
                 new RandomSequenceGenerator(10,5);
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
         assertEquals(generator.getLcsList(), lcsList);
     }

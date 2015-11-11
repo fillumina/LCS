@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BottomUpLcs<T> implements Lcs<T> {
+public class BottomUpLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

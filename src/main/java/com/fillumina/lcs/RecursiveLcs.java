@@ -9,7 +9,7 @@ import java.util.List;
  * It's heavily using recursion so it's VERY memory hungry and time consuming.
  *
  */
-public class RecursiveLcs<T> implements Lcs<T> {
+public class RecursiveLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

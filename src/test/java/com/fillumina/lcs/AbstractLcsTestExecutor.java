@@ -104,14 +104,14 @@ public abstract class AbstractLcsTestExecutor
     /**
      * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
      * the body of the created
-     * {@link Lcs#lcs(java.util.List, java.util.List)}.
+     * {@link ListLcs#lcs(java.util.List, java.util.List)}.
      */
-    protected abstract Lcs<?> getLcsAlgorithm();
+    protected abstract ListLcs<?> getLcsAlgorithm();
 
     @SuppressWarnings("unchecked")
     public Result lcs(final String xs, final String ys) {
         return new Result(
-                executeLcs((Lcs)getLcsAlgorithm(), xs, ys),
+                executeLcs((ListLcs)getLcsAlgorithm(), xs, ys),
                 new CountingResult(countingMap));
     }
 
@@ -128,7 +128,7 @@ public abstract class AbstractLcsTestExecutor
     }
 
     private String getName() {
-        final Class<? extends Lcs> clazz = getLcsAlgorithm().getClass();
+        final Class<? extends ListLcs> clazz = getLcsAlgorithm().getClass();
         final String simpleName = clazz.getSimpleName();
         if (simpleName.isEmpty()) {
             return clazz.getSuperclass().getSimpleName();

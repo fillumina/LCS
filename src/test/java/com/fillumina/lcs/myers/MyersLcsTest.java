@@ -1,7 +1,7 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class MyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new MyersLcs<>();
     }
 }

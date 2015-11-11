@@ -1,17 +1,16 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * The indexes are passed along the calls so to avoid using sublists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcsHelper<T> implements Lcs<T> {
+public class ParallelLinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {

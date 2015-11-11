@@ -1,14 +1,12 @@
 package com.fillumina.lcs.myers;
 
-import java.io.Serializable;
-import java.util.Iterator;
+import static com.fillumina.lcs.myers.Match.chain;
 import java.util.concurrent.RecursiveTask;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-// TODO add management of very long sequences
 public abstract class ParallelLinearSpaceMyersLcs<T> {
     private ThreadLocal<int[][]> cache;
 
@@ -73,7 +71,7 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
             final int n = this.n;
             final int b0 = this.b0;
             final int m = this.m;
-            
+
             if (n == 0 || m == 0) {
                 return null;
             }
@@ -211,7 +209,8 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
                 return match;
             }
 
-            Match before = null, after = null;
+            Match before = null;
+            Match after = null;
             RecursiveLcs beforeLcs = null;
 
             if (!fromStart)  {
@@ -233,166 +232,7 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
                 before = beforeLcs.join();
             }
 
-            return chain(before, match, after);
+            return Match.chain(before, match, after);
         }
     }
-
-    private static Match chain(Match before, Match middle, Match after) {
-        if (middle == null) {
-            if (after == null) {
-                return before;
-            }
-            if (before == null) {
-                return after;
-            }
-            return Match.chain(before, after);
-        }
-        if (after == null) {
-            if (before == null) {
-                return middle;
-            }
-            return Match.chain(before, middle);
-        }
-        if (before == null) {
-            return Match.chain(middle, after);
-        }
-        return Match.chain(before, Match.chain(middle, after));
-    }
-
-    public static class Match implements Iterable<Match>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-        public static final Match NULL = new Match(-1, -1, 0);
-        private final int x;
-        private final int y;
-        private final int steps;
-        private Match next;
-        private Match last;
-
-        private Match(int x, int y, int steps) {
-            this.x = x;
-            this.y = y;
-            this.steps = steps;
-        }
-
-        private static Match chain(final Match head, final Match tail) {
-            assert head != null && tail != null;
-            Match current = head;
-            if (head.last != null) {
-                current = head.last;
-            }
-            current.next = tail;
-            // parallel LCS cannot calculate this reliably
-            //head.lcs += tail.lcs;
-            if (tail.last != null) {
-                current = tail.last;
-            } else {
-                current = tail;
-            }
-            head.last = current;
-            return head;
-        }
-
-        /**
-         * <b>NOTE</b> that this value is accurate only for the first
-         * element of the iterable.
-         */
-        public int getLcs() {
-            int lcs = 0;
-            for (Match m : this) {
-                lcs += m.steps;
-            }
-            return lcs;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getSteps() {
-            return steps;
-        }
-
-        public Iterable<Integer> lcsIndexes() {
-            return new Iterable<Integer>() {
-                @Override
-                public Iterator<Integer> iterator() {
-                    return new Iterator<Integer>() {
-                        Iterator<Match> i = Match.this.iterator();
-                        Match current;
-                        int step = 0;
-
-                        @Override
-                        public boolean hasNext() {
-                            while (current == null || current.steps == 0 ||
-                                    (step + 1) == current.steps) {
-                                if (i.hasNext()) {
-                                    current = i.next();
-                                    step = -1;
-                                } else {
-                                    return false;
-                                }
-                            }
-                            step++;
-                            return true;
-                        }
-
-                        @Override
-                        public Integer next() {
-                            return current.x + step;
-                        }
-                    };
-                }
-            };
-        }
-
-        @Override
-        public Iterator<Match> iterator() {
-            return new Iterator<Match>() {
-                private Match current = Match.this;
-
-                @Override
-                public boolean hasNext() {
-                    return current != null && current != NULL;
-                }
-
-                @Override
-                public Match next() {
-                    Match tmp = current;
-                    current = current.next;
-                    return tmp;
-                }
-            };
-        }
-
-        /**
-         * @return a string representation of the entire iterable.
-         */
-        public static String toString(Match s) {
-            Match current = s;
-            StringBuilder buf = new StringBuilder("[");
-            buf.append(s.toString());
-            while (current.next != null && current.next != NULL) {
-                current = current.next;
-                buf.append(", ").append(current.toString());
-            }
-            buf.append("]");
-            return buf.toString();
-        }
-
-        @Override
-        public String toString() {
-            if (this == NULL) {
-                return "Match{NULL}";
-            }
-            return getClass().getSimpleName() +
-                    "{xStart=" + x + ", yStart=" + y +
-                    ", steps=" + steps + '}';
-        }
-    }
-
 }

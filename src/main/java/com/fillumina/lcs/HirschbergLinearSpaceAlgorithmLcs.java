@@ -11,7 +11,7 @@ import java.util.Collections;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class HirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

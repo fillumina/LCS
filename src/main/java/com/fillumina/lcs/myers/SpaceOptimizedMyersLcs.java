@@ -1,9 +1,9 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.Lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -20,7 +20,7 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class SpaceOptimizedMyersLcs<T> implements Lcs<T> {
+public class SpaceOptimizedMyersLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

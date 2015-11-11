@@ -44,9 +44,9 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
     }
 
     private class LcsRunnable implements Runnable {
-        private final Lcs<Integer> lcsAlgorithm;
+        private final ListLcs<Integer> lcsAlgorithm;
 
-        public LcsRunnable(Lcs<Integer> lcsAlgorithm) {
+        public LcsRunnable(ListLcs<Integer> lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 

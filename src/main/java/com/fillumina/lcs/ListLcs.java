@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public interface Lcs<T> {
+public interface ListLcs<T> {
 
     List<T> lcs(List<T> xs, List<T> ys);
 }

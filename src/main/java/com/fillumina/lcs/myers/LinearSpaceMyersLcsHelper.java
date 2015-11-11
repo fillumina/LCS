@@ -1,17 +1,16 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * The indexes are passed along the calls so to avoid using sublists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsHelper<T> implements Lcs<T> {
+public class LinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
@@ -36,7 +35,7 @@ public class LinearSpaceMyersLcsHelper<T> implements Lcs<T> {
         return match == null ? Match.NULL : match;
     }
 
-    private static class InnerLcs<T> extends LinearSpaceMyersLcs<T> {
+    private static class InnerLcs<T> extends LinearSpaceMyersLcs {
         private final T[] a, b;
 
         public InnerLcs(T[] a, T[] b) {
@@ -45,17 +44,17 @@ public class LinearSpaceMyersLcsHelper<T> implements Lcs<T> {
         }
 
         @Override
-        boolean equals(int x, int y) {
+        public boolean equals(int x, int y) {
             return Objects.equals(a[x], b[y]);
         }
 
         @Override
-        int getLengthA() {
+        public int getFirstSequenceLength() {
             return a == null ? 0 : a.length;
         }
 
         @Override
-        int getLengthB() {
+        public int getSecondSequenceLength() {
             return b == null ? 0 : b.length;
         }
     }

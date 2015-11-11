@@ -9,7 +9,7 @@ import java.util.List;
 public class DirectHirschbergLinearSpaceLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new DirectHirschbergLinearSpaceLcs<Character>() {
 
             @Override

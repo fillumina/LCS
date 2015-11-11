@@ -17,7 +17,7 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class WagnerFischerLcs<T> implements Lcs<T> {
+public class WagnerFischerLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> s, List<T> t) {

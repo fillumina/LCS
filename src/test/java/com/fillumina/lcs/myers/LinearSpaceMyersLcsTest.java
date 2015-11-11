@@ -2,12 +2,11 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTest;
 import com.fillumina.lcs.CharacterLcsTestHelper;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.RandomSequenceGenerator;
-import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -22,7 +21,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new LinearSpaceMyersLcsHelper<>();
     }
 
@@ -142,7 +141,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         assertEquals(generator.getLcsList(), lcsList);

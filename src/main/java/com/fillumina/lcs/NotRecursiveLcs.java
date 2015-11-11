@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class NotRecursiveLcs<T> implements Lcs<T> {
+public class NotRecursiveLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

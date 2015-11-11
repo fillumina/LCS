@@ -1,11 +1,11 @@
 package com.fillumina.lcs.myers.docx4j;
 
 import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class IbmLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new IbmLcs<>();
     }
 
@@ -29,7 +29,7 @@ public class IbmLcsTest extends AbstractLcsTest {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         final List<Integer> result = generator.getLcsList();

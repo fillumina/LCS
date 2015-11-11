@@ -4,6 +4,7 @@ import static com.fillumina.lcs.util.ListUtils.concatenate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static com.fillumina.lcs.util.ListUtils.concatenate;
 
 /**
  * @see <a href="https://neil.fraser.name/writing/diff/">
@@ -11,11 +12,11 @@ import java.util.List;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CommonOptimizations<T> implements Lcs<T> {
+public class CommonOptimizations<T> implements ListLcs<T> {
 
-    private final Lcs<T> delegate;
+    private final ListLcs<T> delegate;
 
-    public CommonOptimizations(Lcs<T> delegate) {
+    public CommonOptimizations(ListLcs<T> delegate) {
         this.delegate = delegate;
     }
 

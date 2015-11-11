@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class RListHirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {

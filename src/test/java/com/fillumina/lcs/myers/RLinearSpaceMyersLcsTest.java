@@ -1,8 +1,8 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
 import org.junit.Test;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new RLinearSpaceMyersLcs<>();
     }
 

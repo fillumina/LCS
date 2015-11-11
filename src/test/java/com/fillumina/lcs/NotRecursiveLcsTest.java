@@ -7,7 +7,7 @@ package com.fillumina.lcs;
 public class NotRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new NotRecursiveLcs<>();
     }
 }

@@ -1,22 +1,16 @@
 package com.fillumina.lcs.myers;
 
-import java.io.Serializable;
-import java.util.Iterator;
-
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 // TODO add management of very long sequences
-public abstract class LinearSpaceMyersLcs<T> {
+public abstract class LinearSpaceMyersLcs implements Lcs {
 
-    abstract boolean equals(int x, int y);
-    abstract int getLengthA();
-    abstract int getLengthB();
-
+    @Override
     public Match getMatch() {
-        final int n = getLengthA();
-        final int m = getLengthB();
+        final int n = getFirstSequenceLength();
+        final int m = getSecondSequenceLength();
         final int min = n < m ? n : m;
         Match matchDown = null;
         Match matchUp = null;
@@ -26,7 +20,7 @@ public abstract class LinearSpaceMyersLcs<T> {
             ;
         }
         if (d != 0) {
-            matchDown = new Match(0, 0, d);
+            matchDown = new LinearLcsMatch(0, 0, d);
             if (d == min) {
                 return matchDown;
             }
@@ -38,13 +32,13 @@ public abstract class LinearSpaceMyersLcs<T> {
             ;
         }
         if (u != 0) {
-            matchUp = new Match(n - u, m - u, u);
+            matchUp = new LinearLcsMatch(n - u, m - u, u);
         }
         if (u + d != min) {
             lcsMatch = lcsRec(d, n - d - u, d, m - d - u,
                     new int[2][2 * (n + m + 1)]);
         }
-        return chain(matchDown, lcsMatch, matchUp);
+        return LinearLcsMatch.chain(matchDown, lcsMatch, matchUp);
     }
 
     protected Match lcsRec(final int a0, final int n, final int b0, final int m,
@@ -55,13 +49,13 @@ public abstract class LinearSpaceMyersLcs<T> {
         if (n == 1) {
             if (m == 1) {
                 if (equals(a0, b0)) {
-                    return new Match(a0, b0, 1);
+                    return new LinearLcsMatch(a0, b0, 1);
                 }
                 return null;
             }
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
-                    return new Match(a0, i, 1);
+                    return new LinearLcsMatch(a0, i, 1);
                 }
             }
             return null;
@@ -69,12 +63,12 @@ public abstract class LinearSpaceMyersLcs<T> {
         if (m == 1) {
             for (int i = a0; i < a0 + n; i++) {
                 if (equals(i, b0)) {
-                    return new Match(i, b0, 1);
+                    return new LinearLcsMatch(i, b0, 1);
                 }
             }
             return null;
         }
-        Match match = null;
+        LinearLcsMatch match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
@@ -132,7 +126,7 @@ public abstract class LinearSpaceMyersLcs<T> {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
-                            match = new Match(a0 + xMid, b0 + (xMid - k),
+                            match = new LinearLcsMatch(a0 + xMid, b0 + (xMid - k),
                                     xEnd - xMid);
                         } else {
                             xStart = isPrev ? next : prev;
@@ -166,7 +160,7 @@ public abstract class LinearSpaceMyersLcs<T> {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            match = new Match(a0 + xStart, b0 + yStart,
+                            match = new LinearLcsMatch(a0 + xStart, b0 + yStart,
                                     xMid - xStart);
                         } else {
                             xEnd = isPrev ? prev : next;
@@ -185,162 +179,31 @@ public abstract class LinearSpaceMyersLcs<T> {
         Match before = fromStart ? null : lcsRec(a0, xStart, b0, yStart, vv);
         Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null
                 : lcsRec(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
-        return chain(before, match, after);
+
+        return LinearLcsMatch.chain(before, match, after);
     }
 
-    private static Match chain(Match before, Match middle, Match after) {
-        if (middle == null) {
-            if (after == null) {
-                return before;
-            }
-            if (before == null) {
-                return after;
-            }
-            return Match.chain(before, after);
-        }
-        if (after == null) {
-            if (before == null) {
-                return middle;
-            }
-            return Match.chain(before, middle);
-        }
-        if (before == null) {
-            return Match.chain(middle, after);
-        }
-        return Match.chain(before, Match.chain(middle, after));
-    }
-
-    public static class Match implements Iterable<Match>, Serializable {
-
+    private static class LinearLcsMatch extends Match {
         private static final long serialVersionUID = 1L;
-        public static final Match NULL = new Match(-1, -1, 0);
-        private final int x;
-        private final int y;
-        private final int steps;
-        private Match next;
-        private Match last;
         private int lcs;
 
-        private Match(int x, int y, int steps) {
-            this.x = x;
-            this.y = y;
-            this.steps = steps;
+        private LinearLcsMatch(int x, int y, int steps) {
+            super(x, y, steps);
             this.lcs = steps;
-        }
-
-        private static Match chain(final Match head, final Match tail) {
-            assert head != null && tail != null;
-            Match current = head;
-            if (head.last != null) {
-                current = head.last;
-            }
-            current.next = tail;
-            head.lcs += tail.lcs;
-            if (tail.last != null) {
-                current = tail.last;
-            } else {
-                current = tail;
-            }
-            head.last = current;
-            return head;
         }
 
         /**
          * <b>NOTE</b> that this value is accurate only for the first
          * element of the iterable.
          */
+        @Override
         public int getLcs() {
             return lcs;
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getSteps() {
-            return steps;
-        }
-
-        public Iterable<Integer> lcsIndexes() {
-            return new Iterable<Integer>() {
-                @Override
-                public Iterator<Integer> iterator() {
-                    return new Iterator<Integer>() {
-                        Iterator<Match> i = Match.this.iterator();
-                        Match current;
-                        int step = 0;
-
-                        @Override
-                        public boolean hasNext() {
-                            while (current == null || current.steps == 0 ||
-                                    (step + 1) == current.steps) {
-                                if (i.hasNext()) {
-                                    current = i.next();
-                                    step = -1;
-                                } else {
-                                    return false;
-                                }
-                            }
-                            step++;
-                            return true;
-                        }
-
-                        @Override
-                        public Integer next() {
-                            return current.x + step;
-                        }
-                    };
-                }
-            };
-        }
-
         @Override
-        public Iterator<Match> iterator() {
-            return new Iterator<Match>() {
-                private Match current = Match.this;
-
-                @Override
-                public boolean hasNext() {
-                    return current != null && current != NULL;
-                }
-
-                @Override
-                public Match next() {
-                    Match tmp = current;
-                    current = current.next;
-                    return tmp;
-                }
-            };
-        }
-
-        /**
-         * @return a string representation of the entire iterable.
-         */
-        public static String toString(Match s) {
-            Match current = s;
-            StringBuilder buf = new StringBuilder("[");
-            buf.append(s.toString());
-            while (current.next != null && current.next != NULL) {
-                current = current.next;
-                buf.append(", ").append(current.toString());
-            }
-            buf.append("]");
-            return buf.toString();
-        }
-
-        @Override
-        public String toString() {
-            if (this == NULL) {
-                return "Match{NULL}";
-            }
-            return getClass().getSimpleName() +
-                    "{xStart=" + x + ", yStart=" + y +
-                    ", steps=" + steps + ", lcs=" + lcs + '}';
+        protected void accumulateLcs(int otherLcs) {
+            lcs += otherLcs;
         }
     }
-
 }

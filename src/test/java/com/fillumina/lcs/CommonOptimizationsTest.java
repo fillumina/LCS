@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class CommonOptimizationsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new CommonOptimizations<>(new BottomUpLcs<Character>());
     }
 }

@@ -1,13 +1,13 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.AbstractLcsTestExecutor;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.SpaceOptimizedMyersLcs.BidirectionalVector;
 import com.fillumina.lcs.myers.SpaceOptimizedMyersLcs.EndPointTable;
 import com.fillumina.lcs.myers.SpaceOptimizedMyersLcs.OneBasedVector;
 import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -18,7 +18,7 @@ public class SpaceOptimizedMyersLcsTest {
     private final AbstractLcsTestExecutor executor = new AbstractLcsTestExecutor() {
 
         @Override
-        protected Lcs<?> getLcsAlgorithm() {
+        protected ListLcs<?> getLcsAlgorithm() {
             return new SpaceOptimizedMyersLcs<>();
         }
 

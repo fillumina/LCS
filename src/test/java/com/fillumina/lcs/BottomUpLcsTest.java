@@ -9,7 +9,7 @@ import org.junit.Test;
 public class BottomUpLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
+    protected ListLcs<?> getLcsAlgorithm() {
         return new BottomUpLcs<>();
     }
 }
