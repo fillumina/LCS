@@ -92,7 +92,7 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
                 new LcsRunnable(new LinearSpaceMyersLcsHelper<Integer>()));
 //        tests.addTest("ParallelLinearSpaceMyers",
 //                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper<Integer>()));
-        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
+//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
 
     @Override
