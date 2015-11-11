@@ -24,7 +24,11 @@ public class Match implements Iterable<Match>, Serializable {
         this.steps = steps;
     }
 
-    public Match chain(final Match other) {
+    /**
+     * This is NOT a general chain algorithm, it works because the way
+     * matches are generated in the LCS algorithms.
+     */
+    Match chain(final Match other) {
         Match current = this;
         if (last != null) {
             current = last;

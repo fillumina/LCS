@@ -1,22 +1,19 @@
 package com.fillumina.lcs.myers;
 
-import static com.fillumina.lcs.myers.Match.chain;
 import java.util.concurrent.RecursiveTask;
+import static com.fillumina.lcs.myers.Match.chain;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class ParallelLinearSpaceMyersLcs<T> {
+public abstract class ParallelLinearSpaceMyersLcs implements Lcs {
     private ThreadLocal<int[][]> cache;
 
-    abstract boolean equals(int x, int y);
-    abstract int getLengthA();
-    abstract int getLengthB();
-
+    @Override
     public Match getMatch() {
-        final int n = getLengthA();
-        final int m = getLengthB();
+        final int n = getFirstSequenceLength();
+        final int m = getSecondSequenceLength();
         final int min = n < m ? n : m;
         cache = new ThreadLocal<int[][]>() {
             @Override
@@ -215,7 +212,7 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
 
             if (!fromStart)  {
                 beforeLcs = new RecursiveLcs(a0, xStart, b0, yStart);
-                if (Math.max(xStart - a0, yStart - b0) < 8) {
+                if (Math.max(xStart - a0, yStart - b0) < 40) {
                     before = beforeLcs.compute();
                     beforeLcs = null;
                 } else {

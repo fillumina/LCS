@@ -38,10 +38,10 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
             lcsMatch = lcsRec(d, n - d - u, d, m - d - u,
                     new int[2][2 * (n + m + 1)]);
         }
-        return LinearLcsMatch.chain(matchDown, lcsMatch, matchUp);
+        return Match.chain(matchDown, lcsMatch, matchUp);
     }
 
-    protected Match lcsRec(final int a0, final int n, final int b0, final int m,
+    private Match lcsRec(final int a0, final int n, final int b0, final int m,
             int[][] vv) {
         if (n == 0 || m == 0) {
             return null;
@@ -180,7 +180,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
         Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null
                 : lcsRec(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
-        return LinearLcsMatch.chain(before, match, after);
+        return Match.chain(before, match, after);
     }
 
     private static class LinearLcsMatch extends Match {

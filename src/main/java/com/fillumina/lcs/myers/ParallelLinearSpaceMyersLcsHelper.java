@@ -35,7 +35,7 @@ public class ParallelLinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
         return match == null ? Match.NULL : match;
     }
 
-    private static class InnerLcs<T> extends ParallelLinearSpaceMyersLcs<T> {
+    private static class InnerLcs<T> extends ParallelLinearSpaceMyersLcs {
         private final T[] a, b;
 
         public InnerLcs(T[] a, T[] b) {
@@ -44,17 +44,17 @@ public class ParallelLinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
         }
 
         @Override
-        boolean equals(int x, int y) {
+        public boolean equals(int x, int y) {
             return Objects.equals(a[x], b[y]);
         }
 
         @Override
-        int getLengthA() {
+        public int getFirstSequenceLength() {
             return a == null ? 0 : a.length;
         }
 
         @Override
-        int getLengthB() {
+        public int getSecondSequenceLength() {
             return b == null ? 0 : b.length;
         }
     }
