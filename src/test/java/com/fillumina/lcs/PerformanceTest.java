@@ -78,6 +78,8 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new OptimizedRecursiveLcs<Integer>()));
 //        tests.addTest("WagnerFischer",
 //                new LcsRunnable(new WagnerFischerLcs<Integer>()));
+        tests.addTest("SmithWaterman",
+                new LcsRunnable(new SmithWatermanLcs<Integer>()));
 
 
 //        tests.addTest("SpaceOptimizedMyers",

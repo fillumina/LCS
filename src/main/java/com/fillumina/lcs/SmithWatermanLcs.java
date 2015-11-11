@@ -18,7 +18,6 @@ public class SmithWatermanLcs<T> implements ListLcs<T> {
         final int[][] s = new int[n+1][m+1];
 
         // creates the grid
-        s[0][0] = 0;
         for (int i=1; i<=n; i++) {
             for (int j=1; j<=m; j++) {
                 if (Objects.equals(a.get(i-1), b.get(j-1))) {
@@ -29,7 +28,7 @@ public class SmithWatermanLcs<T> implements ListLcs<T> {
             }
         }
 
-        // read the path
+        // reads the path
         final int lcs = s[n][m];
         final List<T> lcsList = new ArrayList<>(lcs);
         int i=n, j=m;
