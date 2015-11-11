@@ -4,26 +4,27 @@ import com.fillumina.lcs.AbstractLcsTest;
 import com.fillumina.lcs.CharacterLcsTestHelper;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.RandomSequenceGenerator;
-import com.fillumina.lcs.myers.LinearSpaceMyersLcs.Match;
 import java.util.List;
 import org.junit.Test;
+import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
 import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsHelperTest extends AbstractLcsTest {
+public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private LinearSpaceMyersLcsHelper<Character> algo = new LinearSpaceMyersLcsHelper<>();
+    private ParallelLinearSpaceMyersLcsHelper<Character> algo =
+            new ParallelLinearSpaceMyersLcsHelper<>();
 
     public static void main(String[] args) {
-        new LinearSpaceMyersLcsHelperTest().randomLcs(60, 10);
+        new ParallelLinearSpaceMyersLcsTest().randomLcs(60, 10);
     }
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new LinearSpaceMyersLcsHelper<>();
+        return new ParallelLinearSpaceMyersLcsHelper<>();
     }
 
     @Test(timeout = 100L)

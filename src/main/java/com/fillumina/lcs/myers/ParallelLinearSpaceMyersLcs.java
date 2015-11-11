@@ -10,6 +10,7 @@ import java.util.concurrent.RecursiveTask;
  */
 // TODO add management of very long sequences
 public abstract class ParallelLinearSpaceMyersLcs<T> {
+    private ThreadLocal<int[][]> cache;
 
     abstract boolean equals(int x, int y);
     abstract int getLengthA();
@@ -19,6 +20,13 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
         final int n = getLengthA();
         final int m = getLengthB();
         final int min = n < m ? n : m;
+        cache = new ThreadLocal<int[][]>() {
+            @Override
+            protected int[][] initialValue() {
+                return new int[2][2 * (n + m + 1)];
+            }
+        };
+
         Match matchDown = null;
         Match matchUp = null;
         Match lcsMatch = null;
@@ -48,7 +56,8 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
     }
 
     private class RecursiveLcs extends RecursiveTask<Match> {
-        final int a0, n, b0, m;
+        private static final long serialVersionUID = 1L;
+        private final int a0, n, b0, m;
 
         public RecursiveLcs(int a0, int n, int b0, int m) {
             super();
@@ -60,6 +69,11 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
 
         @Override
         protected Match compute() {
+            final int a0 = this.a0;
+            final int n = this.n;
+            final int b0 = this.b0;
+            final int m = this.m;
+            
             if (n == 0 || m == 0) {
                 return null;
             }
@@ -96,7 +110,7 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
                 final int max = (n + m + 1) / 2 + 1;
                 final int delta = n - m;
                 final boolean evenDelta = (delta & 1) == 0;
-                final int vv[][] = new int[2][3 * (n + m + 1)]; // TODO 3??
+                final int vv[][] = cache.get();
                 final int[] vf = vv[0];
                 final int[] vb = vv[1];
                 final int halfv = vf.length / 2;
@@ -202,7 +216,12 @@ public abstract class ParallelLinearSpaceMyersLcs<T> {
 
             if (!fromStart)  {
                 beforeLcs = new RecursiveLcs(a0, xStart, b0, yStart);
-                beforeLcs.fork();
+                if (Math.max(xStart - a0, yStart - b0) < 8) {
+                    before = beforeLcs.compute();
+                    beforeLcs = null;
+                } else {
+                    beforeLcs.fork();
+                }
             }
 
             if (!(toEnd || n - xEnd == 0 || m - yEnd == 0)) {
