@@ -3,68 +3,51 @@ package com.fillumina.lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
+ * This algorithm uses the LCS score table in a graphical way. It's useful
+ * to visualize how a score table works. Other algorithms focus to better
+ * encode informations in a pure integer table and are thus more efficient.
+ *
+ * @see SmithWatermanLcs
+ * @see WagnerFisherLcs
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class BottomUpLcs<T> implements ListLcs<T> {
 
     @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
-        Grid grid = createGrid(xs, ys);
-
-        List<T> lcs = new ArrayList<>();
-        int i = xs.size() - 1;
-        int j = ys.size() - 1;
-        char move;
-        do {
-            move = grid.get(i, j).move;
-            switch(move) {
-                case '\\':
-                    lcs.add(xs.get(i));
-                    i--;
-                    j--;
-                    break;
-
-                case '^':
-                    i--;
-                    break;
-
-                case '<':
-                    j--;
-                    break;
-            }
-        } while (move != 'e');
-
-        Collections.reverse(lcs);
-        return lcs;
+    public List<T> lcs(List<T> a, List<T> b) {
+        final Grid grid = createGrid(a, b);
+        return readLcs(a, b, grid);
     }
 
-    private Grid createGrid(List<T> xs, List<T> ys) {
-        final int xsSize = xs.size();
-        final int ysSize = ys.size();
+    private Grid createGrid(List<T> a, List<T> b) {
+        final int n = a.size();
+        final int m = b.size();
 
-        final Grid grid = new Grid(xsSize, ysSize, new Cell(0, 'e'));
+        final Grid grid = new Grid(n, m, new Cell(0, Move.INVALID));
 
         Cell cell;
         int left, over;
 
-        for (int j=0; j<ysSize; j++) {
-            T y = ys.get(j);
-            for (int i=0; i<xsSize; i++) {
-                T x = xs.get(i);
+        for (int j = 0; j < m; j++) {
+            T y = b.get(j);
+            for (int i = 0; i < n; i++) {
+                T x = a.get(i);
 
-                if (x.equals(y)) {
-                    cell = new Cell(grid.get(i-1, j-1).len + 1, '\\');
+                if (Objects.equals(x, y)) {
+                    cell = new Cell(grid.get(i - 1, j - 1).len + 1,
+                            Move.DIAGONAL);
 
                 } else {
-                    left = grid.get(i, j-1).len;
-                    over = grid.get(i-1, j).len;
+                    left = grid.get(i, j - 1).len;
+                    over = grid.get(i - 1, j).len;
                     if (left < over) {
-                        cell = new Cell(over, '^');
+                        cell = new Cell(over, Move.UP);
                     } else {
-                        cell = new Cell(left, '<');
+                        cell = new Cell(left, Move.LEFT);
                     }
                 }
 
@@ -74,41 +57,73 @@ public class BottomUpLcs<T> implements ListLcs<T> {
         return grid;
     }
 
-    private String gridToString(List<T> xs, List<T> ys, Grid grid) {
-        StringBuilder buf = new StringBuilder();
-        buf.append("  ");
-        for (int j=0; j<ys.size(); j++) {
-            buf.append(ys.get(j));
-        }
-        buf.append('\n');
-        for (int i=0; i<xs.size(); i++) {
-            buf.append(xs.get(i)).append(' ');
-            for (int j=0; j<ys.size(); j++) {
-                buf.append(grid.get(i,j).move);
+    private List<T> readLcs(List<T> a, List<T> b, Grid grid) {
+        List<T> lcs = new ArrayList<>();
+        int i = a.size() - 1;
+        int j = b.size() - 1;
+        Move move;
+        do {
+            move = grid.get(i, j).move;
+            switch (move) {
+                case DIAGONAL:
+                    lcs.add(a.get(i));
+                    i--;
+                    j--;
+                    break;
+
+                case UP:
+                    i--;
+                    break;
+
+                case LEFT:
+                    j--;
+                    break;
             }
-            buf.append('\n');
+        } while (move != Move.INVALID);
+
+        Collections.reverse(lcs);
+        return lcs;
+    }
+
+    private static enum Move {
+        UP('^'), LEFT('<'), DIAGONAL('\\'), INVALID(' ');
+
+        private char symbol;
+
+        Move(char symbol) {
+            this.symbol = symbol;
         }
-        return buf.toString();
+
+        @Override
+        public String toString() {
+            return Character.toString(symbol);
+        }
     }
 
     private static class Cell {
-        private final int len;
-        private final char move;
 
-        public Cell(int len, char move) {
+        private final int len;
+        private final Move move;
+
+        public Cell(int len, Move move) {
             this.len = len;
             this.move = move;
         }
     }
 
+    /**
+     * It's a matrix of {@link Cell}s that returns a default value when an
+     * element has not been set or it's out of boundaries.
+     */
     private static class Grid {
+
         private final Cell[][] array;
-        private final Cell def;
+        private final Cell defaultValue;
 
         @SuppressWarnings("unchecked")
-        public Grid(int maxX, int maxY, Cell def) {
-            this.array = new Cell[maxX][maxY];
-            this.def = def;
+        public Grid(int rows, int columns, Cell defaultValue) {
+            this.array = new Cell[rows][columns];
+            this.defaultValue = defaultValue;
         }
 
         public Cell get(int x, int y) {
@@ -116,10 +131,10 @@ public class BottomUpLcs<T> implements ListLcs<T> {
             try {
                 value = array[x][y];
             } catch (IndexOutOfBoundsException e) {
-                value = def;
+                return defaultValue;
             }
             if (value == null) {
-                return def;
+                return defaultValue;
             }
             return value;
         }
@@ -134,5 +149,25 @@ public class BottomUpLcs<T> implements ListLcs<T> {
                 // do nothing
             }
         }
+    }
+
+    /**
+     * Produces a grid string representation. Useful for debugging.
+     */
+    private static <T> String gridToString(List<T> a, List<T> b, Grid grid) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("  ");
+        for (int j = 0; j < b.size(); j++) {
+            buf.append(b.get(j));
+        }
+        buf.append('\n');
+        for (int i = 0; i < a.size(); i++) {
+            buf.append(a.get(i)).append(' ');
+            for (int j = 0; j < b.size(); j++) {
+                buf.append(grid.get(i, j).move.toString());
+            }
+            buf.append('\n');
+        }
+        return buf.toString();
     }
 }

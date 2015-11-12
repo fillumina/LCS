@@ -8,6 +8,6 @@ public class NotRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
     protected ListLcs<?> getLcsAlgorithm() {
-        return new NotRecursiveLcs<>();
+        return new SmithWatermanLcs<>();
     }
 }

@@ -1,50 +1,58 @@
 package com.fillumina.lcs;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
+ * Similar to the  Wagner-Fisher approach, it uses a score table that doesn't
+ * need to be initialized first and so it's slightly more efficient.
  *
+ * @see WagnerFisherLcs
+ * @see <a href='https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm'>
+ *  Wikipedia: Smith-Waterman Algorithm
+ * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class SmithWatermanLcs<T> implements ListLcs<T> {
 
     @Override
-    public List<T> lcs(final List<T> a, final List<T> b) {
-        final int n = a.size();
-        final int m = b.size();
-        final int[][] s = new int[n+1][m+1];
+    public List<T> lcs(List<T> a, List<T> b) {
+        int n = a.size();
+        int m = b.size();
 
-        // creates the grid
-        for (int i=1; i<=n; i++) {
-            for (int j=1; j<=m; j++) {
-                if (Objects.equals(a.get(i-1), b.get(j-1))) {
-                    s[i][j] = s[i-1][j-1] + 1;
+        int[][] d = new int[n + 1][m + 1];
+
+        // row 0 and column 0 are initialized to 0 already
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (a.get(i).equals(b.get(j))) {
+                    d[i + 1][j + 1] = d[i][j] + 1;
                 } else {
-                    s[i][j] = Math.max(s[i-1][j], s[i][j-1]);
+                    d[i + 1][j + 1]
+                            = Math.max(d[i + 1][j], d[i][j + 1]);
                 }
             }
         }
 
-        // reads the path
-        final int lcs = s[n][m];
-        final List<T> lcsList = new ArrayList<>(lcs);
-        int i=n, j=m;
-        while (i>0 && j>0) {
-            if (Objects.equals(a.get(i-1), b.get(j-1))) {
-                i--;
-                j--;
-                lcsList.add(a.get(i));
-            } else if (s[i-1][j] < s[i][j-1]) {
-                j--;
+        int index = d[n][m];
+
+        // read the substring out from the matrix
+        @SuppressWarnings("unchecked")
+        T[] sb = (T[]) new Object[index];
+        index--;
+        for (int x = n, y = m; x != 0 && y != 0;) {
+            if (d[x][y] == d[x - 1][y]) {
+                x--;
+            } else if (d[x][y] == d[x][y - 1]) {
+                y--;
             } else {
-                i--;
+                sb[index--] = a.get(x - 1); // set the list in reverse order
+                x--;
+                y--;
             }
         }
-        Collections.reverse(lcsList);
-        return lcsList;
+
+        return Arrays.asList(sb);
     }
 
 }

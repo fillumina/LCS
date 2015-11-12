@@ -3,51 +3,61 @@ package com.fillumina.lcs;
 import java.util.List;
 import static com.fillumina.lcs.util.ListUtils.*;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
+ * Computes the LCS using linear space O(n).
+ * The algorithms that use the LCS score table only work with 2
+ * rows at a time (current row j and j-1) so it is possible to avoid
+ * creating the entire table by just using these rows. By calculating
+ * the forward and backward vector and watching where they meet the
+ * LCS can be calculated by successively dividing the virtual score table at
+ * the meeting point. The dividing technique is called
+ * <a href='https://en.wikipedia.org/wiki/Dynamic_programming'>dynamic
+ * programming</a>. This algorithm is slower than those that
+ * use the full score table.
  *
- * @see <a href="https://www.ics.uci.edu/~eppstein/161/960229.html">
- *  LCS
- * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class HirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
 
     @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
-        int nx = xs.size();
-        int ny = ys.size();
+    public List<T> lcs(List<T> a, List<T> b) {
+        int n = a.size();
+        int m = b.size();
 
-        if (nx == 0) {
-            return Collections.<T>emptyList();
+        switch (n) {
+            case 0:
+                return Collections.<T>emptyList();
 
-        } else if (nx == 1) {
-            final T xs0 = xs.get(0);
-            if (ys.contains(xs0)) {
-                return Collections.singletonList(xs0);
-            }
-            return Collections.<T>emptyList();
+            case 1:
+                final T t = a.get(0);
+                if (b.contains(t)) {
+                    return Collections.singletonList(t);
+                }
+                return Collections.<T>emptyList();
 
-        } else {
-            int i = nx / 2;
-            List<T> xb = xs.subList(0, i);
-            List<T> xe = xs.subList(i, nx);
-            int[] ll_b = lcs_lens(xb, ys);
-            int[] ll_e = lcs_lens(reverse(xe), reverse(ys));
+            default:
+                int i = n / 2;
+                List<T> aHead = a.subList(0, i);
+                List<T> aTail = a.subList(i, n);
+                int[] forward = calculateLcs(aHead, b);
+                int[] backward = calculateLcs(reverse(aTail), reverse(b));
 
-            int k = indexOfBiggerSum(ll_b, ll_e, ny);
+                // k is the index shared by both forward and backward
+                // score vectors.
+                int k = indexOfBiggerSum(forward, backward);
 
-            List<T> yb = ys.subList(0, k);
-            List<T> ye = ys.subList(k, ny);
-            return concatenate(lcs(xb, yb), lcs(xe, ye));
+                List<T> bHead = b.subList(0, k);
+                List<T> bTail = b.subList(k, m);
+                return concatenate(lcs(aHead, bHead), lcs(aTail, bTail));
         }
     }
 
-    private int indexOfBiggerSum(int[] ll_b, int[] ll_e, int ny) {
-        assert ny + 1 == ll_b.length && ny + 1 == ll_e.length;
-        int tmp, k = -1, max = -1;
-        for (int j=0; j<=ny; j++) {
-            tmp = ll_b[j] + ll_e[ny-j];
+    private int indexOfBiggerSum(int[] fw, int[] bw) {
+        int tmp, k = -1, max = -1, m = fw.length - 1;
+        for (int j = 0; j <= m; j++) {
+            tmp = fw[j] + bw[m - j];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -56,19 +66,23 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
         return k;
     }
 
-    private int[] lcs_lens(List<T> xs, List<T> ys) {
-        final int ysSize = ys.size();
-        final int length = ysSize + 1;
+    private int[] calculateLcs(List<T> a, List<T> b) {
+        final int m = b.size();
 
-        int[] curr = new int[length];
-        int[] prev = new int[length];
+        int[][] array = new int[2][m+1];
+        int[] tmp;
+        int[] curr = array[0];
+        int[] prev = array[1];
 
-        for (T x : xs) {
-            System.arraycopy(curr, 0, prev, 0, length);
+        for (T x : a) {
+            // swap(curr, prev)
+            tmp = curr;
+            curr = prev;
+            prev = tmp;
 
-            for (int i=0; i<ysSize; i++) {
-                T y = ys.get(i);
-                if (x.equals(y)) {
+            for (int i=0; i<m; i++) {
+                T y = b.get(i);
+                if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);

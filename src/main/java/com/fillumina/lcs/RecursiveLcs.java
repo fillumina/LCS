@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Implementation of the Longest Common Subsequence algorithm.
- * It's heavily using recursion so it's VERY memory hungry and time consuming.
+ * The most simple LCS algorithm. It is heavily based on recursion so it's quite
+ * impractical but offers a very concise and clear implementation.
  *
+ * @see MomoizedRecursiveLcs
+ * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class RecursiveLcs<T> implements ListLcs<T> {
 
@@ -27,7 +29,7 @@ public class RecursiveLcs<T> implements ListLcs<T> {
         if (xe.equals(ye)) {
             return concatenate(lcs(xs, n-1, ys, m-1), xe);
         } else {
-            return getLongest(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));
+            return longest(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));
         }
     }
 
@@ -38,7 +40,7 @@ public class RecursiveLcs<T> implements ListLcs<T> {
         return list;
     }
 
-    static <T> List<T> getLongest(List<T> a, List<T> b) {
+    static <T> List<T> longest(List<T> a, List<T> b) {
         return (a.size() > b.size() ? a : b);
     }
 
