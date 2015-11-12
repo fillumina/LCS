@@ -2,7 +2,6 @@ package com.fillumina.lcs.scoretable;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
-import org.junit.Test;
 
 /**
  *

@@ -1,5 +1,7 @@
 package com.fillumina.lcs;
 
+import java.util.Iterator;
+
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
@@ -12,14 +14,18 @@ public abstract class LinearSpaceMyersLcs {
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
 
-    public Match getMatch() {
+    protected int getMaximumAllowded() {
+        return Integer.MAX_VALUE;
+    }
+
+    public Match getLcsMatch() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
         return lcsTail(0, n, 0, m, new int[2][3 *(n+m+1)]);
     }
 
-    private Match lcsTail(final int a0, final int n, final int b0, final int m,
-            int[][] vv) {
+    private Match lcsTail(final int a0, final int n,
+            final int b0, final int m, int[][] vv) {
         final int min = n < m ? n : m;
         Match matchDown = null;
         Match matchUp = null;
@@ -84,7 +90,7 @@ public abstract class LinearSpaceMyersLcs {
         // find middle snake
         {
             // set variables out of scope so to have less garbage on the stack
-            final int max = (n + m + 1) / 2 + 1;
+            final int max = Math.min(getMaximumAllowded(), (n + m + 1) / 2 + 1);
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];
@@ -184,10 +190,172 @@ public abstract class LinearSpaceMyersLcs {
         if (fromStart && toEnd) {
             return match;
         }
-        Match before = fromStart ? null : lcsTail(a0, xStart, b0, yStart, vv);
-        Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null
-                : lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
+        Match before = fromStart ? null :
+                lcsTail(a0, xStart, b0, yStart, vv);
+        Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null :
+                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return Match.chain(before, match, after);
     }
+
+    public static class Match implements Iterable<Match> {
+
+        private static final long serialVersionUID = 1L;
+        public static final Match NULL = new Match(-1, -1, 0);
+        private final int x;
+        private final int y;
+        private final int steps;
+        private Match next;
+        private Match last;
+        private int lcs;
+
+        Match(int x, int y, int steps) {
+            this.x = x;
+            this.y = y;
+            this.steps = steps;
+            this.lcs = steps;
+        }
+
+        /**
+         * This is NOT a general chain algorithm, it works because the way
+         * matches are generated in the LCS algorithms.
+         */
+        Match chain(final Match other) {
+            Match current = this;
+            if (last != null) {
+                current = last;
+            }
+            current.next = other;
+            lcs += other.lcs;
+            if (other.last != null) {
+                current = other.last;
+            } else {
+                current = other;
+            }
+            last = current;
+            return this;
+        }
+
+        /** The value is valid only for the head match of the sequence. */
+        public int getSequenceSize() {
+            return lcs;
+        }
+
+        public int getFirstSequenceIndex() {
+            return x;
+        }
+
+        public int getSecondSequenceIndex() {
+            return y;
+        }
+
+        public int getSteps() {
+            return steps;
+        }
+
+        abstract class IndexIterator implements Iterator<Integer> {
+            private final Iterator<Match> i = Match.this.iterator();
+            protected int step = 0;
+            protected Match current;
+
+            @Override
+            public boolean hasNext() {
+                while (current == null ||
+                        current.steps == 0 ||
+                        (step + 1) == current.steps) {
+                    if (i.hasNext()) {
+                        current = (Match) i.next();
+                        step = -1;
+                    } else {
+                        return false;
+                    }
+                }
+                step++;
+                return true;
+            }
+
+        }
+
+        public Iterable<Integer> lcsIndexesOfTheFirstSequence() {
+            return new Iterable<Integer>() {
+                @Override
+                public Iterator<Integer> iterator() {
+                    return new IndexIterator() {
+
+                        @Override
+                        public Integer next() {
+                            return current.x + step;
+                        }
+                    };
+                }
+            };
+        }
+
+        public Iterable<Integer> lcsIndexesOfTheSecondSequence() {
+            return new Iterable<Integer>() {
+                @Override
+                public Iterator<Integer> iterator() {
+                    return new IndexIterator() {
+
+                        @Override
+                        public Integer next() {
+                            return current.y + step;
+                        }
+                    };
+                }
+            };
+        }
+
+        @Override
+        public Iterator<Match> iterator() {
+            return new Iterator<Match>() {
+                private Match current = Match.this;
+
+                @Override
+                public boolean hasNext() {
+                    return current != null && current != NULL;
+                }
+
+                @Override
+                public Match next() {
+                    Match tmp = current;
+                    current = current.next;
+                    return tmp;
+                }
+            };
+        }
+
+        @Override
+        public String toString() {
+            if (this == NULL) {
+                return "Match{NULL}";
+            }
+            return getClass().getSimpleName() +
+                    "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
+        }
+
+        static Match chain(Match before, Match middle,
+                Match after) {
+            if (middle == null) {
+                if (after == null) {
+                    return before;
+                }
+                if (before == null) {
+                    return after;
+                }
+                return before.chain(after);
+            }
+            if (after == null) {
+                if (before == null) {
+                    return middle;
+                }
+                return before.chain(middle);
+            }
+            if (before == null) {
+                return middle.chain(after);
+            }
+            return before.chain(middle.chain(after));
+        }
+    }
+
 }

@@ -4,7 +4,6 @@ import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
 import java.util.List;
 import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  *

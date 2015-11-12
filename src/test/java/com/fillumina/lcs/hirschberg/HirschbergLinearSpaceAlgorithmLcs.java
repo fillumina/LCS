@@ -1,9 +1,7 @@
 package com.fillumina.lcs.hirschberg;
 
-import com.fillumina.lcs.hirschberg.*;
 import com.fillumina.lcs.ListLcs;
 import java.util.List;
-import static com.fillumina.lcs.util.ListUtils.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;

@@ -1,13 +1,13 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs;
 
-import com.fillumina.lcs.Match;
+import com.fillumina.lcs.LinearSpaceMyersLcs.Match;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
+import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -15,7 +15,8 @@ import com.fillumina.lcs.ListLcs;
  */
 public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private LinearSpaceMyersLcsHelper<Character> algo = new LinearSpaceMyersLcsHelper<>();
+    private LinearSpaceMyersLcsWrapper<Character> algo =
+            new LinearSpaceMyersLcsWrapper<>();
 
     public static void main(String[] args) {
         new LinearSpaceMyersLcsTest().randomLcs(60, 10);
@@ -23,7 +24,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected ListLcs<?> getLcsAlgorithm() {
-        return new LinearSpaceMyersLcsHelper<>();
+        return new LinearSpaceMyersLcsWrapper<>();
     }
 
     @Test(timeout = 100L)
@@ -130,7 +131,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
         Match m = algo.lcsMatch(listA, listB);
-        assertEquals(Match.toString(m), expectedLcs, m.getLcs());
+        assertEquals(ListUtils.toString(m), expectedLcs, m.getSequenceSize());
     }
 
     @Test(timeout = 1_000L)
@@ -147,5 +148,4 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
 
         assertEquals(generator.getLcsList(), lcsList);
     }
-
 }

@@ -4,7 +4,6 @@ import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

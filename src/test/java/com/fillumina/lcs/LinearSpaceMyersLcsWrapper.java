@@ -1,24 +1,21 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs;
 
-import com.fillumina.lcs.LinearSpaceMyersLcs;
-import com.fillumina.lcs.Match;
+import com.fillumina.lcs.LinearSpaceMyersLcs.Match;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
 
 /**
- * The indexes are passed along the calls so to avoid using sublists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
+public class LinearSpaceMyersLcsWrapper<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
         final Match matches = lcsMatch(a, b);
-        List<T> lcs = new ArrayList<>(matches.getLcs());
-        for (int index : matches.lcsIndexes()) {
+        List<T> lcs = new ArrayList<>(matches.getSequenceSize());
+        for (int index : matches.lcsIndexesOfTheFirstSequence()) {
             lcs.add(a.get(index));
         }
         return lcs;
@@ -33,7 +30,7 @@ public class LinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
     }
 
     public Match lcsMatch(final T[] a, final T[] b) {
-        final Match match = new InnerLcs<>(a, b).getMatch();
+        final Match match = new InnerLcs<>(a, b).getLcsMatch();
         return match == null ? Match.NULL : match;
     }
 
