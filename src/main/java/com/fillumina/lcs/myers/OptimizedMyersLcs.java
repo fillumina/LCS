@@ -30,11 +30,10 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         final T[] aa = a.toArray((T[])new Object[a.size()]);
         @SuppressWarnings("unchecked")
         final T[] bb = b.toArray((T[])new Object[b.size()]);
-        final List<Snake> snakes = lcsMyers(aa, bb);
-        return extractLcs(snakes, aa);
+        return lcsMyers(aa, bb);
     }
 
-    private List<Snake> lcsMyers(T[] a, T[] b) {
+    private List<T> lcsMyers(T[] a, T[] b) {
         int n = a.length;
         int m = b.length;
         int max = n + m + 1;
@@ -43,7 +42,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         int[][] vv = new int[max][size];
         int[] vNext, vPrev;
 
-        int maxk, next, prev, x=-1, y=-1, d, k=-1;
+        int maxk, next, prev, x=-1, y=-1, d, k, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
             vPrev = vv[d == 0 ? 0 : d-1];
@@ -70,8 +69,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
             }
         }
 
-        List<Snake> snakes = new ArrayList<>();
-
+        List<T> result = new ArrayList<>();
 
         int xStart, yStart, xMid, steps, xEnd, v[];
         for (; d >= 0 && x > 0 && y > 0; d--) {
@@ -95,48 +93,16 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
 
             steps = xEnd - xMid;
             if (steps != 0) {
-                snakes.add(new Snake(xMid, xEnd));
+                for (s=xEnd-1; s>=xMid; s--) {
+                    result.add(a[s]);
+                }
             }
 
             x = xStart;
             y = yStart;
         }
         // the snakes are collected backwards
-        Collections.reverse(snakes);
-        return snakes;
+        Collections.reverse(result);
+        return result;
     }
-
-    /** @return the common subsequence elements. */
-    private List<T> extractLcs(List<Snake> snakes, T[] a) {
-        List<T> list = new ArrayList<>();
-        for (Snake snake : snakes) {
-            for (int s=snake.xMid; s<snake.xEnd; s++) {
-                list.add(a[s]);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Records each snake in the solution. A snake is a sequence of
-     * equal elements starting from Mid to End and preceeded by a vertical
-     * or horizontal edge going from Start to Mid.
-     */
-    protected static class Snake  {
-        private Snake next;
-        public final int xMid, xEnd;
-
-        public Snake(int xMid, int xEnd) {
-            this.xMid = xMid;
-            this.xEnd = xEnd;
-        }
-
-        @Override
-        public String toString() {
-            return "Snake{" +
-                    ", xMid=" + xMid +
-                    ", xEnd=" + xEnd + '}';
-        }
-    }
-
 }
