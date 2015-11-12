@@ -1,7 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import com.fillumina.lcs.ListLcs;
 import java.util.Arrays;
@@ -93,10 +91,10 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
                 xMid = xStart + 1;
             }
 
-            steps = xEnd - xMid;
-            if (steps != 0) {
+            if (xEnd != xMid) {
                 for (s=xEnd-1; s>=xMid; s--) {
-                    result[index--] = a[s];
+                    result[index] = a[s];
+                    index--;
                 }
             }
 
