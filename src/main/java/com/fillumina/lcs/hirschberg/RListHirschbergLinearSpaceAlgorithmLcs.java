@@ -1,11 +1,14 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.hirschberg;
 
+import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.util.RList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Optimized Hirschberg Linear Space LCS algorithm that calculates the
+ * reverse vector without the need to reverse the list.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

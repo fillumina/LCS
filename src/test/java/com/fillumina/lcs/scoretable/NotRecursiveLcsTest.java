@@ -1,4 +1,8 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.scoretable;
+
+import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.scoretable.SmithWatermanLcs;
 
 /**
  *

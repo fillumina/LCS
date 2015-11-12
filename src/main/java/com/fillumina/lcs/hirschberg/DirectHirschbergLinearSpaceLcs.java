@@ -1,10 +1,14 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.hirschberg;
 
+import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
+ * Optimized Hirschberg Linear Space LCS algorithm that calculates the
+ * reverse vector without the need to reverse the list.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -13,62 +17,64 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
     @Override
     public List<T> lcs(List<T> xs, List<T> ys) {
         final int ysSize = ys.size();
-        return lcs_rlw(xs, 0, xs.size(),
+        return lcsRlw(xs, 0, xs.size(),
                 ys, 0, ysSize,
             new int[3][ysSize + 1]);
     }
 
-    List<T> lcs_rlw(List<T> xs, int xsStart, int xsEnd,
-            List<T> ys, int ysStart, int ysEnd,
+    List<T> lcsRlw(List<T> a, int aStart, int aEnd,
+            List<T> b, int bStart, int bEnd,
             int[][] buffer) {
-        final int xsSize = xsEnd - xsStart;
+        final int n = aEnd - aStart;
 
-        if (xsSize == 0) {
-            return Collections.<T>emptyList();
+        switch (n) {
+            case 0:
+                return Collections.<T>emptyList();
 
-        } else if (xsSize == 1) {
-            final T xs0 = xs.get(xsStart);
-            for (int i=ysStart; i<ysEnd; i++) {
-                if (xs0.equals(ys.get(i))) {
-                    return Collections.singletonList(xs0);
+            case 1:
+                final T t = a.get(aStart);
+                for (int i=bStart; i<bEnd; i++) {
+                    if (Objects.equals(t, b.get(i))) {
+                        return Collections.singletonList(t);
+                    }
                 }
-            }
-            return Collections.<T>emptyList();
+                return Collections.<T>emptyList();
 
-        } else {
-            final int i = xsStart + xsSize / 2;
+            default:
+                final int i = aStart + n / 2;
 
-            final int k = calculateCuttingIndex(xs, xsStart, i, xsEnd,
-                    ys, ysStart, ysEnd, buffer);
+                final int k = calculateCuttingIndex(a, aStart, i, aEnd,
+                        b, bStart, bEnd, buffer);
 
-            return add(lcs_rlw(xs, xsStart, i, ys, ysStart, k, buffer),
-                    lcs_rlw(xs, i, xsEnd, ys, k, ysEnd, buffer));
+                return add(lcsRlw(a, aStart, i, b, bStart, k, buffer),
+                        lcsRlw(a, i, aEnd, b, k, bEnd, buffer));
         }
     }
 
     private int calculateCuttingIndex(
-            List<T> xs, int xsStart, final int i, int xsEnd,
-            List<T> ys, int ysStart, int ysEnd,
+            List<T> a, int aStart, final int i, int aEnd,
+            List<T> b, int bStart, int bEnd,
             int[][] buffer) {
-        int[] ll_b = lcs_lens(xs, xsStart, i, ys, ysStart, ysEnd, buffer);
-        int[] ll_e = lcs_lens_reverse(xs, i, xsEnd, ys, ysStart, ysEnd, buffer);
-        int k = indexOfBiggerSum(ll_b, ll_e, ysStart, ysEnd) ;
+        int[] forward = calculateLcsForward(a, aStart, i, b, bStart, bEnd, buffer);
+        int[] backward = calculateLcsReverse(a, i, aEnd, b, bStart, bEnd, buffer);
+        int k = indexOfBiggerSum(forward, backward, bStart, bEnd) ;
         return k;
     }
 
-    private static <T> int[] lcs_lens(List<T> xs, int xsStart, int xsEnd,
-            List<T> ys, int ysStart, int ysEnd,
+    private static <T> int[] calculateLcsForward(
+            List<T> a, int aStart, int aEnd,
+            List<T> b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[0];
-        zero(curr, ysStart, ysEnd + 1);
+        zero(curr, bStart, bEnd + 1);
         int[] prev = buffer[2];
 
-        for (int j=xsStart; j<xsEnd; j++) {
-            T x = xs.get(j);
-            System.arraycopy(curr, ysStart, prev, ysStart, ysEnd - ysStart + 1);
+        for (int j=aStart; j<aEnd; j++) {
+            T x = a.get(j);
+            System.arraycopy(curr, bStart, prev, bStart, bEnd - bStart + 1);
 
-            for (int i=ysStart; i<ysEnd; i++) {
-                T y = ys.get(i);
+            for (int i=bStart; i<bEnd; i++) {
+                T y = b.get(i);
                 if (x.equals(y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
@@ -79,7 +85,7 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
         return curr;
     }
 
-    private static <T> int[] lcs_lens_reverse(
+    private static <T> int[] calculateLcsReverse(
             List<T> xs, int xsStart, int xsEnd,
             List<T> ys, int ysStart, int ysEnd,
             int[][] buffer) {

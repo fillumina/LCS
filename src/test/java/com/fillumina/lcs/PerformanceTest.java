@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.LinearSpaceMyersLcsHelper;
 import com.fillumina.lcs.myers.MyersLcs;

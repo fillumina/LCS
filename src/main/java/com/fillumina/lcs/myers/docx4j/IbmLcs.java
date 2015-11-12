@@ -7,7 +7,13 @@ import java.util.Objects;
 import com.fillumina.lcs.ListLcs;
 
 /**
+ * This is an adapter to make the DOCX4J LCS algorithm be testable along
+ * with the other algorithms in this project. This IBM algorithm is a useful
+ * reference for every speeding-up challenges.
  *
+ * @see <a href='http://grepcode.com/file_/repo1.maven.org/maven2/org.docx4j/docx4j/3.2.1/org/eclipse/compare/internal/LCS.java/?v=source'>
+ *  IBM Docx4J 3.2.1 LCS source</a>
+
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class IbmLcs<T> implements ListLcs<T> {
@@ -21,6 +27,12 @@ public class IbmLcs<T> implements ListLcs<T> {
         return (List<T>) lcs.getSolution();
     }
 
+    /**
+     * The IBM algorithm doesn't creates any structure to hold the LCS sequence
+     * but delegates this operation to the implementor. Unfortunately the Myers
+     * algorithm doesn't provide the indexes in a ordered way so if you need
+     * them so you should sort them afterwards.
+     */
     public static class LcsImpl extends LCS {
 
         private final Object[] a, b;

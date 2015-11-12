@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.scoretable.BottomUpLcs;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

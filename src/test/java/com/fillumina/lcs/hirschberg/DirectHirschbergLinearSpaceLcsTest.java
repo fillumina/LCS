@@ -1,5 +1,8 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.hirschberg;
 
+import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.hirschberg.DirectHirschbergLinearSpaceLcs;
 import java.util.List;
 
 /**

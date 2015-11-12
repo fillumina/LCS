@@ -1,5 +1,9 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.recursive;
 
+import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.RandomSequenceGenerator;
+import com.fillumina.lcs.recursive.RecursiveLcs;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
