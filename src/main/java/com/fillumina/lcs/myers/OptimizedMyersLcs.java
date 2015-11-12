@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.fillumina.lcs.ListLcs;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -69,9 +70,10 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
             }
         }
 
-        List<T> result = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        T[] result = (T[]) new Object[max];
 
-        int xStart, yStart, xMid, steps, xEnd, v[];
+        int xStart, yStart, xMid, steps, xEnd, v[], index = max-1;
         for (; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;
@@ -94,7 +96,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
             steps = xEnd - xMid;
             if (steps != 0) {
                 for (s=xEnd-1; s>=xMid; s--) {
-                    result.add(a[s]);
+                    result[index--] = a[s];
                 }
             }
 
@@ -102,7 +104,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
             y = yStart;
         }
         // the snakes are collected backwards
-        Collections.reverse(result);
-        return result;
+        List<T> list = Arrays.asList(result);
+        return list.subList(index+1, max);
     }
 }
