@@ -141,7 +141,6 @@ public class MyersLcs<T> implements ListLcs<T> {
      * or horizontal edge going from Start to Mid.
      */
     protected static class Snake  {
-        private Snake next;
         public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
 
         public Snake(int xStart, int yStart, int xMid, int yMid, int xEnd,

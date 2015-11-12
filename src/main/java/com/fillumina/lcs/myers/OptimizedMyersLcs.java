@@ -43,11 +43,12 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         int[][] vv = new int[max][size];
         int[] vNext, vPrev;
 
-        int maxk, next, prev, x, y;
-        for (int d = 0; d < max; d++) {
+        int maxk, next, prev, x=-1, y=-1, d, k=-1;
+        FILL_THE_TABLE:
+        for (d = 0; d < max; d++) {
             vPrev = vv[d == 0 ? 0 : d-1];
             vNext = vv[d];
-            for (int k = -d; k <= d; k += 2) {
+            for (k = -d; k <= d; k += 2) {
                 maxk = max + k;
                 next = vPrev[maxk + 1]; // down
                 prev = vPrev[maxk - 1]; // right
@@ -64,22 +65,16 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
                 }
                 vNext[maxk] = x;
                 if (x >= n && y >= m) {
-                    return calculateSolution(d, vv, x, y, max);
+                    break FILL_THE_TABLE;
                 }
             }
         }
-        return Collections.<Snake>emptyList();
-    }
 
-    private List<Snake> calculateSolution(int lastD,
-            int[][] vv, int xLast, int yLast, int max) {
         List<Snake> snakes = new ArrayList<>();
 
-        int x = xLast;
-        int y = yLast;
 
-        int d, xStart, yStart, xMid, steps, xEnd, next, prev, k, maxk, v[];
-        for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
+        int xStart, yStart, xMid, steps, xEnd, v[];
+        for (; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;
             v = vv[d == 0 ? 0 : d-1];
