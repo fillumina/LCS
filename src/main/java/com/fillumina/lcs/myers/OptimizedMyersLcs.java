@@ -40,19 +40,17 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         int max = n + m + 1;
 
         int size = (max << 1) + 1;
-        //BidirectionalArray vv = new BidirectionalArray(max);
         int[][] vv = new int[max][size];
-        //BidirectionalVector v = new BidirectionalVector(max);
-        int[] v = new int[size]; // max * 2
-
-        v[max + 1] =  0;
+        int[] vNext, vPrev;
 
         int maxk, next, prev, x, y;
         for (int d = 0; d < max; d++) {
+            vPrev = vv[d == 0 ? 0 : d-1];
+            vNext = vv[d];
             for (int k = -d; k <= d; k += 2) {
                 maxk = max + k;
-                next = v[maxk + 1]; // down
-                prev = v[maxk - 1]; // right
+                next = vPrev[maxk + 1]; // down
+                prev = vPrev[maxk - 1]; // right
                 if (k == -d || (k != d && prev < next)) {
                     x = next;
                 } else {
@@ -64,17 +62,11 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
                     x++;
                     y++;
                 }
-                v[maxk] = x;
+                vNext[maxk] = x;
                 if (x >= n && y >= m) {
-                    // reached the end of the 'table'
-                    if (d < max) {
-                        System.arraycopy(v, 0, vv[d], 0, size);
-                    }
-
                     return calculateSolution(d, vv, x, y, max);
                 }
             }
-            System.arraycopy(v, 0, vv[d], 0, size);
         }
         return Collections.<Snake>emptyList();
     }
@@ -90,7 +82,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;
-            v = vv[d];
+            v = vv[d == 0 ? 0 : d-1];
 
             xEnd = x;
 
