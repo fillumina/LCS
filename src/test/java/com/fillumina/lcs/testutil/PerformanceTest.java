@@ -1,5 +1,6 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.testutil;
 
+import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.hirschberg.OptimizedHirschbergLinearSpaceLcs;
 import com.fillumina.lcs.myers.LinearSpaceMyersLcsHelper;
 import com.fillumina.lcs.myers.MyersLcs;

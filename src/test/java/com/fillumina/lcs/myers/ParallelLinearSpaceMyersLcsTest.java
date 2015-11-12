@@ -1,8 +1,9 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.CharacterLcsTestHelper;
-import com.fillumina.lcs.RandomSequenceGenerator;
+import com.fillumina.lcs.Match;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
+import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
+import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

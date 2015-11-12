@@ -1,7 +1,7 @@
 package com.fillumina.lcs.myers.docx4j;
 
-import com.fillumina.lcs.AbstractLcsTest;
-import com.fillumina.lcs.RandomSequenceGenerator;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
+import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;

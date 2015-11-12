@@ -1,8 +1,7 @@
 package com.fillumina.lcs.scoretable;
 
-import com.fillumina.lcs.AbstractLcsTestExecutor;
+import com.fillumina.lcs.testutil.AbstractLcsTestExecutor;
 import com.fillumina.lcs.ListLcs;
-import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;

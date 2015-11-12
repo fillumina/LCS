@@ -1,7 +1,8 @@
 package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.Match;
 import java.util.concurrent.RecursiveTask;
-import static com.fillumina.lcs.myers.Match.chain;
+import static com.fillumina.lcs.Match.chain;
 
 /**
  *

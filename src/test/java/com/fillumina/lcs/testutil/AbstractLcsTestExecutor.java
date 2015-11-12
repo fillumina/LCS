@@ -1,5 +1,6 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.testutil;
 
+import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

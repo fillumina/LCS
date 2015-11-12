@@ -1,6 +1,6 @@
 package com.fillumina.lcs.hirschberg;
 
-import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package com.fillumina.lcs.recursive;
 
-import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
-import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;

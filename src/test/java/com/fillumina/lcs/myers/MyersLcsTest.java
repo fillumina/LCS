@@ -1,6 +1,6 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.AbstractLcsTest;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.ListLcs;
 
 /**

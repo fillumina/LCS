@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;

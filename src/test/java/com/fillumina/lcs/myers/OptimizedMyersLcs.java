@@ -8,17 +8,6 @@ import java.util.Objects;
 /**
  * An optimization of the Myers algorithm.
  *
- * @see
- * <a href="http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-of">
- * Investigating Myers' diff algorithm: Part 1 of 2
- * </a>
- * @see
- * <a href="http://www.codeproject.com/Articles/42280/Investigating-Myers-Diff-Algorithm-Part-of">
- * Investigating Myers' diff algorithm: Part 2 of 2
- * </a>
- * @see <a href="https://neil.fraser.name/software/diff_match_patch/myers.pdf">
- * An O(ND) Difference Algorithm and Its Variations, Myers 1986
- * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class OptimizedMyersLcs<T> implements ListLcs<T> {
@@ -71,7 +60,7 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         @SuppressWarnings("unchecked")
         T[] result = (T[]) new Object[max];
 
-        int xStart, yStart, xMid, steps, xEnd, v[], index = max-1;
+        int xStart, yStart, xMid, xEnd, v[], index = max-1;
         for (; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;

@@ -1,5 +1,7 @@
 package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.Match;
+
 /**
  * This is a more flexible interface for an LCS algorithm. It allows to
  * select LCS on sequences different from lists.

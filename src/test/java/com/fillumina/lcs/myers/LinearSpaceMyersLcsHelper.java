@@ -1,5 +1,7 @@
 package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.LinearSpaceMyersLcs;
+import com.fillumina.lcs.Match;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +12,7 @@ import com.fillumina.lcs.ListLcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
+public class LinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
@@ -35,7 +37,7 @@ public class ParallelLinearSpaceMyersLcsHelper<T> implements ListLcs<T> {
         return match == null ? Match.NULL : match;
     }
 
-    private static class InnerLcs<T> extends ParallelLinearSpaceMyersLcs {
+    private static class InnerLcs<T> extends LinearSpaceMyersLcs {
         private final T[] a, b;
 
         public InnerLcs(T[] a, T[] b) {

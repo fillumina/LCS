@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import static com.fillumina.lcs.util.ListUtils.concatenate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

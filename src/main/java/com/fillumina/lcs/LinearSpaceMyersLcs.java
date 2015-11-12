@@ -1,4 +1,4 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs;
 
 /**
  *
@@ -6,9 +6,12 @@ package com.fillumina.lcs.myers;
  */
 // TODO add management of very long sequences
 // TODO apply the maximum speedup!
-public abstract class LinearSpaceMyersLcs implements Lcs {
+public abstract class LinearSpaceMyersLcs {
 
-    @Override
+    protected abstract int getFirstSequenceLength();
+    protected abstract int getSecondSequenceLength();
+    protected abstract boolean equals(int x, int y);
+
     public Match getMatch() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
@@ -26,7 +29,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
             ;
         }
         if (d != 0) {
-            matchDown = new LinearLcsMatch(a0, b0, d);
+            matchDown = new Match(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
@@ -38,7 +41,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
             ;
         }
         if (u != 0) {
-            matchUp = new LinearLcsMatch(a0 + n - u, b0 + m - u, u);
+            matchUp = new Match(a0 + n - u, b0 + m - u, u);
         }
         if (u + d != min) {
             lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
@@ -54,13 +57,13 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
         if (n == 1) {
             if (m == 1) {
                 if (equals(a0, b0)) {
-                    return new LinearLcsMatch(a0, b0, 1);
+                    return new Match(a0, b0, 1);
                 }
                 return null;
             }
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
-                    return new LinearLcsMatch(a0, i, 1);
+                    return new Match(a0, i, 1);
                 }
             }
             return null;
@@ -68,12 +71,12 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
         if (m == 1) {
             for (int i = a0; i < a0 + n; i++) {
                 if (equals(i, b0)) {
-                    return new LinearLcsMatch(i, b0, 1);
+                    return new Match(i, b0, 1);
                 }
             }
             return null;
         }
-        LinearLcsMatch match = null;
+        Match match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
@@ -131,7 +134,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
-                            match = new LinearLcsMatch(a0 + xMid, b0 + (xMid - k),
+                            match = new Match(a0 + xMid, b0 + (xMid - k),
                                     xEnd - xMid);
                         } else {
                             xStart = isPrev ? next : prev;
@@ -165,7 +168,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            match = new LinearLcsMatch(a0 + xStart, b0 + yStart,
+                            match = new Match(a0 + xStart, b0 + yStart,
                                     xMid - xStart);
                         } else {
                             xEnd = isPrev ? prev : next;
@@ -186,30 +189,5 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
                 : lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return Match.chain(before, match, after);
-    }
-
-    //TODO copy the full Match here
-    private static class LinearLcsMatch extends Match {
-        private static final long serialVersionUID = 1L;
-        private int lcs;
-
-        private LinearLcsMatch(int x, int y, int steps) {
-            super(x, y, steps);
-            this.lcs = steps;
-        }
-
-        /**
-         * <b>NOTE</b> that this value is accurate only for the first
-         * element of the iterable.
-         */
-        @Override
-        public int getLcs() {
-            return lcs;
-        }
-
-        @Override
-        protected void accumulateLcs(int otherLcs) {
-            lcs += otherLcs;
-        }
     }
 }

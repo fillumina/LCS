@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.other;
 
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -10,6 +10,8 @@ import java.util.Random;
 import static org.junit.Assert.*;
 
 /**
+ * Performance test to check the penalty of using lists against arrays.
+ * Reading an arrays is around 15% faster than reading a list.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -58,6 +60,7 @@ public class ArrayVsListPerformanceTest
 
     @Override
     public void addAssertions(PerformanceAssertion assertion) {
+        assertion.assertTest("array").fasterThan("list");
     }
 
 }

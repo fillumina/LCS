@@ -10,7 +10,7 @@ import com.fillumina.lcs.ListLcs;
 import java.util.Objects;
 
 /**
- * Myers algorithm that uses forward and backward snake. This is not designed
+ * Myers algorithm that uses forward and backward snakes. It is not designed
  * to be performant but to be easy to understand.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
