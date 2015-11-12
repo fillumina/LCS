@@ -5,7 +5,7 @@ import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.Lcs;
 
 /**
  *
@@ -14,7 +14,7 @@ import com.fillumina.lcs.ListLcs;
 public class IbmLcsTest extends AbstractLcsTest {
 
     @Override
-    protected ListLcs<?> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new IbmLcs<>();
     }
 
@@ -29,7 +29,7 @@ public class IbmLcsTest extends AbstractLcsTest {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         final List<Integer> result = generator.getLcsList();

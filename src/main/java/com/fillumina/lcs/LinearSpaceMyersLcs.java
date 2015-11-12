@@ -6,21 +6,20 @@ import java.util.Iterator;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-// TODO add management of very long sequences
-// TODO apply the maximum speedup!
 public abstract class LinearSpaceMyersLcs {
 
     protected abstract int getFirstSequenceLength();
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
 
-    protected int getMaximumAllowded() {
-        return Integer.MAX_VALUE;
+    protected int getMaximumDistance() {
+        return Integer.MAX_VALUE; //TODO check what happens exactly
     }
 
-    public Match getLcsMatch() {
+    public Match getLcsMatches() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
+        // TODO check about this magic number
         return lcsTail(0, n, 0, m, new int[2][3 *(n+m+1)]);
     }
 
@@ -90,7 +89,7 @@ public abstract class LinearSpaceMyersLcs {
         // find middle snake
         {
             // set variables out of scope so to have less garbage on the stack
-            final int max = Math.min(getMaximumAllowded(), (n + m + 1) / 2 + 1);
+            final int max = Math.min(getMaximumDistance(), (n + m + 1) / 2 + 1);
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];

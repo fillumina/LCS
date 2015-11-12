@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsWrapper<T> implements ListLcs<T> {
+public class LinearSpaceMyersLcsWrapper<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
@@ -30,7 +30,7 @@ public class LinearSpaceMyersLcsWrapper<T> implements ListLcs<T> {
     }
 
     public Match lcsMatch(final T[] a, final T[] b) {
-        final Match match = new InnerLcs<>(a, b).getLcsMatch();
+        final Match match = new InnerLcs<>(a, b).getLcsMatches();
         return match == null ? Match.NULL : match;
     }
 

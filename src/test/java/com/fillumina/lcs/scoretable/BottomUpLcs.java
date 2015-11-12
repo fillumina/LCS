@@ -1,22 +1,21 @@
 package com.fillumina.lcs.scoretable;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import com.fillumina.lcs.Lcs;
 
 /**
  * This algorithm uses the LCS score table in a graphical way. It's useful
- * to visualize how a score table works. Other algorithms focus to better
- * encode informations in a pure integer table and are thus more efficient.
+ * to visualize how a score table works.
  *
  * @see SmithWatermanLcs
  * @see WagnerFisherLcs
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BottomUpLcs<T> implements ListLcs<T> {
+public class BottomUpLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

@@ -1,8 +1,8 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.List;
+import com.fillumina.lcs.Lcs;
 
 /**
  *
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class CharacterLcsTestHelper {
 
-    public static String executeLcs(ListLcs<Character> lcs, String a, String b) {
+    public static String executeLcs(Lcs<Character> lcs, String a, String b) {
         List<Character> resultList = lcs.lcs(toList(a), toList(b));
         return toString(resultList);
     }

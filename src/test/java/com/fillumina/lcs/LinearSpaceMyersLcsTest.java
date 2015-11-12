@@ -23,7 +23,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     @Override
-    protected ListLcs<?> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new LinearSpaceMyersLcsWrapper<>();
     }
 
@@ -143,7 +143,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         assertEquals(generator.getLcsList(), lcsList);

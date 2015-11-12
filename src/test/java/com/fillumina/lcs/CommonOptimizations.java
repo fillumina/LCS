@@ -6,16 +6,19 @@ import java.util.List;
 import static com.fillumina.lcs.util.ListUtils.concatenate;
 
 /**
+ * Some optimizations that can improve considerably
+ * the speed of any LCS algorithm.
+ *
  * @see <a href="https://neil.fraser.name/writing/diff/">
  *  Neil Fraser: Diff Strategies
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CommonOptimizations<T> implements ListLcs<T> {
+public class CommonOptimizations<T> implements Lcs<T> {
 
-    private final ListLcs<T> delegate;
+    private final Lcs<T> delegate;
 
-    public CommonOptimizations(ListLcs<T> delegate) {
+    public CommonOptimizations(Lcs<T> delegate) {
         this.delegate = delegate;
     }
 

@@ -1,10 +1,11 @@
 package com.fillumina.lcs.recursive;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class RecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    protected ListLcs<?> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new RecursiveLcs<Character>() {
 
             @Override
@@ -47,7 +48,7 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         RandomSequenceGenerator generator =
                 new RandomSequenceGenerator(10,5);
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
         assertEquals(generator.getLcsList(), lcsList);
     }

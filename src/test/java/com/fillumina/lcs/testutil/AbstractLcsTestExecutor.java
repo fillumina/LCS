@@ -1,12 +1,12 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -105,14 +105,14 @@ public abstract class AbstractLcsTestExecutor
     /**
      * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
      * the body of the created
-     * {@link ListLcs#lcs(java.util.List, java.util.List)}.
+     * {@link Lcs#lcs(java.util.List, java.util.List)}.
      */
-    protected abstract ListLcs<?> getLcsAlgorithm();
+    protected abstract Lcs<?> getLcsAlgorithm();
 
     @SuppressWarnings("unchecked")
     public Result lcs(final String xs, final String ys) {
         return new Result(
-                executeLcs((ListLcs)getLcsAlgorithm(), xs, ys),
+                executeLcs((Lcs)getLcsAlgorithm(), xs, ys),
                 new CountingResult(countingMap));
     }
 
@@ -129,7 +129,7 @@ public abstract class AbstractLcsTestExecutor
     }
 
     private String getName() {
-        final Class<? extends ListLcs> clazz = getLcsAlgorithm().getClass();
+        final Class<? extends Lcs> clazz = getLcsAlgorithm().getClass();
         final String simpleName = clazz.getSimpleName();
         if (simpleName.isEmpty()) {
             return clazz.getSuperclass().getSimpleName();

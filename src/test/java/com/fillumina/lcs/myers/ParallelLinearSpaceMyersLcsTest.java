@@ -5,11 +5,12 @@ import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
 import com.fillumina.lcs.util.ListUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
+import com.fillumina.lcs.Lcs;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -25,7 +26,7 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     @Override
-    protected ListLcs<?> getLcsAlgorithm() {
+    protected Lcs<?> getLcsAlgorithm() {
         return new ParallelLinearSpaceMyersLcsWrapper<>();
     }
 
@@ -145,7 +146,7 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         assertEquals(generator.getLcsList(), lcsList);

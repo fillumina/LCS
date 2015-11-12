@@ -6,8 +6,8 @@ import com.fillumina.lcs.util.BidirectionalArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.fillumina.lcs.ListLcs;
 import java.util.Objects;
+import com.fillumina.lcs.Lcs;
 
 /**
  * Myers devises a faster way to perform the LCS by recursing the score table
@@ -35,7 +35,7 @@ import java.util.Objects;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs<T> implements ListLcs<T> {
+public class MyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

@@ -1,8 +1,8 @@
 package com.fillumina.lcs.scoretable;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.List;
+import com.fillumina.lcs.Lcs;
 
 /**
  * This algorithm uses a score table that needs to be initialized first and
@@ -11,15 +11,15 @@ import java.util.List;
  * <img src="WagnerFisher.gif" />
  *
  * @see <a href="https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm">
- *  Wikipedia: Wagner-Fisher algorithm
+ *  Wikipedia
  * </a>
  * @see <a href="http://stackoverflow.com/questions/30792428/wagner-fischer-algorithm">
- *  Stackoverflow: Wagner-Fisher algorithm
+ *  Stackoverflow
  * </a>
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class WagnerFischerLcs<T> implements ListLcs<T> {
+public class WagnerFischerLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

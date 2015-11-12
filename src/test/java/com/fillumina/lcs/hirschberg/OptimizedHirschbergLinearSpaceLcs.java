@@ -1,10 +1,10 @@
 package com.fillumina.lcs.hirschberg;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import com.fillumina.lcs.Lcs;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
+public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

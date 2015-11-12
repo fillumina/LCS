@@ -1,14 +1,14 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.LinearSpaceMyersLcsWrapper;
-import com.fillumina.lcs.myers.OptimizedMyersLcs;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -39,9 +39,9 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
     }
 
     private class LcsRunnable implements Runnable {
-        private final ListLcs<Integer> lcsAlgorithm;
+        private final Lcs<Integer> lcsAlgorithm;
 
-        public LcsRunnable(ListLcs<Integer> lcsAlgorithm) {
+        public LcsRunnable(Lcs<Integer> lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 
@@ -79,11 +79,11 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
 //        tests.addTest("Myers", new LcsRunnable(new MyersLcs<Integer>()));
 //        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs<Integer>()));
-        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs<Integer>()));
+//        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs<Integer>()));
 //        tests.addTest("RLinearSpaceMyers",
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
-//        tests.addTest("BaselineOptimizedLinearSpaceMyers",
-//                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
+        tests.addTest("BaselineOptimizedLinearSpaceMyers",
+                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
         tests.addTest("LinearSpaceMyers",
                 new LcsRunnable(new LinearSpaceMyersLcsWrapper<Integer>()));
 //        tests.addTest("ParallelLinearSpaceMyers",

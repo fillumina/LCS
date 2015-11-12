@@ -1,9 +1,10 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -15,7 +16,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     public void randomLcs(int len, int lcs) {
         System.out.println("testing random sequences...");
         @SuppressWarnings("unchecked")
-        final ListLcs<Integer> algorithm = (ListLcs<Integer>)getLcsAlgorithm();
+        final Lcs<Integer> algorithm = (Lcs<Integer>)getLcsAlgorithm();
         for (int i=0; i<100; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);
@@ -36,7 +37,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
         b.add(null);
         @SuppressWarnings("unchecked")
         List<Character> solution =
-                ((ListLcs<Character>)getLcsAlgorithm()).lcs(a, b);
+                ((Lcs<Character>)getLcsAlgorithm()).lcs(a, b);
         assertEquals(a, solution);
     }
 
@@ -232,7 +233,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
         System.out.println(generator.toString());
 
         @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((ListLcs)getLcsAlgorithm())
+        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
         assertEquals(generator.getLcsList(), lcsList);

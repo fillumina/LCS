@@ -6,8 +6,8 @@ import com.fillumina.lcs.util.OneBasedVector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.fillumina.lcs.ListLcs;
 import java.util.Objects;
+import com.fillumina.lcs.Lcs;
 
 /**
  * Because the linear space optimization of the basic Myers algorithm uses
@@ -27,7 +27,7 @@ import java.util.Objects;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ReverseMyersLcs<T> implements ListLcs<T> {
+public class ReverseMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

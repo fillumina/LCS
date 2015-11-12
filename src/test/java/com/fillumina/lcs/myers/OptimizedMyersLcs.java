@@ -1,16 +1,16 @@
 package com.fillumina.lcs.myers;
 
 import java.util.List;
-import com.fillumina.lcs.ListLcs;
 import java.util.Arrays;
 import java.util.Objects;
+import com.fillumina.lcs.Lcs;
 
 /**
  * An optimization of the Myers algorithm.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedMyersLcs<T> implements ListLcs<T> {
+public class OptimizedMyersLcs<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {

@@ -1,8 +1,8 @@
 package com.fillumina.lcs.scoretable;
 
 import com.fillumina.lcs.testutil.AbstractLcsTestExecutor;
-import com.fillumina.lcs.ListLcs;
 import org.junit.Test;
+import com.fillumina.lcs.Lcs;
 
 /**
  *
@@ -15,7 +15,7 @@ public class WagnerFischerLcsTest {
         new AbstractLcsTestExecutor() {
 
             @Override
-            protected ListLcs<?> getLcsAlgorithm() {
+            protected Lcs<?> getLcsAlgorithm() {
                 return new WagnerFischerLcs<>();
             }
 
