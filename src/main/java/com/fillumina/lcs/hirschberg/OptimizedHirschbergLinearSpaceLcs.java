@@ -12,14 +12,13 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
+public class OptimizedHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
 
     @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
-        final int ysSize = ys.size();
-        return lcsRlw(xs, 0, xs.size(),
-                ys, 0, ysSize,
-            new int[3][ysSize + 1]);
+    public List<T> lcs(List<T> a, List<T> b) {
+        final int m = b.size();
+        return lcsRlw(a, 0, a.size(), b, 0, m,
+            new int[3][m + 1]);
     }
 
     List<T> lcsRlw(List<T> a, int aStart, int aEnd,
@@ -57,8 +56,7 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
             int[][] buffer) {
         int[] forward = calculateLcsForward(a, aStart, i, b, bStart, bEnd, buffer);
         int[] backward = calculateLcsReverse(a, i, aEnd, b, bStart, bEnd, buffer);
-        int k = indexOfBiggerSum(forward, backward, bStart, bEnd) ;
-        return k;
+        return indexOfBiggerSum(forward, backward, bStart, bEnd) ;
     }
 
     private static <T> int[] calculateLcsForward(
@@ -86,19 +84,19 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
     }
 
     private static <T> int[] calculateLcsReverse(
-            List<T> xs, int xsStart, int xsEnd,
-            List<T> ys, int ysStart, int ysEnd,
+            List<T> a, int aStart, int aEnd,
+            List<T> b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[1];
-        zero(curr, ysStart, ysEnd + 1);
+        zero(curr, bStart, bEnd + 1);
         int[] prev = buffer[2];
 
-        for (int j=xsEnd-1; j>=xsStart; j--) {
-            T x = xs.get(j);
-            System.arraycopy(curr, ysStart, prev, ysStart, ysEnd - ysStart + 1);
+        for (int j=aEnd-1; j>=aStart; j--) {
+            T x = a.get(j);
+            System.arraycopy(curr, bStart, prev, bStart, bEnd - bStart + 1);
 
-            for (int i=ysStart; i<ysEnd; i++) {
-                T y = ys.get(ysEnd - i + ysStart - 1);
+            for (int i=bStart; i<bEnd; i++) {
+                T y = b.get(bEnd - i + bStart - 1);
                 if (x.equals(y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
@@ -109,11 +107,11 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
         return curr;
     }
 
-    private static int indexOfBiggerSum(int[] ll_b, int[] ll_e,
+    private static int indexOfBiggerSum(int[] forward, int[] reverse,
             int start, int end) {
         int tmp, k = -1, max = -1;
         for (int j=start; j<=end; j++) {
-            tmp = ll_b[j] + ll_e[end-j+start];
+            tmp = forward[j] + reverse[end-j+start];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -122,13 +120,13 @@ public class DirectHirschbergLinearSpaceLcs<T> implements ListLcs<T> {
         return k;
     }
 
-    private static void zero(int[] array, int from, int to) {
+    static void zero(int[] array, int from, int to) {
         for (int i = from; i < to; i++) {
             array[i] = 0;
         }
     }
 
-    private static <T> List<T> add(List<T> a, List<T> b) {
+    static <T> List<T> add(List<T> a, List<T> b) {
         if (a.isEmpty()) {
             return b;
         }

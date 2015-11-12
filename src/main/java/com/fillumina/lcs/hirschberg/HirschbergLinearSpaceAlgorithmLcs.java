@@ -3,6 +3,7 @@ package com.fillumina.lcs.hirschberg;
 import com.fillumina.lcs.ListLcs;
 import java.util.List;
 import static com.fillumina.lcs.util.ListUtils.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -45,8 +46,6 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
                 int[] forward = calculateLcs(aHead, b);
                 int[] backward = calculateLcs(reverse(aTail), reverse(b));
 
-                // k is the index shared by both forward and backward
-                // score vectors.
                 int k = indexOfBiggerSum(forward, backward);
 
                 List<T> bHead = b.subList(0, k);
@@ -91,5 +90,25 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements ListLcs<T> {
             }
         }
         return curr;
+    }
+
+    /** The given lists are not modified. */
+    static <T> List<T> concatenate(List<T> a, List<T> b) {
+        if (a.isEmpty()) {
+            return b;
+        }
+        if (b.isEmpty()) {
+            return a;
+        }
+        List<T> l = new ArrayList<>(a.size() + b.size());
+        l.addAll(a);
+        l.addAll(b);
+        return l;
+    }
+
+    static <T> List<T> reverse(final List<T> list) {
+        List<T> l = new ArrayList<>(list);
+        Collections.reverse(l);
+        return Collections.unmodifiableList(l);
     }
 }
