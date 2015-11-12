@@ -41,16 +41,20 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         int m = b.length;
         int max = n + m + 1;
 
-        BidirectionalArray vv = new BidirectionalArray(max);
-        BidirectionalVector v = new BidirectionalVector(max);
+        int size = (max << 1) + 1;
+        //BidirectionalArray vv = new BidirectionalArray(max);
+        int[][] vv = new int[max][size];
+        //BidirectionalVector v = new BidirectionalVector(max);
+        int[] v = new int[size]; // max * 2
 
-        v.set(1, 0);
+        v[max + 1] =  0;
 
-        int next, prev, x, y;
+        int maxk, next, prev, x, y;
         for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {
-                next = v.get(k + 1); // down
-                prev = v.get(k - 1); // right
+                maxk = max + k;
+                next = v[maxk + 1]; // down
+                prev = v[maxk - 1]; // right
                 if (k == -d || (k != d && prev < next)) {
                     x = next;
                 } else {
@@ -62,37 +66,40 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
                     x++;
                     y++;
                 }
-                v.set(k, x);
+                v[maxk] = x;
                 if (x >= n && y >= m) {
                     // reached the end of the 'table'
                     if (d < max) {
-                        vv.copyVectorOnLine(d, v);
+                        System.arraycopy(v, 0, vv[d], 0, size);
                     }
 
-                    return calculateSolution(d, vv, x, y);
+                    return calculateSolution(d, vv, x, y, max);
                 }
             }
-            vv.copyVectorOnLine(d, v);
+            System.arraycopy(v, 0, vv[d], 0, size);
         }
         return Collections.<Snake>emptyList();
     }
 
     private List<Snake> calculateSolution(int lastD,
-            BidirectionalArray vv, int xLast, int yLast) {
+            int[][] vv, int xLast, int yLast, int max) {
         List<Snake> snakes = new ArrayList<>();
 
         int x = xLast;
         int y = yLast;
 
-        int d, xStart, yStart, xMid, yMid, xEnd, yEnd, next, prev;
+        int d, xStart, yStart, xMid, yMid, xEnd, yEnd, next, prev, k, maxk, v[];
         for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
-            int k = x - y;
+            k = x - y;
+            maxk = max + k;
+            v = vv[d];
 
             xEnd = x;
             yEnd = y;
 
-            next = vv.get(d, k + 1);
-            prev = vv.get(d, k - 1);
+
+            next = v[maxk + 1];
+            prev = v[maxk - 1];
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
                 yStart = next - k - 1;
