@@ -1,7 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.util.BidirectionalVector;
-import com.fillumina.lcs.util.BidirectionalArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,15 +86,13 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
         int x = xLast;
         int y = yLast;
 
-        int d, xStart, yStart, xMid, yMid, xEnd, yEnd, next, prev, k, maxk, v[];
+        int d, xStart, yStart, xMid, steps, xEnd, next, prev, k, maxk, v[];
         for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;
             v = vv[d];
 
             xEnd = x;
-            yEnd = y;
-
 
             next = v[maxk + 1];
             prev = v[maxk - 1];
@@ -110,9 +106,10 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
                 xMid = xStart + 1;
             }
 
-            yMid = xMid - k;
-
-            snakes.add(new Snake(xStart, yStart, xMid, yMid, xEnd, yEnd));
+            steps = xEnd - xMid;
+            if (steps != 0) {
+                snakes.add(new Snake(xMid, xEnd));
+            }
 
             x = xStart;
             y = yStart;
@@ -126,8 +123,8 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
     private List<T> extractLcs(List<Snake> snakes, T[] a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
-            for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
-                list.add(a[x-1]);
+            for (int s=snake.xMid; s<snake.xEnd; s++) {
+                list.add(a[s]);
             }
         }
         return list;
@@ -140,23 +137,18 @@ public class OptimizedMyersLcs<T> implements ListLcs<T> {
      */
     protected static class Snake  {
         private Snake next;
-        public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
+        public final int xMid, xEnd;
 
-        public Snake(int xStart, int yStart, int xMid, int yMid, int xEnd,
-                int yEnd) {
-            this.xStart = xStart;
-            this.yStart = yStart;
+        public Snake(int xMid, int xEnd) {
             this.xMid = xMid;
-            this.yMid = yMid;
             this.xEnd = xEnd;
-            this.yEnd = yEnd;
         }
 
         @Override
         public String toString() {
-            return "Snake{" + "xStart=" + xStart + ", yStart=" + yStart +
-                    ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
-                    ", yEnd=" + yEnd + '}';
+            return "Snake{" +
+                    ", xMid=" + xMid +
+                    ", xEnd=" + xEnd + '}';
         }
     }
 
