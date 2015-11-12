@@ -8,8 +8,11 @@ import com.fillumina.lcs.ListLcs;
 
 /**
  * This is an adapter to make the DOCX4J LCS algorithm be testable along
- * with the other algorithms in this project. This IBM algorithm is a useful
- * reference for every speeding-up challenges.
+ * with the other algorithms in this project. This IBM implementation is a useful
+ * reference for every speeding-up challenges. It implements the Myers
+ * algorithm pretty efficiently and also can be limited on the maximum space
+ * between successive matches (d) and a way to avoid calculating indexes
+ * outside the virtual table.
  *
  * @see <a href='http://grepcode.com/file_/repo1.maven.org/maven2/org.docx4j/docx4j/3.2.1/org/eclipse/compare/internal/LCS.java/?v=source'>
  *  IBM Docx4J 3.2.1 LCS source</a>

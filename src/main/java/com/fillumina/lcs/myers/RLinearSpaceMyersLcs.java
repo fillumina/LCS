@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import com.fillumina.lcs.ListLcs;
+import java.util.Objects;
 
 /**
  * Myers algorithm that uses forward and backward snake. This is not designed
@@ -126,7 +127,7 @@ public class RLinearSpaceMyersLcs<T> implements ListLcs<T> {
         }
         y = x - k;
         while (x >= 0 && y >= 0 && x < n && y < m &&
-                a.get(x + 1).equals(b.get(y + 1))) {
+                Objects.equals(a.get(x + 1), b.get(y + 1))) {
             x++;
             y++;
         }
@@ -190,7 +191,7 @@ public class RLinearSpaceMyersLcs<T> implements ListLcs<T> {
         }
         y = x - k;
         while (x > 0 && y > 0 && x <= n && y <= m &&
-                a.get(x).equals(b.get(y))) {
+                Objects.equals(a.get(x), b.get(y))) {
             x--;
             y--;
         }

@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.fillumina.lcs.ListLcs;
+import java.util.Objects;
 
 /**
+ * Because the linear space optimization of the basic Myers algorithm uses
+ * a reverse LCS this is an implementation of this variant. The algorithm is the
+ * same as the normal Myers but it proceeds backwards.
  *
  * @see
  * <a href="http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-of">
@@ -27,10 +31,10 @@ public class ReverseMyersLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
-        OneBasedVector<T> obvA = new OneBasedVector<>(a);
-        OneBasedVector<T> obvB = new OneBasedVector<>(b);
-        List<Snake> snakes = lcsMyers(obvA, obvB);
-        return extractLcs(snakes, obvA);
+        OneBasedVector<T> va = new OneBasedVector<>(a);
+        OneBasedVector<T> vb = new OneBasedVector<>(b);
+        List<Snake> snakes = lcsMyers(va, vb);
+        return extractLcs(snakes, va);
     }
 
     private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
@@ -60,37 +64,28 @@ public class ReverseMyersLcs<T> implements ListLcs<T> {
                 }
                 y = x - k;
                 while (x > 0 && y > 0 && x <= n && y <= m &&
-                        a.get(x).equals(b.get(y))) {
+                        Objects.equals(a.get(x), b.get(y))) {
                     x--;
                     y--;
                 }
                 v.set(k, x);
                 if (x <= 0 && y <= 0) {
-                    vv.copy(d, v);
-
-//                    int lcs = (dmax - d) / 2;
-//                    System.out.println("LCS=" + lcs);
-//                    System.out.println("D=" + d);
-//                    System.out.println("K=" + k);
-//                    System.out.println("DELTA=" + delta);
-//                    System.out.println("x=" + x);
-//                    System.out.println("y=" + y);
-//                    System.out.println(vv.toString());
+                    vv.copyVectorOnLine(d, v);
 
                     return calculateSolution(d, vv, x, y, delta, n, m);
                 }
             }
-            vv.copy(d, v);
+            vv.copyVectorOnLine(d, v);
         }
         return Collections.<Snake>emptyList();
     }
 
     private List<Snake> calculateSolution(int lastD,
-            BidirectionalArray vs, int xx, int yy, int delta, int n, int m) {
+            BidirectionalArray vs, int xLast, int yLast, int delta, int n, int m) {
         List<Snake> snakes = new ArrayList<>();
 
-        int xStart = xx;
-        int yStart = yy;
+        int xStart = xLast;
+        int yStart = yLast;
 
         int d, next, prev, xMid, yMid, xEnd, yEnd;
         for (d = lastD; d >= 0 && xStart < n && yStart < m; d--) {
@@ -129,9 +124,10 @@ public class ReverseMyersLcs<T> implements ListLcs<T> {
     }
 
     /**
-     * Records each snake in the solution. A snake is a sequence of
-     * equal elements starting from mid to end and preceeded by a vertical
-     * or horizontal edge going from start to mid.
+     * Records each snake in the solution. This is in fact a reverse
+     * snake which differs from the forward one in the sense that the
+     * sequence of equal elements goes from Start to Mid and the vertical
+     * or horizontal edge goes from Mid to End.
      */
     static class Snake {
 

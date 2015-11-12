@@ -4,6 +4,7 @@ import com.fillumina.lcs.ListLcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The most simple LCS algorithm. It is heavily based on recursion so it's quite
@@ -27,7 +28,7 @@ public class RecursiveLcs<T> implements ListLcs<T> {
         T xe = xs.get(n-1);
         T ye = ys.get(m-1);
 
-        if (xe.equals(ye)) {
+        if (Objects.equals(xe, ye)) {
             return concatenate(lcs(xs, n-1, ys, m-1), xe);
         } else {
             return longest(lcs(xs, n, ys, m-1), lcs(xs, n-1, ys, m));

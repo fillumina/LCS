@@ -40,8 +40,8 @@ public class BidirectionalArray {
         return new BidirectionalVector(array[x]);
     }
 
-    public void copy(int line, BidirectionalVector v) {
-        v.copyToArray(this.array[line]);
+    public void copyVectorOnLine(int line, BidirectionalVector v) {
+        v.copyTo(this.array[line]);
     }
 
     @Override

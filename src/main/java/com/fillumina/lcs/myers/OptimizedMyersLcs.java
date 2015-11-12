@@ -10,17 +10,7 @@ import com.fillumina.lcs.ListLcs;
 import java.util.Objects;
 
 /**
- * Myers devises a faster way to perform the LCS by recursing the score table
- * along its diagonals. This means that his algorithm searches first
- * for matches along a specific distance and then just increases the allowed
- * distance until a match is found. The algorithm always work closer to the
- * optimal solution which is the diagonal (all elements are equal) and so the
- * first solution that completes can be safely taken.
- * The other algorithms starts by searching
- * a match from the farthest distance possible (because they always start from
- * the beginning of a row in the score table).
- * This implementation tries to be
- * as close as possible to the one described by author on his paper.
+ * An optimization of the Myers algorithm.
  *
  * @see
  * <a href="http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-of">
@@ -35,19 +25,21 @@ import java.util.Objects;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs<T> implements ListLcs<T> {
+public class OptimizedMyersLcs<T> implements ListLcs<T> {
 
     @Override
     public List<T> lcs(List<T> a, List<T> b) {
-        final OneBasedVector<T> va = new OneBasedVector<>(a);
-        final OneBasedVector<T> vb = new OneBasedVector<>(b);
-        final List<Snake> snakes = lcsMyers(va, vb);
-        return extractLcs(snakes, va);
+        @SuppressWarnings("unchecked")
+        final T[] aa = a.toArray((T[])new Object[a.size()]);
+        @SuppressWarnings("unchecked")
+        final T[] bb = b.toArray((T[])new Object[b.size()]);
+        final List<Snake> snakes = lcsMyers(aa, bb);
+        return extractLcs(snakes, aa);
     }
 
-    private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
-        int n = a.size();
-        int m = b.size();
+    private List<Snake> lcsMyers(T[] a, T[] b) {
+        int n = a.length;
+        int m = b.length;
         int max = n + m + 1;
 
         BidirectionalArray vv = new BidirectionalArray(max);
@@ -67,7 +59,7 @@ public class MyersLcs<T> implements ListLcs<T> {
                 }
                 y = x - k;
                 while (x >= 0 && y >= 0 && x < n && y < m &&
-                        Objects.equals(a.get(x + 1), b.get(y + 1))) {
+                        Objects.equals(a[x], b[y])) {
                     x++;
                     y++;
                 }
@@ -125,11 +117,11 @@ public class MyersLcs<T> implements ListLcs<T> {
     }
 
     /** @return the common subsequence elements. */
-    private List<T> extractLcs(List<Snake> snakes, OneBasedVector<T> a) {
+    private List<T> extractLcs(List<Snake> snakes, T[] a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
-                list.add(a.get(x));
+                list.add(a[x-1]);
             }
         }
         return list;

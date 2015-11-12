@@ -1,6 +1,6 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.myers.RLinearSpaceMyersLcsTest;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -25,6 +25,18 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
             assertEquals(generator.getLcsList(), lcsList);
         }
+    }
+
+    @Test
+    public void shouldAllowNullValueInTheList() {
+        List<Character> a = new ArrayList<>();
+        List<Character> b = new ArrayList<>();
+        a.add(null);
+        b.add(null);
+        @SuppressWarnings("unchecked")
+        List<Character> solution =
+                ((ListLcs<Character>)getLcsAlgorithm()).lcs(a, b);
+        assertEquals(a, solution);
     }
 
     @Test(timeout = 10_000L)

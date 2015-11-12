@@ -5,6 +5,7 @@ package com.fillumina.lcs.myers;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 // TODO add management of very long sequences
+// TODO apply the maximum speedup!
 public abstract class LinearSpaceMyersLcs implements Lcs {
 
     @Override
@@ -187,6 +188,7 @@ public abstract class LinearSpaceMyersLcs implements Lcs {
         return Match.chain(before, match, after);
     }
 
+    //TODO copy the full Match here
     private static class LinearLcsMatch extends Match {
         private static final long serialVersionUID = 1L;
         private int lcs;

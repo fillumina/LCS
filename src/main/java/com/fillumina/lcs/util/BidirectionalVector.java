@@ -45,7 +45,7 @@ public class BidirectionalVector {
         array[index] = value;
     }
 
-    public void copyToArray(int[] vector) {
+    public void copyTo(int[] vector) {
         if (vector.length < array.length) {
             throw new IllegalArgumentException("vector too small");
         }

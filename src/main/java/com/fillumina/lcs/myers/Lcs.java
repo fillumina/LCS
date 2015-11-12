@@ -1,6 +1,8 @@
 package com.fillumina.lcs.myers;
 
 /**
+ * This is a more flexible interface for an LCS algorithm. It allows to
+ * select LCS on sequences different from lists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

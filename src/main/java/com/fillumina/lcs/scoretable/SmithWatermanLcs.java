@@ -3,6 +3,7 @@ package com.fillumina.lcs.scoretable;
 import com.fillumina.lcs.ListLcs;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Similar to the  Wagner-Fisher approach, it uses a score table that doesn't
@@ -26,7 +27,7 @@ public class SmithWatermanLcs<T> implements ListLcs<T> {
         // row 0 and column 0 are initialized to 0 already
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (a.get(i).equals(b.get(j))) {
+                if (Objects.equals(a.get(i), b.get(j))) {
                     d[i + 1][j + 1] = d[i][j] + 1;
                 } else {
                     d[i + 1][j + 1]

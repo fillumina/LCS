@@ -35,12 +35,12 @@ public class BidirectionalArrayTest {
             v.set(i, i);
         }
 
-        a.copy(0, v);
+        a.copyVectorOnLine(0, v);
         for (int i = -3; i <= 3; i++) {
             assertEquals(i, a.get(0, i));
         }
 
-        a.copy(1, v);
+        a.copyVectorOnLine(1, v);
         for (int i = -3; i <= 3; i++) {
             assertEquals(i, a.get(1, i));
         }
