@@ -3,7 +3,6 @@ package com.fillumina.lcs.testutil;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
 
@@ -44,6 +43,11 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     @Test(timeout = 10_000L)
     public void shouldPerformRandomLengthTests() {
         randomLcs(60, 10);
+    }
+
+    @Test
+    public void shouldSelectTheOptimalResult() {
+        lcs("CXCDEFX", "CDEFX").assertResult("CDEFX");
     }
 
     @Test(timeout = 1_000L)

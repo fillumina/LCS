@@ -3,6 +3,7 @@ package com.fillumina.lcs;
 import java.util.Iterator;
 
 /**
+ * This is an implementation of the Linear Space Myers LCS algorithm.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -30,9 +31,7 @@ public abstract class LinearSpaceMyersLcs {
         Match matchUp = null;
         Match lcsMatch = null;
         int d;
-        for (d = 0; d < min && equals(a0+d, b0+d); d++) {
-            ;
-        }
+        for (d = 0; d < min && equals(a0+d, b0+d); d++);
         if (d != 0) {
             matchDown = new Match(a0, b0, d);
             if (d == min) {
@@ -42,9 +41,7 @@ public abstract class LinearSpaceMyersLcs {
         int u;
         int x0 = a0 + n - 1;
         int y0 = b0 + m - 1;
-        for (u = 0; u < min && equals(x0 - u, y0 - u); u++) {
-            ;
-        }
+        for (u = 0; u < (min-d) && equals(x0 - u, y0 - u); u++);
         if (u != 0) {
             matchUp = new Match(a0 + n - u, b0 + m - u, u);
         }
@@ -81,20 +78,20 @@ public abstract class LinearSpaceMyersLcs {
             }
             return null;
         }
+
         Match match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
         int yEnd = -1;
-        // find middle snake
         {
-            // set variables out of scope so to have less garbage on the stack
+            // different scope to have less garbage on the stack when recursing
             final int max = Math.min(getMaximumDistance(), (n + m + 1) / 2 + 1);
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];
             final int[] vb = vv[1];
-            final int halfv = vf.length / 2;
+            final int halfv = vf.length >> 1;
 
             vf[halfv + 1] = 0;
             vb[halfv + delta - 1] = n;
@@ -113,7 +110,7 @@ public abstract class LinearSpaceMyersLcs {
 
             FIND_MIDDLE_SNAKE:
             for (int d = 0; d <= max; d++) {
-                if (d > 1) {
+                if (d != 0) {
                     kStart = delta - (d - 1);
                     kEnd = delta + (d - 1);
                 }
@@ -217,7 +214,7 @@ public abstract class LinearSpaceMyersLcs {
 
         /**
          * This is NOT a general chain algorithm, it works because the way
-         * matches are generated in the LCS algorithms.
+         * matches are generated in the Myers LCS algorithms.
          */
         Match chain(final Match other) {
             Match current = this;
@@ -256,23 +253,32 @@ public abstract class LinearSpaceMyersLcs {
             private final Iterator<Match> i = Match.this.iterator();
             protected int step = 0;
             protected Match current;
+            protected boolean hasNext;
 
-            @Override
-            public boolean hasNext() {
+            public IndexIterator() {
+                increment();
+            }
+
+            protected final void increment() {
                 while (current == null ||
                         current.steps == 0 ||
                         (step + 1) == current.steps) {
                     if (i.hasNext()) {
-                        current = (Match) i.next();
+                        current = i.next();
                         step = -1;
                     } else {
-                        return false;
+                        hasNext = false;
+                        return;
                     }
                 }
                 step++;
-                return true;
+                hasNext = true;
             }
 
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
         }
 
         public Iterable<Integer> lcsIndexesOfTheFirstSequence() {
@@ -283,7 +289,9 @@ public abstract class LinearSpaceMyersLcs {
 
                         @Override
                         public Integer next() {
-                            return current.x + step;
+                            final int result = current.x + step;
+                            increment();
+                            return result;
                         }
                     };
                 }
@@ -298,7 +306,9 @@ public abstract class LinearSpaceMyersLcs {
 
                         @Override
                         public Integer next() {
-                            return current.y + step;
+                            final int result = current.y + step;
+                            increment();
+                            return result;
                         }
                     };
                 }

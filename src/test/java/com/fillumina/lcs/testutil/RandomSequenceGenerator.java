@@ -35,9 +35,8 @@ public class RandomSequenceGenerator {
      *
      * @param total length of the sequences
      * @param lcs   lenght of the longest common sequence
-     * @param seed  seed of the random number generator. Equal seeds mean
-     *              same random sequence is repeated (useful for debugging
-     *              a specific situation).
+     * @param seed  seed of the random number generator. Equal seeds mean the
+     *              same random sequence is repeated (useful for debugging)
      */
     public RandomSequenceGenerator(final int total, final int lcs,
             final long seed) {

@@ -30,9 +30,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
         Match matchUp = null;
         Match lcsMatch = null;
         int d;
-        for (d = 0; d < min && equals(d, d); d++) {
-            ;
-        }
+        for (d = 0; d < min && equals(d, d); d++);
         if (d != 0) {
             matchDown = new Match(0, 0, d);
             if (d == min) {
@@ -42,9 +40,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
         int u;
         int x0 = n - 1;
         int y0 = m - 1;
-        for (u = 0; u < min && equals(x0 - u, y0 - u); u++) {
-            ;
-        }
+        for (u = 0; u < (min-d) && equals(x0 - u, y0 - u); u++);
         if (u != 0) {
             matchUp = new Match(n - u, m - u, u);
         }

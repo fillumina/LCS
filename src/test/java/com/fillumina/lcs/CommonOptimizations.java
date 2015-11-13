@@ -71,7 +71,7 @@ public class CommonOptimizations<T> implements Lcs<T> {
         if (d == min) {
             return before;
         }
-        for (u=0; u<min && xs.get(n-u-1).equals(ys.get(m-u-1)); u++);
+        for (u=0; u<(min-d) && xs.get(n-u-1).equals(ys.get(m-u-1)); u++);
         if (d == 0 && u == 0) {
             return delegate.lcs(xs, ys);
         }

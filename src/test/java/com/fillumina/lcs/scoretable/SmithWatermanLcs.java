@@ -36,7 +36,7 @@ public class SmithWatermanLcs<T> implements Lcs<T> {
             }
         }
 
-        int index = d[n][m];
+        int index = d[n][m]; // the lcs length
 
         // read the substring out from the matrix
         @SuppressWarnings("unchecked")
