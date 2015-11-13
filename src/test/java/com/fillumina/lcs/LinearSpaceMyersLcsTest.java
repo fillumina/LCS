@@ -1,6 +1,6 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.LinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.LinearSpaceMyersLcs.LcsItem;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
@@ -130,7 +130,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
     private void countLcs(String a, String b, int expectedLcs) {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
-        Match m = algo.lcsMatch(listA, listB);
+        LcsItem m = algo.lcsMatch(listA, listB);
         assertEquals(ListUtils.toString(m), expectedLcs, m.getSequenceSize());
     }
 

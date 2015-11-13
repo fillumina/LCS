@@ -18,8 +18,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 600;
-    private static final int LCS = 500;
+    private static final int TOTAL = 60;
+    private static final int LCS = 50;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -83,13 +83,13 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs<Integer>()));
 //        tests.addTest("RLinearSpaceMyers",
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
-        tests.addTest("BaselineOptimizedLinearSpaceMyers",
-                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
+//        tests.addTest("BaselineOptimizedLinearSpaceMyers",
+//                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
         tests.addTest("LinearSpaceMyers",
                 new LcsRunnable(new LinearSpaceMyersLcsAdaptor<Integer>()));
 //        tests.addTest("ParallelLinearSpaceMyers",
 //                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper<Integer>()));
-//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
+        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
 
     @Override

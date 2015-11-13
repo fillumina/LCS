@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.LcsItem;
 import com.fillumina.lcs.Lcs;
 
 /**
@@ -14,7 +14,7 @@ public class ParallelLinearSpaceMyersLcsAdaptor<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
-        final Match matches = lcsMatch(a, b);
+        final LcsItem matches = lcsMatch(a, b);
         List<T> lcs = new ArrayList<>(matches.getLcs());
         for (int index : matches.lcsIndexes()) {
             lcs.add(a.get(index));
@@ -23,17 +23,17 @@ public class ParallelLinearSpaceMyersLcsAdaptor<T> implements Lcs<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public Match lcsMatch(final List<T> a, final List<T> b) {
+    public LcsItem lcsMatch(final List<T> a, final List<T> b) {
         final int n = a.size();
         final int m = b.size();
         return lcsMatch((T[]) a.toArray(new Object[n]),
                 (T[]) b.toArray(new Object[m]));
     }
 
-    public Match lcsMatch(final T[] a, final T[] b) {
-        final Match match =
-                new ParallelLinearSpaceMyersLcsImpl<>(a, b).getMatch();
-        return match == null ? Match.NULL : match;
+    public LcsItem lcsMatch(final T[] a, final T[] b) {
+        final LcsItem match =
+                new ParallelLinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
+        return match == null ? LcsItem.NULL : match;
     }
 
     private static class ParallelLinearSpaceMyersLcsImpl<T>

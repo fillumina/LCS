@@ -1,9 +1,14 @@
 package com.fillumina.lcs;
 
+import java.io.Serializable;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * This is an implementation of the Linear Space Myers LCS algorithm.
+ * Implementation of the Linear Space Myers LCS algorithm. For maximum
+ * flexibility its input is provided by extending the class.
+ * It returns an ordered sequence of {@link LcsItem}es from which various
+ * useful informations can be easily extracted.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -13,29 +18,30 @@ public abstract class LinearSpaceMyersLcs {
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
 
+    /** Override to provide the maximum distance on which a match is searched. */
     protected int getMaximumDistance() {
         return Integer.MAX_VALUE; //TODO check what happens exactly
     }
 
-    public Match getLcsMatches() {
+    public LcsItem calculateLcs() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
-        return lcsTail(0, n, 0, m, null);
-    }
-
-    private Match lcsTail(final int a0, final int n,
-            final int b0, final int m, int[][] vv) {
         if (n == 0 || m == 0) {
             return null;
         }
+        return lcsTail(0, n, 0, m, null);
+    }
+
+    private LcsItem lcsTail(final int a0, final int n,
+            final int b0, final int m, int[][] vv) {
         final int min = n < m ? n : m;
-        Match matchDown = null;
-        Match matchUp = null;
-        Match lcsMatch = null;
+        LcsItem matchDown = null;
+        LcsItem matchUp = null;
+        LcsItem lcsMatch = null;
         int d = 0;
         if (equals(a0, b0)) {
             for (d = 1; d < min && equals(a0 + d, b0 + d); d++);
-            matchDown = new Match(a0, b0, d);
+            matchDown = new LcsItem(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
@@ -46,20 +52,20 @@ public abstract class LinearSpaceMyersLcs {
             final int y0 = b0 + m - 1;
             final int maxu = min - d;
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
-            matchUp = new Match(a0 + n - u, b0 + m - u, u);
+            matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
         }
         if (u + d < min) {
             lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
         }
-        return Match.chain(matchDown, lcsMatch, matchUp);
+        return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
 
-    private Match lcsRec(final int a0, final int n, final int b0, final int m,
-            int[][] vv) {
+    private LcsItem lcsRec(final int a0, final int n,
+            final int b0, final int m, int[][] vv) {
         if (n == 1) {
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
-                    return new Match(a0, i, 1);
+                    return new LcsItem(a0, i, 1);
                 }
             }
             return null;
@@ -67,7 +73,7 @@ public abstract class LinearSpaceMyersLcs {
         if (m == 1) {
             for (int i = a0; i < a0 + n; i++) {
                 if (equals(i, b0)) {
-                    return new Match(i, b0, 1);
+                    return new LcsItem(i, b0, 1);
                 }
             }
             return null;
@@ -77,7 +83,7 @@ public abstract class LinearSpaceMyersLcs {
             vv = new int[2][n+m+4];
         }
 
-        Match match = null;
+        LcsItem match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
@@ -134,7 +140,7 @@ public abstract class LinearSpaceMyersLcs {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
-                            match = new Match(a0 + xMid, b0 + (xMid - k),
+                            match = new LcsItem(a0 + xMid, b0 + (xMid - k),
                                     xEnd - xMid);
                         } else {
                             xStart = isPrev ? next : prev;
@@ -170,7 +176,7 @@ public abstract class LinearSpaceMyersLcs {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            match = new Match(a0 + xStart, b0 + yStart,
+                            match = new LcsItem(a0 + xStart, b0 + yStart,
                                     xMid - xStart);
                         } else {
                             xEnd = isPrev ? prev : next;
@@ -186,26 +192,27 @@ public abstract class LinearSpaceMyersLcs {
         if (fromStart && toEnd) {
             return match;
         }
-        Match before = fromStart ? null :
+        LcsItem before = fromStart ? null :
                 lcsTail(a0, xStart, b0, yStart, vv);
-        Match after = toEnd ? null :
+
+        LcsItem after = toEnd ? null :
                 lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
-        return Match.chain(before, match, after);
+        return LcsItem.chain(before, match, after);
     }
 
-    public static class Match implements Iterable<Match> {
-
+    public static class LcsItem
+            implements Iterable<LcsItem>, Serializable {
         private static final long serialVersionUID = 1L;
-        public static final Match NULL = new Match(-1, -1, 0);
+        public static final LcsItem NULL = new LcsItem(-1, -1, 0);
         private final int x;
         private final int y;
         private final int steps;
-        private Match next;
-        private Match last;
+        private LcsItem next;
+        private LcsItem last;
         private int lcs;
 
-        Match(int x, int y, int steps) {
+        LcsItem(int x, int y, int steps) {
             this.x = x;
             this.y = y;
             this.steps = steps;
@@ -216,8 +223,8 @@ public abstract class LinearSpaceMyersLcs {
          * This is NOT a general chain algorithm, it works because the way
          * matches are generated in the Myers LCS algorithms.
          */
-        Match chain(final Match other) {
-            Match current = this;
+        LcsItem chain(final LcsItem other) {
+            LcsItem current = this;
             if (last != null) {
                 current = last;
             }
@@ -250,9 +257,9 @@ public abstract class LinearSpaceMyersLcs {
         }
 
         abstract class IndexIterator implements Iterator<Integer> {
-            private final Iterator<Match> i = Match.this.iterator();
+            private final Iterator<LcsItem> i = LcsItem.this.iterator();
             protected int step = 0;
-            protected Match current;
+            protected LcsItem current;
             protected boolean hasNext;
 
             public IndexIterator() {
@@ -289,6 +296,9 @@ public abstract class LinearSpaceMyersLcs {
 
                         @Override
                         public Integer next() {
+                            if (!hasNext) {
+                                throw new NoSuchElementException();
+                            }
                             final int result = current.x + step;
                             increment();
                             return result;
@@ -306,6 +316,9 @@ public abstract class LinearSpaceMyersLcs {
 
                         @Override
                         public Integer next() {
+                            if (!hasNext) {
+                                throw new NoSuchElementException();
+                            }
                             final int result = current.y + step;
                             increment();
                             return result;
@@ -316,9 +329,9 @@ public abstract class LinearSpaceMyersLcs {
         }
 
         @Override
-        public Iterator<Match> iterator() {
-            return new Iterator<Match>() {
-                private Match current = Match.this;
+        public Iterator<LcsItem> iterator() {
+            return new Iterator<LcsItem>() {
+                private LcsItem current = LcsItem.this;
 
                 @Override
                 public boolean hasNext() {
@@ -326,8 +339,8 @@ public abstract class LinearSpaceMyersLcs {
                 }
 
                 @Override
-                public Match next() {
-                    Match tmp = current;
+                public LcsItem next() {
+                    LcsItem tmp = current;
                     current = current.next;
                     return tmp;
                 }
@@ -343,7 +356,7 @@ public abstract class LinearSpaceMyersLcs {
                     "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
         }
 
-        static Match chain(Match before, Match middle, Match after) {
+        static LcsItem chain(LcsItem before, LcsItem middle, LcsItem after) {
             if (middle == null) {
                 if (after == null) {
                     return before;

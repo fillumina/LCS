@@ -5,11 +5,19 @@ import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
+import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.LcsItem;
 import com.fillumina.lcs.util.ListUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import com.fillumina.lcs.Lcs;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
@@ -139,7 +147,7 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
     private void countLcs(String a, String b, int expectedLcs) {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
-        Match m = algo.lcsMatch(listA, listB);
+        LcsItem m = algo.lcsMatch(listA, listB);
         assertEquals(ListUtils.toString(m), expectedLcs, m.getLcs());
     }
 

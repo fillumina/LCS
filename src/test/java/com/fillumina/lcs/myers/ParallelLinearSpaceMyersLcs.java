@@ -15,7 +15,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
 
-    public Match getMatch() {
+    public LcsItem calculateLcs() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
         final int min = n < m ? n : m;
@@ -26,13 +26,13 @@ public abstract class ParallelLinearSpaceMyersLcs {
             }
         };
 
-        Match matchDown = null;
-        Match matchUp = null;
-        Match lcsMatch = null;
+        LcsItem matchDown = null;
+        LcsItem matchUp = null;
+        LcsItem lcsMatch = null;
         int d;
         for (d = 0; d < min && equals(d, d); d++);
         if (d != 0) {
-            matchDown = new Match(0, 0, d);
+            matchDown = new LcsItem(0, 0, d);
             if (d == min) {
                 return matchDown;
             }
@@ -42,15 +42,15 @@ public abstract class ParallelLinearSpaceMyersLcs {
         int y0 = m - 1;
         for (u = 0; u < (min-d) && equals(x0 - u, y0 - u); u++);
         if (u != 0) {
-            matchUp = new Match(n - u, m - u, u);
+            matchUp = new LcsItem(n - u, m - u, u);
         }
         if (u + d != min) {
             lcsMatch = new RecursiveLcs(d, n - d - u, d, m - d - u).compute();
         }
-        return Match.chain(matchDown, lcsMatch, matchUp);
+        return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
 
-    private class RecursiveLcs extends RecursiveTask<Match> {
+    private class RecursiveLcs extends RecursiveTask<LcsItem> {
         private static final long serialVersionUID = 1L;
         private final int a0, n, b0, m;
 
@@ -63,7 +63,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
         }
 
         @Override
-        protected Match compute() {
+        protected LcsItem compute() {
             final int a0 = this.a0;
             final int n = this.n;
             final int b0 = this.b0;
@@ -75,13 +75,13 @@ public abstract class ParallelLinearSpaceMyersLcs {
             if (n == 1) {
                 if (m == 1) {
                     if (ParallelLinearSpaceMyersLcs.this.equals(a0, b0)) {
-                        return new Match(a0, b0, 1);
+                        return new LcsItem(a0, b0, 1);
                     }
                     return null;
                 }
                 for (int i = b0; i < b0 + m; i++) {
                     if (ParallelLinearSpaceMyersLcs.this.equals(a0, i)) {
-                        return new Match(a0, i, 1);
+                        return new LcsItem(a0, i, 1);
                     }
                 }
                 return null;
@@ -89,12 +89,12 @@ public abstract class ParallelLinearSpaceMyersLcs {
             if (m == 1) {
                 for (int i = a0; i < a0 + n; i++) {
                     if (ParallelLinearSpaceMyersLcs.this.equals(i, b0)) {
-                        return new Match(i, b0, 1);
+                        return new LcsItem(i, b0, 1);
                     }
                 }
                 return null;
             }
-            Match match = null;
+            LcsItem match = null;
             int xStart = -1;
             int yStart = -1;
             int xEnd = -1;
@@ -154,7 +154,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                             if (xEnd > xMid) {
                                 xStart = isPrev ? next : prev + 1;
                                 yStart = xStart - (k + (isPrev ? 1 : -1));
-                                match = new Match(a0 + xMid, b0 + (xMid - k),
+                                match = new LcsItem(a0 + xMid, b0 + (xMid - k),
                                         xEnd - xMid);
                             } else {
                                 xStart = isPrev ? next : prev;
@@ -189,7 +189,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                             if (xMid > xStart) {
                                 xEnd = isPrev ? prev : next - 1;
                                 yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                                match = new Match(a0 + xStart, b0 + yStart,
+                                match = new LcsItem(a0 + xStart, b0 + yStart,
                                         xMid - xStart);
                             } else {
                                 xEnd = isPrev ? prev : next;
@@ -206,8 +206,8 @@ public abstract class ParallelLinearSpaceMyersLcs {
                 return match;
             }
 
-            Match before = null;
-            Match after = null;
+            LcsItem before = null;
+            LcsItem after = null;
             RecursiveLcs beforeLcs = null;
 
             if (!fromStart)  {
@@ -229,22 +229,22 @@ public abstract class ParallelLinearSpaceMyersLcs {
                 before = beforeLcs.join();
             }
 
-            return Match.chain(before, match, after);
+            return LcsItem.chain(before, match, after);
         }
     }
 
-    public static class Match implements Iterable<Match>, Serializable {
+    public static class LcsItem implements Iterable<LcsItem>, Serializable {
         private static final long serialVersionUID = 1L;
 
-        public static final Match NULL = new Match(-1, -1, 0);
+        public static final LcsItem NULL = new LcsItem(-1, -1, 0);
 
         private final int x;
         private final int y;
         private final int steps;
-        private Match next;
-        private Match last;
+        private LcsItem next;
+        private LcsItem last;
 
-        Match(int x, int y, int steps) {
+        LcsItem(int x, int y, int steps) {
             this.x = x;
             this.y = y;
             this.steps = steps;
@@ -254,8 +254,8 @@ public abstract class ParallelLinearSpaceMyersLcs {
          * This is NOT a general chain algorithm, it works because the way
          * matches are generated in the LCS algorithms.
          */
-        Match chain(final Match other) {
-            Match current = this;
+        LcsItem chain(final LcsItem other) {
+            LcsItem current = this;
             if (last != null) {
                 current = last;
             }
@@ -276,7 +276,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
 
         public int getLcs() {
             int lcs = 0;
-            for (Match m : this) {
+            for (LcsItem m : this) {
                 lcs += m.getSteps();
             }
             return lcs;
@@ -299,8 +299,8 @@ public abstract class ParallelLinearSpaceMyersLcs {
                 @Override
                 public Iterator<Integer> iterator() {
                     return new Iterator<Integer>() {
-                        private Iterator<Match> i = Match.this.iterator();
-                        private Match current;
+                        private Iterator<LcsItem> i = LcsItem.this.iterator();
+                        private LcsItem current;
                         private int step = 0;
 
                         @Override
@@ -308,7 +308,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                             while (current == null || current.steps == 0 ||
                                     (step + 1) == current.steps) {
                                 if (i.hasNext()) {
-                                    current = (Match) i.next();
+                                    current = (LcsItem) i.next();
                                     step = -1;
                                 } else {
                                     return false;
@@ -328,9 +328,9 @@ public abstract class ParallelLinearSpaceMyersLcs {
         }
 
         @Override
-        public Iterator<Match> iterator() {
-            return new Iterator<Match>() {
-                private Match current = Match.this;
+        public Iterator<LcsItem> iterator() {
+            return new Iterator<LcsItem>() {
+                private LcsItem current = LcsItem.this;
 
                 @Override
                 public boolean hasNext() {
@@ -338,8 +338,8 @@ public abstract class ParallelLinearSpaceMyersLcs {
                 }
 
                 @Override
-                public Match next() {
-                    Match tmp = current;
+                public LcsItem next() {
+                    LcsItem tmp = current;
                     current = current.next;
                     return tmp;
                 }
@@ -356,7 +356,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                     ", steps=" + steps + '}';
         }
 
-        public static Match chain(Match before, Match middle, Match after) {
+        public static LcsItem chain(LcsItem before, LcsItem middle, LcsItem after) {
             if (middle == null) {
                 if (after == null) {
                     return before;
