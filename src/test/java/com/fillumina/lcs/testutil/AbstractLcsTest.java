@@ -50,6 +50,11 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
         lcs("CXCDEFX", "CDEFX").assertResult("CDEFX");
     }
 
+    @Test
+    public void shouldSelectTheOptimalResultAvoidingPreoptimizations() {
+        lcs("_CXCDEFX_", "=CDEFX=").assertResult("CDEFX");
+    }
+
     @Test(timeout = 1_000L)
     public void shouldGetTheOnlyElement() {
         lcs("A", "A").assertResult("A");
