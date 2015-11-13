@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
-import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.myers.docx4j.IbmLcs;
 import static org.junit.Assert.assertEquals;
 
 /**

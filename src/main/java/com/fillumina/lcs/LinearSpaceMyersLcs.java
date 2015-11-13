@@ -20,7 +20,7 @@ public abstract class LinearSpaceMyersLcs {
     public Match getLcsMatches() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
-        return lcsTail(0, n, 0, m, new int[2][n+m+4]);
+        return lcsTail(0, n, 0, m, null);
     }
 
     private Match lcsTail(final int a0, final int n,
@@ -30,21 +30,22 @@ public abstract class LinearSpaceMyersLcs {
         Match matchUp = null;
         Match lcsMatch = null;
         int d;
-        for (d = 0; d < min && equals(a0+d, b0+d); d++);
+        for (d = 0; d < min && equals(a0 + d, b0 + d); d++);
         if (d != 0) {
             matchDown = new Match(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
         }
+        final int x0 = a0 + n - 1;
+        final int y0 = b0 + m - 1;
+        final int maxu = min - d;
         int u;
-        int x0 = a0 + n - 1;
-        int y0 = b0 + m - 1;
-        for (u = 0; u < (min-d) && equals(x0 - u, y0 - u); u++);
+        for (u = 0; u < maxu && equals(x0 - u, y0 - u); u++);
         if (u != 0) {
             matchUp = new Match(a0 + n - u, b0 + m - u, u);
         }
-        if (u + d <= min) {
+        if (u + d < min) {
             lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
         }
         return Match.chain(matchDown, lcsMatch, matchUp);
@@ -52,16 +53,17 @@ public abstract class LinearSpaceMyersLcs {
 
     private Match lcsRec(final int a0, final int n, final int b0, final int m,
             int[][] vv) {
-        if (n == 0 || m == 0) {
-            return null;
-        }
+//        if (n == 0 || m == 0) {
+//            return null;
+//        }
         if (n == 1) {
-            if (m == 1) {
-                if (equals(a0, b0)) {
-                    return new Match(a0, b0, 1);
-                }
-                return null;
-            }
+            // already filtered by lcsTail()
+//            if (m == 1) {
+//                if (equals(a0, b0)) {
+//                    return new Match(a0, b0, 1);
+//                }
+//                return null;
+//            }
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
                     return new Match(a0, i, 1);
@@ -76,6 +78,10 @@ public abstract class LinearSpaceMyersLcs {
                 }
             }
             return null;
+        }
+
+        if (vv == null) {
+            vv = new int[2][n+m+4];
         }
 
         Match match = null;
@@ -93,14 +99,12 @@ public abstract class LinearSpaceMyersLcs {
             final int halfv = vf.length >> 1;
 
             vf[halfv + 1] = 0;
+            vf[halfv + delta] = 0;
             vb[halfv - 1] = n;
             vb[halfv - delta] = n;
-            vf[halfv + delta] = 0;
 
             boolean isPrev;
             int k;
-            int kDeltaStart;
-            int kDeltaEnd;
             int prev;
             int next;
             int vIndex;
@@ -146,14 +150,15 @@ public abstract class LinearSpaceMyersLcs {
                         break FIND_MIDDLE_SNAKE;
                     }
                 }
-                kDeltaEnd = delta + d;
-                kDeltaStart = delta - d;
-                for (k = kDeltaStart; k <= kDeltaEnd; k += 2) {
+
+                kStart = delta - d;
+                kEnd = delta + d;
+                for (k = kStart; k <= kEnd; k += 2) {
                     vIndex = halfv + k - delta;
 
                     next = vb[vIndex + 1];
                     prev = vb[vIndex - 1];
-                    isPrev = k == kDeltaEnd || (k != kDeltaStart && prev < next);
+                    isPrev = k == kEnd || (k != kStart && prev < next);
                     if (isPrev) {
                         xStart = prev; // up
                     } else {
@@ -184,15 +189,13 @@ public abstract class LinearSpaceMyersLcs {
             }
         }
         final boolean fromStart = xStart <= 0;
-        final boolean toEnd = xEnd >= n;
+        final boolean toEnd = xEnd >= n || n - xEnd == 0 || m - yEnd == 0;
         if (fromStart && toEnd) {
             return match;
         }
         Match before = fromStart ? null :
                 lcsTail(a0, xStart, b0, yStart, vv);
-        Match after = toEnd ||
-                n - xEnd == 0 ||
-                m - yEnd == 0  ? null :
+        Match after = toEnd ? null :
                 lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return Match.chain(before, match, after);
