@@ -7,6 +7,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -50,7 +52,7 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         @SuppressWarnings("unchecked")
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
-        assertEquals(generator.getLcsList(), lcsList);
+        assertEquals(generator.getLcs(), lcsList);
     }
 
     @Test(timeout = 10_000L)

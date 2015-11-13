@@ -9,6 +9,10 @@ import java.util.Random;
 import java.util.TreeSet;
 
 /**
+ * Generates two random sequences of integers of the requested size each
+ * containing exactly one common sequence (thus the LCS). The common
+ * sequence is easily recognizable because it is composed of negative
+ * numbers.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -34,9 +38,10 @@ public class RandomSequenceGenerator {
     /**
      *
      * @param total length of the sequences
-     * @param lcs   lenght of the longest common sequence
-     * @param seed  seed of the random number generator. Equal seeds mean the
-     *              same random sequence is repeated (useful for debugging)
+     * @param lcs   length of the longest common sequence
+     * @param seed  seed of the random number generator. To the same
+     *              seeds correspond same random generations (useful for
+     *              debugging).
      */
     public RandomSequenceGenerator(final int total, final int lcs,
             final long seed) {
@@ -50,7 +55,6 @@ public class RandomSequenceGenerator {
 
         this.lcsList = createLcsList(new ArrayList<Integer>(lcs), lcs);
 
-        // useful to regenerate a failed test (just pass the same seed)
         Random rnd = new Random(seed);
         this.a = setLcsSequenceRandomlyIntoList(aList, lcsList, rnd);
         this.b = setLcsSequenceRandomlyIntoList(bList, lcsList, rnd);
@@ -94,7 +98,7 @@ public class RandomSequenceGenerator {
         return Collections.unmodifiableList(list);
     }
 
-    public List<Integer> getLcsList() {
+    public List<Integer> getLcs() {
         return lcsList;
     }
 

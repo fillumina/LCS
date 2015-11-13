@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -33,7 +34,7 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
         super();
         RandomSequenceGenerator generator =
                 new RandomSequenceGenerator(TOTAL, LCS, SEED);
-        this.lcsList = generator.getLcsList();
+        this.lcsList = generator.getLcs();
         this.a = generator.getA();
         this.b = generator.getB();
     }

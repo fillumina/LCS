@@ -8,7 +8,6 @@ import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -147,6 +146,6 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
-        assertEquals(generator.getLcsList(), lcsList);
+        assertEquals(generator.getLcs(), lcsList);
     }
 }

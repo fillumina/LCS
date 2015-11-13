@@ -25,7 +25,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
             List<Integer> lcsList = algorithm
                     .lcs(generator.getA(), generator.getB());
 
-            assertEquals(generator.getLcsList(), lcsList);
+            assertEquals(generator.getLcs(), lcsList);
         }
     }
 
@@ -245,6 +245,6 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
-        assertEquals(generator.getLcsList(), lcsList);
+        assertEquals(generator.getLcs(), lcsList);
     }
 }

@@ -32,7 +32,7 @@ public class IbmLcsTest extends AbstractLcsTest {
         List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
                 .lcs(generator.getA(), generator.getB());
 
-        final List<Integer> result = generator.getLcsList();
+        final List<Integer> result = generator.getLcs();
 //        for (int i=0; i<LCS; i++) {
 //            if (result.get(i) != lcsList.get(i)) {
 //                System.out.println("ERROR ON INDEX=" + i +

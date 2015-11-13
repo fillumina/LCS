@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -21,8 +20,7 @@ public abstract class LinearSpaceMyersLcs {
     public Match getLcsMatches() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
-        // TODO check about this magic number
-        return lcsTail(0, n, 0, m, new int[2][5 *(n+m+1)]);
+        return lcsTail(0, n, 0, m, new int[2][n+m+4]);
     }
 
     private Match lcsTail(final int a0, final int n,
@@ -87,7 +85,7 @@ public abstract class LinearSpaceMyersLcs {
         int yEnd = -1;
         {
             // different scope to have less garbage on the stack when recursing
-            final int max = Math.min(getMaximumDistance(), (n + m + 1) / 2 + 1);
+            final int max = Math.min(getMaximumDistance(), (n + m + 1) >> 1);
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];
@@ -96,8 +94,8 @@ public abstract class LinearSpaceMyersLcs {
 
             vf[halfv + 1] = 0;
             vb[halfv - 1] = n;
-            // covers vb[vIndex - delta] in forward middle snake search
             vb[halfv - delta] = n;
+            vf[halfv + delta] = 0;
 
             boolean isPrev;
             int k;
@@ -128,7 +126,8 @@ public abstract class LinearSpaceMyersLcs {
                     }
                     yEnd = xEnd - k;
                     xMid = xEnd;
-                    while (xEnd < n && yEnd < m && equals(a0 + xEnd, b0 + yEnd)) {
+                    while (xEnd < n && yEnd < m &&
+                            equals(a0 + xEnd, b0 + yEnd)) {
                         xEnd++;
                         yEnd++;
                     }
