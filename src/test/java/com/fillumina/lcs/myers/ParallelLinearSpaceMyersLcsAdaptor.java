@@ -7,11 +7,10 @@ import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.Match;
 import com.fillumina.lcs.Lcs;
 
 /**
- * The indexes are passed along the calls so to avoid using sublists.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcsWrapper<T> implements Lcs<T> {
+public class ParallelLinearSpaceMyersLcsAdaptor<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {
@@ -32,14 +31,16 @@ public class ParallelLinearSpaceMyersLcsWrapper<T> implements Lcs<T> {
     }
 
     public Match lcsMatch(final T[] a, final T[] b) {
-        final Match match = new InnerLcs<>(a, b).getMatch();
+        final Match match =
+                new ParallelLinearSpaceMyersLcsImpl<>(a, b).getMatch();
         return match == null ? Match.NULL : match;
     }
 
-    private static class InnerLcs<T> extends ParallelLinearSpaceMyersLcs {
+    private static class ParallelLinearSpaceMyersLcsImpl<T>
+            extends ParallelLinearSpaceMyersLcs {
         private final T[] a, b;
 
-        public InnerLcs(T[] a, T[] b) {
+        public ParallelLinearSpaceMyersLcsImpl(T[] a, T[] b) {
             this.a = a;
             this.b = b;
         }

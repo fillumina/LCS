@@ -103,7 +103,7 @@ public abstract class LinearSpaceMyersLcs {
             int kDeltaEnd;
             int prev;
             int next;
-            int maxk;
+            int vIndex;
             int xMid;
             int kStart = delta - 1;
             int kEnd = delta + 1;
@@ -115,9 +115,9 @@ public abstract class LinearSpaceMyersLcs {
                     kEnd = delta + (d - 1);
                 }
                 for (k = -d; k <= d; k += 2) {
-                    maxk = halfv + k;
-                    next = vf[maxk + 1];
-                    prev = vf[maxk - 1];
+                    vIndex = halfv + k;
+                    next = vf[vIndex + 1];
+                    prev = vf[vIndex - 1];
                     isPrev = k == -d || (k != d && prev < next);
                     if (isPrev) {
                         xEnd = next; // down
@@ -130,9 +130,9 @@ public abstract class LinearSpaceMyersLcs {
                         xEnd++;
                         yEnd++;
                     }
-                    vf[maxk] = xEnd;
+                    vf[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
-                            vb[maxk] <= xEnd) {
+                            vb[vIndex] <= xEnd) {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
@@ -148,9 +148,9 @@ public abstract class LinearSpaceMyersLcs {
                 kDeltaEnd = delta + d;
                 kDeltaStart = delta - d;
                 for (k = kDeltaStart; k <= kDeltaEnd; k += 2) {
-                    maxk = halfv + k;
-                    next = vb[maxk + 1];
-                    prev = vb[maxk - 1];
+                    vIndex = halfv + k;
+                    next = vb[vIndex + 1];
+                    prev = vb[vIndex - 1];
                     isPrev = k == kDeltaEnd || (k != kDeltaStart && prev < next);
                     if (isPrev) {
                         xStart = prev; // up
@@ -164,9 +164,9 @@ public abstract class LinearSpaceMyersLcs {
                         xStart--;
                         yStart--;
                     }
-                    vb[maxk] = xStart;
+                    vb[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
-                            xStart <= vf[maxk]) {
+                            xStart <= vf[vIndex]) {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));

@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -18,8 +20,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private ParallelLinearSpaceMyersLcsWrapper<Character> algo =
-            new ParallelLinearSpaceMyersLcsWrapper<>();
+    private ParallelLinearSpaceMyersLcsAdaptor<Character> algo =
+            new ParallelLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
         new ParallelLinearSpaceMyersLcsTest().randomLcs(60, 10);
@@ -27,7 +29,7 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new ParallelLinearSpaceMyersLcsWrapper<>();
+        return new ParallelLinearSpaceMyersLcsAdaptor<>();
     }
 
     @Test(timeout = 100L)

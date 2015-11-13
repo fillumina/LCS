@@ -8,6 +8,7 @@ import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -15,8 +16,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private LinearSpaceMyersLcsWrapper<Character> algo =
-            new LinearSpaceMyersLcsWrapper<>();
+    private LinearSpaceMyersLcsAdaptor<Character> algo =
+            new LinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
         new LinearSpaceMyersLcsTest().randomLcs(60, 10);
@@ -24,7 +25,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new LinearSpaceMyersLcsWrapper<>();
+        return new LinearSpaceMyersLcsAdaptor<>();
     }
 
     @Test(timeout = 100L)
