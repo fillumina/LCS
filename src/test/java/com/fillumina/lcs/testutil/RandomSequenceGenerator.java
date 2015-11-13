@@ -51,7 +51,6 @@ public class RandomSequenceGenerator {
         this.lcsList = createLcsList(new ArrayList<Integer>(lcs), lcs);
 
         // useful to regenerate a failed test (just pass the same seed)
-        System.err.println("seed: " + seed);
         Random rnd = new Random(seed);
         this.a = setLcsSequenceRandomlyIntoList(aList, lcsList, rnd);
         this.b = setLcsSequenceRandomlyIntoList(bList, lcsList, rnd);

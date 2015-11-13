@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -21,7 +22,7 @@ public abstract class LinearSpaceMyersLcs {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
         // TODO check about this magic number
-        return lcsTail(0, n, 0, m, new int[2][3 *(n+m+1)]);
+        return lcsTail(0, n, 0, m, new int[2][5 *(n+m+1)]);
     }
 
     private Match lcsTail(final int a0, final int n,
@@ -45,7 +46,7 @@ public abstract class LinearSpaceMyersLcs {
         if (u != 0) {
             matchUp = new Match(a0 + n - u, b0 + m - u, u);
         }
-        if (u + d != min) {
+        if (u + d <= min) {
             lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
         }
         return Match.chain(matchDown, lcsMatch, matchUp);
@@ -94,8 +95,9 @@ public abstract class LinearSpaceMyersLcs {
             final int halfv = vf.length >> 1;
 
             vf[halfv + 1] = 0;
-            vb[halfv + delta - 1] = n;
-            vb[halfv - delta - 1] = n;
+            vb[halfv - 1] = n;
+            // covers vb[vIndex - delta] in forward middle snake search
+            vb[halfv - delta] = n;
 
             boolean isPrev;
             int k;
@@ -132,7 +134,7 @@ public abstract class LinearSpaceMyersLcs {
                     }
                     vf[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
-                            vb[vIndex] <= xEnd) {
+                            vb[vIndex - delta] <= xEnd) {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
@@ -148,7 +150,8 @@ public abstract class LinearSpaceMyersLcs {
                 kDeltaEnd = delta + d;
                 kDeltaStart = delta - d;
                 for (k = kDeltaStart; k <= kDeltaEnd; k += 2) {
-                    vIndex = halfv + k;
+                    vIndex = halfv + k - delta;
+
                     next = vb[vIndex + 1];
                     prev = vb[vIndex - 1];
                     isPrev = k == kDeltaEnd || (k != kDeltaStart && prev < next);
@@ -159,14 +162,14 @@ public abstract class LinearSpaceMyersLcs {
                     }
                     yStart = xStart - k;
                     xMid = xStart;
-                    while (xStart > 0 && yStart > 0 && equals(a0 + xStart - 1,
-                            b0 + yStart - 1)) {
+                    while (xStart > 0 && yStart > 0 &&
+                            equals(a0 + xStart - 1, b0 + yStart - 1)) {
                         xStart--;
                         yStart--;
                     }
                     vb[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
-                            xStart <= vf[vIndex]) {
+                            xStart <= vf[vIndex + delta]) {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
@@ -188,7 +191,9 @@ public abstract class LinearSpaceMyersLcs {
         }
         Match before = fromStart ? null :
                 lcsTail(a0, xStart, b0, yStart, vv);
-        Match after = toEnd || n - xEnd == 0 || m - yEnd == 0 ? null :
+        Match after = toEnd ||
+                n - xEnd == 0 ||
+                m - yEnd == 0  ? null :
                 lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return Match.chain(before, match, after);
