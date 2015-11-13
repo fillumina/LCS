@@ -25,24 +25,27 @@ public abstract class LinearSpaceMyersLcs {
 
     private Match lcsTail(final int a0, final int n,
             final int b0, final int m, int[][] vv) {
+        if (n == 0 || m == 0) {
+            return null;
+        }
         final int min = n < m ? n : m;
         Match matchDown = null;
         Match matchUp = null;
         Match lcsMatch = null;
-        int d;
-        for (d = 0; d < min && equals(a0 + d, b0 + d); d++);
-        if (d != 0) {
+        int d = 0;
+        if (equals(a0, b0)) {
+            for (d = 1; d < min && equals(a0 + d, b0 + d); d++);
             matchDown = new Match(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
         }
-        final int x0 = a0 + n - 1;
-        final int y0 = b0 + m - 1;
-        final int maxu = min - d;
-        int u;
-        for (u = 0; u < maxu && equals(x0 - u, y0 - u); u++);
-        if (u != 0) {
+        int u = 0;
+        if (equals(a0 + n - 1, b0 + m - 1)) {
+            final int x0 = a0 + n - 1;
+            final int y0 = b0 + m - 1;
+            final int maxu = min - d;
+            for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
             matchUp = new Match(a0 + n - u, b0 + m - u, u);
         }
         if (u + d < min) {
@@ -53,17 +56,7 @@ public abstract class LinearSpaceMyersLcs {
 
     private Match lcsRec(final int a0, final int n, final int b0, final int m,
             int[][] vv) {
-//        if (n == 0 || m == 0) {
-//            return null;
-//        }
         if (n == 1) {
-            // already filtered by lcsTail()
-//            if (m == 1) {
-//                if (equals(a0, b0)) {
-//                    return new Match(a0, b0, 1);
-//                }
-//                return null;
-//            }
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
                     return new Match(a0, i, 1);
@@ -188,7 +181,7 @@ public abstract class LinearSpaceMyersLcs {
                 }
             }
         }
-        final boolean fromStart = xStart <= 0;
+        final boolean fromStart = xStart <= 0 || yStart <= 0;
         final boolean toEnd = xEnd >= n || n - xEnd == 0 || m - yEnd == 0;
         if (fromStart && toEnd) {
             return match;
@@ -350,8 +343,7 @@ public abstract class LinearSpaceMyersLcs {
                     "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
         }
 
-        static Match chain(Match before, Match middle,
-                Match after) {
+        static Match chain(Match before, Match middle, Match after) {
             if (middle == null) {
                 if (after == null) {
                     return before;

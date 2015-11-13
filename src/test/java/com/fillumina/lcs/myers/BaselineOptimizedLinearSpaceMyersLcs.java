@@ -8,7 +8,9 @@ import java.util.Objects;
 import com.fillumina.lcs.Lcs;
 
 /**
- * The indexes are passed along the calls so to avoid using sublists.
+ * This is an old implementation of {@link LinearSpaceMyersLcs} used as
+ * a reference. It is slightly faster because it accesses directly to the
+ * arrays instead of having to pass through an inherited method.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
