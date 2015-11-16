@@ -59,8 +59,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
             matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
         }
-        if (u + d < min) {
-            lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
+        u += d;
+        if (u < min) {
+            lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
         }
         return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
