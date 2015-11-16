@@ -30,7 +30,7 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         int[][] vv = new int[max][size];
         int[] vNext, vPrev;
 
-        int maxk, next, prev, x=-1, y=-1, d, k, s;
+        int maxk, next, prev, x=-1, y=-1, d, k=-1, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
             vPrev = vv[d == 0 ? 0 : d-1];
@@ -60,9 +60,8 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         @SuppressWarnings("unchecked")
         T[] result = (T[]) new Object[max];
 
-        int xStart, yStart, xMid, index = max-1;
+        int xStart, xMid, index = max-1;
         for (; d >= 0 && x > 0 && y > 0; d--) {
-            k = x - y;
             maxk = max + k;
             vNext = vv[d == 0 ? 0 : d-1];
 
@@ -70,12 +69,12 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
             prev = vNext[maxk - 1];
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
-                yStart = next - k - 1;
                 xMid = xStart;
+                k++;
             } else {
                 xStart = prev;
-                yStart = prev - k + 1;
                 xMid = xStart + 1;
+                k--;
             }
 
             if (x != xMid) {
@@ -86,7 +85,6 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
             }
 
             x = xStart;
-            y = yStart;
         }
         // the snakes are collected backwards
         List<T> list = Arrays.asList(result);
