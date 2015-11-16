@@ -32,6 +32,11 @@ public abstract class LinearSpaceMyersLcs {
         return lcsTail(0, n, 0, m, null);
     }
 
+    /**
+     * At every step of the Myers Linear Space Algorithm it may happens
+     * that there could be an equal head and tail. Because decreasing n and m
+     * reduces calculations an easy check can avoid a lot of work.
+     */
     private LcsItem lcsTail(final int a0, final int n,
             final int b0, final int m, int[][] vv) {
         final int min = n < m ? n : m;
@@ -47,9 +52,9 @@ public abstract class LinearSpaceMyersLcs {
             }
         }
         int u = 0;
-        if (equals(a0 + n - 1, b0 + m - 1)) {
-            final int x0 = a0 + n - 1;
-            final int y0 = b0 + m - 1;
+        final int x0 = a0 + n - 1;
+        final int y0 = b0 + m - 1;
+        if (equals(x0, y0)) {
             final int maxu = min - d;
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
             matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
@@ -187,15 +192,10 @@ public abstract class LinearSpaceMyersLcs {
                 }
             }
         }
-        final boolean fromStart = xStart <= 0 || yStart <= 0;
-        final boolean toEnd = xEnd >= n || n - xEnd == 0 || m - yEnd == 0;
-        if (fromStart && toEnd) {
-            return match;
-        }
-        LcsItem before = fromStart ? null :
+        LcsItem before = xStart <= 0 || yStart <= 0 ? null :
                 lcsTail(a0, xStart, b0, yStart, vv);
 
-        LcsItem after = toEnd ? null :
+        LcsItem after = xEnd >= n || n - xEnd == 0 || m - yEnd == 0 ? null :
                 lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return LcsItem.chain(before, match, after);
