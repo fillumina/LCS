@@ -30,7 +30,7 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         int[][] vv = new int[max][size];
         int[] vNext, vPrev;
 
-        int maxk, next, prev, x=-1, y=-1, d, k=-1, s;
+        int maxk, next, prev, x=-1, y, d, k=-1, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
             vPrev = vv[d == 0 ? 0 : d-1];
@@ -45,8 +45,7 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
                     x = prev + 1;
                 }
                 y = x - k;
-                while (x >= 0 && y >= 0 && x < n && y < m &&
-                        Objects.equals(a[x], b[y])) {
+                while (x < n && y < m && Objects.equals(a[x], b[y])) {
                     x++;
                     y++;
                 }
@@ -61,7 +60,7 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         T[] result = (T[]) new Object[max];
 
         int xStart, xMid, index = max-1;
-        for (; d >= 0 && x > 0 && y > 0; d--) {
+        for (; d >= 0 && x > 0; d--) {
             maxk = max + k;
             vNext = vv[d == 0 ? 0 : d-1];
 
@@ -69,11 +68,11 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
             prev = vNext[maxk - 1];
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
-                xMid = xStart;
+                xMid = next;
                 k++;
             } else {
                 xStart = prev;
-                xMid = xStart + 1;
+                xMid = prev + 1;
                 k--;
             }
 

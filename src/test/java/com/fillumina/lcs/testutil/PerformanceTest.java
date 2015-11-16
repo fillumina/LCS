@@ -8,7 +8,10 @@ import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.myers.BaselineLinearSpaceMyersLcsAdaptor;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
+import com.fillumina.lcs.myers.MyersLcs;
+import com.fillumina.lcs.myers.OptimizedMyersLcs;
 import com.fillumina.lcs.myers.docx4j.IbmLcs;
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 60;
+    private static final int TOTAL = 600;
     private static final int LCS = 50;
     private static final long SEED = System.nanoTime();
 
@@ -55,8 +58,8 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(500);
-        config.setTimeout(10, TimeUnit.MINUTES);
+        config.setBaseIterations(100);
+        config.setTimeout(30, TimeUnit.MINUTES);
     }
 
     @Override
@@ -85,9 +88,11 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
 //        tests.addTest("BaselineOptimizedLinearSpaceMyers",
 //                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
+//        tests.addTest("BaselineLinearSpaceMyers",
+//                new LcsRunnable(new BaselineLinearSpaceMyersLcsAdaptor<Integer>()));
         tests.addTest("LinearSpaceMyers",
                 new LcsRunnable(new LinearSpaceMyersLcsAdaptor<Integer>()));
-//        tests.addTest("ParallelLinearSpaceMyers",
+//        test.addTest("ParallelLinearSpaceMyers",
 //                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper<Integer>()));
         tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
     }
