@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class LinearSpaceMyersLcs {
+public abstract class AbstractLinearSpaceMyersLcs {
 
     protected abstract int getFirstSequenceLength();
     protected abstract int getSecondSequenceLength();

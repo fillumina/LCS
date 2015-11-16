@@ -1,6 +1,6 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.LinearSpaceMyersLcs.LcsItem;
+import com.fillumina.lcs.AbstractLinearSpaceMyersLcs.LcsItem;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
@@ -8,23 +8,26 @@ import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
+public class AbstractLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private LinearSpaceMyersLcsAdaptor<Character> algo =
-            new LinearSpaceMyersLcsAdaptor<>();
+    private AbstractLinearSpaceMyersLcsAdaptor<Character> algo =
+            new AbstractLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
-        new LinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new AbstractLinearSpaceMyersLcsTest().randomLcs(60, 10);
     }
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new LinearSpaceMyersLcsAdaptor<>();
+        return new AbstractLinearSpaceMyersLcsAdaptor<>();
     }
 
     @Test(timeout = 100L)
@@ -134,7 +137,7 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsTest {
         assertEquals(ListUtils.toString(m), expectedLcs, m.getSequenceSize());
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 2_000L)
     public void shouldPassVeryLongTest() {
         RandomSequenceGenerator generator =
 //                new RandomSequenceGenerator(60,10, 26641683514364L);

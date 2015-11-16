@@ -1,6 +1,6 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.LinearSpaceMyersLcsAdaptor;
+import com.fillumina.lcs.AbstractLinearSpaceMyersLcsAdaptor;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.Lcs;
 
@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
  */
 public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
-    private LinearSpaceMyersLcsAdaptor<Character> algo = new LinearSpaceMyersLcsAdaptor<>();
+    private AbstractLinearSpaceMyersLcsAdaptor<Character> algo = new AbstractLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
         new BaselineOptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10);
@@ -18,6 +18,6 @@ public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new LinearSpaceMyersLcsAdaptor<>();
+        return new AbstractLinearSpaceMyersLcsAdaptor<>();
     }
 }
