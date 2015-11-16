@@ -60,16 +60,14 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         @SuppressWarnings("unchecked")
         T[] result = (T[]) new Object[max];
 
-        int xStart, yStart, xMid, xEnd, v[], index = max-1;
+        int xStart, yStart, xMid, index = max-1;
         for (; d >= 0 && x > 0 && y > 0; d--) {
             k = x - y;
             maxk = max + k;
-            v = vv[d == 0 ? 0 : d-1];
+            vNext = vv[d == 0 ? 0 : d-1];
 
-            xEnd = x;
-
-            next = v[maxk + 1];
-            prev = v[maxk - 1];
+            next = vNext[maxk + 1];
+            prev = vNext[maxk - 1];
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
                 yStart = next - k - 1;
@@ -80,8 +78,8 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
                 xMid = xStart + 1;
             }
 
-            if (xEnd != xMid) {
-                for (s=xEnd-1; s>=xMid; s--) {
+            if (x != xMid) {
+                for (s=x-1; s>=xMid; s--) {
                     result[index] = a[s];
                     index--;
                 }
