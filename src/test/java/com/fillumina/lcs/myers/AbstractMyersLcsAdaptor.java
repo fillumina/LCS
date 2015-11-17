@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcsAdaptor<T> implements Lcs<T> {
+public class AbstractMyersLcsAdaptor<T> implements Lcs<T> {
 
     @Override
     public List<T> lcs(final List<T> a, final List<T> b) {

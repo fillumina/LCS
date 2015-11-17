@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -17,11 +19,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class AbstractMyersLcsTest extends AbstractLcsTest {
 
-    private MyersLcsAdaptor<Character> algo =
-            new MyersLcsAdaptor<>();
+    private AbstractMyersLcsAdaptor<Character> algo =
+            new AbstractMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
-        new AbstractMyersLcsTest().randomLcs(60, 10);
+        new AbstractMyersLcsTest().randomLcs(60000, 50, 1);
     }
 
     @Override

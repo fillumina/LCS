@@ -36,7 +36,7 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
             new ParallelLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
-        new ParallelLinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new ParallelLinearSpaceMyersLcsTest().randomLcs(60, 10, 100);
     }
 
     @Override

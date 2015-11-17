@@ -8,6 +8,7 @@ import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.myers.AbstractMyersLcsAdaptor;
 import com.fillumina.lcs.myers.BaselineLinearSpaceMyersLcsAdaptor;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.MyersLcs;
@@ -87,6 +88,8 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs<Integer>()));
 //        tests.addTest("RLinearSpaceMyers",
 //                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
+//        tests.addTest("AbstractMyers",
+//                new LcsRunnable(new AbstractMyersLcsAdaptor<Integer>()));
 //        tests.addTest("BaselineOptimizedLinearSpaceMyers",
 //                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
         tests.addTest("BaselineLinearSpaceMyers",

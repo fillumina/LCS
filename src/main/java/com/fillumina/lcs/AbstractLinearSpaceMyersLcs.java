@@ -13,15 +13,11 @@ import java.util.NoSuchElementException;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLinearSpaceMyersLcs {
+    private int[][] mm;
 
     protected abstract int getFirstSequenceLength();
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
-
-    /** Override to provide the maximum distance on which a match is searched. */
-    protected int getMaximumDistance() {
-        return Integer.MAX_VALUE; //TODO check what happens exactly
-    }
 
     public LcsItem calculateLcs() {
         final int n = getFirstSequenceLength();
@@ -29,7 +25,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
         if (n == 0 || m == 0) {
             return null;
         }
-        return lcsTail(0, n, 0, m, null);
+        return lcsTail(0, n, 0, m, -1, null);
     }
 
     /**
@@ -38,7 +34,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
      * reduces calculations an easy check can avoid a lot of work.
      */
     private LcsItem lcsTail(final int a0, final int n,
-            final int b0, final int m, int[][] vv) {
+            final int b0, final int m, final int equals, int[][] vv) {
         final int min = n < m ? n : m;
         LcsItem matchDown = null;
         LcsItem matchUp = null;
@@ -61,7 +57,14 @@ public abstract class AbstractLinearSpaceMyersLcs {
         }
         u += d;
         if (u < min) {
-            lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
+//            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + Math.min(n,m));
+            if (equals < min && vv != null && (((n+m+1) << 1) + 1) <= vv[0].length) {
+//                System.out.println("MYERS");
+                lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv);
+            } else {
+//                System.out.println("LCS");
+                lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
+            }
         }
         return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
@@ -94,9 +97,11 @@ public abstract class AbstractLinearSpaceMyersLcs {
         int yStart = -1;
         int xEnd = -1;
         int yEnd = -1;
+        int fwEquals = 0;
+        int bwEquals = 0;
         {
             // different scope to have less garbage on the stack when recursing
-            final int max = Math.min(getMaximumDistance(), (n + m + 1) >> 1);
+            final int max = (n + m + 1) >> 1;
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];
@@ -139,6 +144,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
                             equals(a0 + xEnd, b0 + yEnd)) {
                         xEnd++;
                         yEnd++;
+                        fwEquals++;
                     }
                     vf[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
@@ -175,6 +181,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
                             equals(a0 + xStart - 1, b0 + yStart - 1)) {
                         xStart--;
                         yStart--;
+                        bwEquals++;
                     }
                     vb[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
@@ -193,13 +200,83 @@ public abstract class AbstractLinearSpaceMyersLcs {
                 }
             }
         }
-        LcsItem before = xStart <= 0 || yStart <= 0 ? null :
-                lcsTail(a0, xStart, b0, yStart, vv);
+        LcsItem before = xStart <= 0 || yStart <= 0 || fwEquals == 0 ? null :
+                lcsTail(a0, xStart, b0, yStart, fwEquals, vv);
 
-        LcsItem after = xEnd >= n || n - xEnd == 0 || m - yEnd == 0 ? null :
-                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
+        LcsItem after = xEnd >= n || n - xEnd == 0 || m - yEnd == 0 || bwEquals == 0
+                ? null :
+                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, bwEquals, vv);
 
         return LcsItem.chain(before, match, after);
+    }
+
+    private LcsItem lcsForwardMyers(int a0, int n, int b0, int m, int[][] vv) {
+        int max = n + m + 1;
+        int size = (max << 1) + 1;
+
+        if (mm == null || mm[0].length < size) {
+            mm = new int[max][size];
+        }
+
+        int[] vNext, vPrev;
+
+        int maxk, next, prev, x=-1, y, d, k=-1;
+        FILL_THE_TABLE:
+        for (d = 0; d < max; d++) {
+            vPrev = mm[d == 0 ? 0 : d-1];
+            vNext = mm[d];
+            for (k = -d; k <= d; k += 2) {
+                maxk = max + k;
+                next = vPrev[maxk + 1]; // down
+                prev = vPrev[maxk - 1]; // right
+                if (k == -d || (k != d && prev < next)) {
+                    x = next;
+                } else {
+                    x = prev + 1;
+                }
+                y = x - k;
+                while (x < n && y < m && equals(a0 + x, b0 + y)) {
+                    x++;
+                    y++;
+                }
+                vNext[maxk] = x;
+                if (x >= n && y >= m) {
+                    LcsItem head=null;
+
+                    int xStart, xMid;
+                    for (; d >= 0 && x > 0; d--) {
+                        maxk = max + k;
+                        vNext = mm[d == 0 ? 0 : d-1];
+
+                        next = vNext[maxk + 1];
+                        prev = vNext[maxk - 1];
+                        if (k == -d || (k != d && prev < next)) {
+                            xStart = next;
+                            xMid = next;
+                            k++;
+                        } else {
+                            xStart = prev;
+                            xMid = prev + 1;
+                            k--;
+                        }
+
+                        if (x != xMid) {
+                            LcsItem  tmp = new LcsItem(
+                                    a0 + xMid, b0 + xMid - k, x - xMid);
+                            if (head == null) {
+                                head = tmp;
+                            } else {
+                                head = tmp.chain(head);
+                            }
+                        }
+
+                        x = xStart;
+                    }
+                    return head;
+                }
+            }
+        }
+        return null;
     }
 
     public static class LcsItem

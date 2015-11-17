@@ -58,6 +58,6 @@ public class RecursiveLcsTest extends AbstractLcsTest {
     @Test(timeout = 10_000L)
     @Override
     public void shouldPerformRandomLengthTests() {
-        randomLcs(7, 4);
+        randomLcs(7, 4, 100);
     }
 }

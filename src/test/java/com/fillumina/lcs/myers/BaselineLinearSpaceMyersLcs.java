@@ -1,6 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.*;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

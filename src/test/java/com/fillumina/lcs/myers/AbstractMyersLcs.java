@@ -60,7 +60,6 @@ public abstract class AbstractMyersLcs {
 
     private LcsItem lcsForwardMyers(int a0, int n, int b0, int m) {
         int max = n + m + 1;
-
         int size = (max << 1) + 1;
         int[][] vv = new int[max][size];
         int[] vNext, vPrev;

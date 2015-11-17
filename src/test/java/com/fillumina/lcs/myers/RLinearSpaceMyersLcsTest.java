@@ -16,7 +16,7 @@ public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
     }
 
     public static void main(String[] args) {
-        new RLinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new RLinearSpaceMyersLcsTest().randomLcs(60, 10, 100);
     }
 
     @Test

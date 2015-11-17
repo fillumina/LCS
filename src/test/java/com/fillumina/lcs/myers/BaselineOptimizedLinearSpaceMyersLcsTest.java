@@ -13,7 +13,7 @@ public class BaselineOptimizedLinearSpaceMyersLcsTest extends AbstractLcsTest {
     private AbstractLinearSpaceMyersLcsAdaptor<Character> algo = new AbstractLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
-        new BaselineOptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10);
+        new BaselineOptimizedLinearSpaceMyersLcsTest().randomLcs(60, 10, 100);
     }
 
     @Override

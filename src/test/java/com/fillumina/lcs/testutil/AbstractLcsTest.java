@@ -12,18 +12,21 @@ import static org.junit.Assert.assertEquals;
  */
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
-    public void randomLcs(int len, int lcs) {
+    public void randomLcs(int len, int lcs, int iterations) {
         System.out.println("testing random sequences...");
         @SuppressWarnings("unchecked")
         final Lcs<Integer> algorithm = (Lcs<Integer>)getLcsAlgorithm();
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<iterations; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);
-            System.out.println("iteration " + i + " seed: " +
+            System.out.print("iteration " + i + " seed: " +
                     generator.getSeed() +"L");
 
+            long t = System.currentTimeMillis();
             List<Integer> lcsList = algorithm
                     .lcs(generator.getA(), generator.getB());
+
+            System.out.println(" " + (System.currentTimeMillis() - t) + " ms");
 
             assertEquals(generator.getLcs(), lcsList);
         }
@@ -43,7 +46,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test(timeout = 10_000L)
     public void shouldPerformRandomLengthTests() {
-        randomLcs(60, 10);
+        randomLcs(60, 10, 100);
     }
 
     @Test
@@ -237,7 +240,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     @Test(timeout = 1_000L)
     public void shouldPassLengthTest() {
         RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(60,10, 9567649770900L);
+                new RandomSequenceGenerator(60,10);
 
         System.out.println("seed= " + generator.getSeed() + "L");
 
