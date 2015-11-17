@@ -9,9 +9,6 @@ import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -28,7 +25,7 @@ public class AbstractMyersLcsTest extends AbstractLcsTest {
 
     @Override
     protected Lcs<?> getLcsAlgorithm() {
-        return new AbstractLinearSpaceMyersLcsAdaptor<>();
+        return new AbstractMyersLcsAdaptor<>();
     }
 
     @Test(timeout = 100L)

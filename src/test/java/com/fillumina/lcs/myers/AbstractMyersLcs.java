@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractMyersLcs {
+
     protected abstract int getFirstSequenceLength();
     protected abstract int getSecondSequenceLength();
     protected abstract boolean equals(int x, int y);
@@ -51,9 +52,9 @@ public abstract class AbstractMyersLcs {
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
             matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
         }
-        if (u + d < min) {
-            lcsMatch = lcsForwardMyers(
-                    a0 + d, n - d - u, b0 + d, m - d - u);
+        u += d;
+        if (u < min) {
+            lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u);
         }
         return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
@@ -61,11 +62,11 @@ public abstract class AbstractMyersLcs {
     private LcsItem lcsForwardMyers(int a0, int n, int b0, int m) {
         int max = n + m + 1;
         int size = (max << 1) + 1;
-        int[][] vv = new int[max][size];
-        int[] vNext, vPrev;
 
-        int maxk, next, prev, x=-1, y, d, k=-1;
-        FILL_THE_TABLE:
+        int[][] vv = new int[max][size];
+        int[] vPrev, vNext;
+
+        int maxk, next, prev, x, y, d, k;
         for (d = 0; d < max; d++) {
             vPrev = vv[d == 0 ? 0 : d-1];
             vNext = vv[d];
@@ -84,43 +85,43 @@ public abstract class AbstractMyersLcs {
                     y++;
                 }
                 vNext[maxk] = x;
+
                 if (x >= n && y >= m) {
-                    break FILL_THE_TABLE;
+                    LcsItem head=null;
+                    int xStart, xMid;
+
+                    for (; d >= 0 && x > 0; d--) {
+                        maxk = max + k;
+                        vNext = vv[d == 0 ? 0 : d-1];
+                        next = vNext[maxk + 1];
+                        prev = vNext[maxk - 1];
+                        if (k == -d || (k != d && prev < next)) {
+                            xStart = next;
+                            xMid = next;
+                            k++;
+                        } else {
+                            xStart = prev;
+                            xMid = prev + 1;
+                            k--;
+                        }
+
+                        if (x != xMid) {
+                            LcsItem  tmp = new LcsItem(
+                                    a0 + xMid, b0 + xMid - k, x - xMid);
+                            if (head == null) {
+                                head = tmp;
+                            } else {
+                                head = tmp.chain(head);
+                            }
+                        }
+
+                        x = xStart;
+                    }
+                    return head;
                 }
             }
         }
-
-        LcsItem head=null;
-
-        int xStart, xMid;
-        for (; d >= 0 && x > 0; d--) {
-            maxk = max + k;
-            vNext = vv[d == 0 ? 0 : d-1];
-
-            next = vNext[maxk + 1];
-            prev = vNext[maxk - 1];
-            if (k == -d || (k != d && prev < next)) {
-                xStart = next;
-                xMid = next;
-                k++;
-            } else {
-                xStart = prev;
-                xMid = prev + 1;
-                k--;
-            }
-
-            if (x != xMid) {
-                LcsItem  tmp = new LcsItem(xMid, xMid - k, x - xMid);
-                if (head == null) {
-                    head = tmp;
-                } else {
-                    head = tmp.chain(head);
-                }
-            }
-
-            x = xStart;
-        }
-        return head;
+        return null;
     }
 
 
