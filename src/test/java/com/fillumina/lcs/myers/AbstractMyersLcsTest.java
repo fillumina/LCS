@@ -103,7 +103,7 @@ public class AbstractMyersLcsTest extends AbstractLcsTest {
         countLcs("C", "ABCDEF", 1);
     }
 
-    @Test(timeout = 100L)
+    @Test(timeout = 500L)
     public void shouldLcsEmptyResultForEmptyListReversed() {
         countLcs("", "ABCDEF", 0);
     }
@@ -123,7 +123,7 @@ public class AbstractMyersLcsTest extends AbstractLcsTest {
         countLcs("AAAAAAA123", "BBBBBBB123", 3);
     }
 
-    @Test(timeout = 100L)
+    @Test(timeout = 300L)
     public void shouldLcsTheBothEndsDiagonals() {
         countLcs("123AAAAAAA123", "123BBBBBBB123", 6);
     }

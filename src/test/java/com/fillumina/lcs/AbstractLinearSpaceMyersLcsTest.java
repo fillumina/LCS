@@ -137,7 +137,7 @@ public class AbstractLinearSpaceMyersLcsTest extends AbstractLcsTest {
         assertEquals(ListUtils.toString(m), expectedLcs, m.getSequenceSize());
     }
 
-    @Test(timeout = 2_000L)
+    @Test//(timeout = 2_000L)
     public void shouldPassVeryLongTest() {
         RandomSequenceGenerator generator =
 //                new RandomSequenceGenerator(60,10, 26641683514364L);

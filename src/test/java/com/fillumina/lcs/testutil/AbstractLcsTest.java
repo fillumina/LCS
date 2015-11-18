@@ -46,7 +46,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test(timeout = 10_000L)
     public void shouldPerformRandomLengthTests() {
-        randomLcs(60, 10, 100);
+        randomLcs(10, 3, 1);
     }
 
     @Test

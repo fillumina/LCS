@@ -7,13 +7,11 @@ import java.util.NoSuchElementException;
 /**
  * Implementation of the Linear Space Myers LCS algorithm. For maximum
  * flexibility its input is provided by extending the class.
- * It returns an ordered sequence of {@link LcsItem}es from which various
- * useful informations can be easily extracted.
+ * It returns an ordered sequence of {@link LcsItem}s.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLinearSpaceMyersLcs {
-    private int[][] mm;
 
     protected abstract int getFirstSequenceLength();
     protected abstract int getSecondSequenceLength();
@@ -57,12 +55,20 @@ public abstract class AbstractLinearSpaceMyersLcs {
         }
         u += d;
         if (u < min) {
-//            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + Math.min(n,m));
-            if (equals < min && vv != null && (((n+m+1) << 1) + 1) <= vv[0].length) {
-//                System.out.println("MYERS");
-                lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv);
+            //lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, new int[max * (max + 1)]);
+
+            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
+            if (vv != null && equals < min) {
+                int size = n + m + 1 - u;
+                if ((size * (size + 1)) < vv[0].length) {
+                System.out.println("MYERS= " + vv[0].length );
+                    lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv[0]);
+                } else {
+                    System.out.println("LCS");
+                    lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
+                }
             } else {
-//                System.out.println("LCS");
+                System.out.println("LCS");
                 lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
             }
         }
@@ -200,6 +206,8 @@ public abstract class AbstractLinearSpaceMyersLcs {
                 }
             }
         }
+
+        // TODO put this stuff closer to the snake calculation
         LcsItem before = xStart <= 0 || yStart <= 0 || fwEquals == 0 ? null :
                 lcsTail(a0, xStart, b0, yStart, fwEquals, vv);
 
@@ -210,25 +218,19 @@ public abstract class AbstractLinearSpaceMyersLcs {
         return LcsItem.chain(before, match, after);
     }
 
-    private LcsItem lcsForwardMyers(int a0, int n, int b0, int m, int[][] vv) {
+
+    private LcsItem lcsForwardMyers(int a0, int n, int b0, int m, int[] vv) {
         int max = n + m + 1;
-        int size = (max << 1) + 1;
+        //int[] vv = new int[max * (max + 1)];
 
-        if (mm == null || mm[0].length < size) {
-            mm = new int[max][size];
-        }
-
-        int[] vNext, vPrev;
-
-        int maxk, next, prev, x=-1, y, d, k=-1;
-        FILL_THE_TABLE:
+        int maxk, next, prev, x, y, d, k, vPrev, vNext = 1;
         for (d = 0; d < max; d++) {
-            vPrev = mm[d == 0 ? 0 : d-1];
-            vNext = mm[d];
+            vPrev = vNext;
+            vNext += (d << 1) + 1;
             for (k = -d; k <= d; k += 2) {
-                maxk = max + k;
-                next = vPrev[maxk + 1]; // down
-                prev = vPrev[maxk - 1]; // right
+                maxk = vPrev + k;
+                next = vv[maxk + 1]; // down
+                prev = vv[maxk - 1]; // right
                 if (k == -d || (k != d && prev < next)) {
                     x = next;
                 } else {
@@ -239,17 +241,16 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     x++;
                     y++;
                 }
-                vNext[maxk] = x;
+                vv[vNext + k] = x;
+
                 if (x >= n && y >= m) {
                     LcsItem head=null;
-
                     int xStart, xMid;
-                    for (; d >= 0 && x > 0; d--) {
-                        maxk = max + k;
-                        vNext = mm[d == 0 ? 0 : d-1];
 
-                        next = vNext[maxk + 1];
-                        prev = vNext[maxk - 1];
+                    for (; d >= 0 && x > 0; d--) {
+                        maxk = vPrev + k;
+                        next = vv[maxk + 1];
+                        prev = vv[maxk - 1];
                         if (k == -d || (k != d && prev < next)) {
                             xStart = next;
                             xMid = next;
@@ -271,6 +272,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
                         }
 
                         x = xStart;
+                        vPrev -= ((d-1) << 1) + 1;
                     }
                     return head;
                 }

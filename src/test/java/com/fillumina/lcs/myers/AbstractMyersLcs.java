@@ -61,19 +61,16 @@ public abstract class AbstractMyersLcs {
 
     private LcsItem lcsForwardMyers(int a0, int n, int b0, int m) {
         int max = n + m + 1;
-        int size = (max << 1) + 1;
+        int[] vv = new int[max * (max + 1)];
 
-        int[][] vv = new int[max][size];
-        int[] vPrev, vNext;
-
-        int maxk, next, prev, x, y, d, k;
+        int maxk, next, prev, x, y, d, k, vPrev, vNext = incr(0);
         for (d = 0; d < max; d++) {
-            vPrev = vv[d == 0 ? 0 : d-1];
-            vNext = vv[d];
+            vPrev = vNext;
+            vNext += incr(d);
             for (k = -d; k <= d; k += 2) {
-                maxk = max + k;
-                next = vPrev[maxk + 1]; // down
-                prev = vPrev[maxk - 1]; // right
+                maxk = vPrev + k;
+                next = vv[maxk + 1]; // down
+                prev = vv[maxk - 1]; // right
                 if (k == -d || (k != d && prev < next)) {
                     x = next;
                 } else {
@@ -84,17 +81,16 @@ public abstract class AbstractMyersLcs {
                     x++;
                     y++;
                 }
-                vNext[maxk] = x;
+                vv[vNext + k] = x;
 
                 if (x >= n && y >= m) {
                     LcsItem head=null;
                     int xStart, xMid;
 
                     for (; d >= 0 && x > 0; d--) {
-                        maxk = max + k;
-                        vNext = vv[d == 0 ? 0 : d-1];
-                        next = vNext[maxk + 1];
-                        prev = vNext[maxk - 1];
+                        maxk = vPrev + k;
+                        next = vv[maxk + 1];
+                        prev = vv[maxk - 1];
                         if (k == -d || (k != d && prev < next)) {
                             xStart = next;
                             xMid = next;
@@ -116,6 +112,7 @@ public abstract class AbstractMyersLcs {
                         }
 
                         x = xStart;
+                        vPrev -= incr(d-1);
                     }
                     return head;
                 }
@@ -124,6 +121,9 @@ public abstract class AbstractMyersLcs {
         return null;
     }
 
+    private static final int incr(int d) {
+        return (d << 1) + 1;
+    }
 
     public static class LcsItem
             implements Iterable<LcsItem>, Serializable {
