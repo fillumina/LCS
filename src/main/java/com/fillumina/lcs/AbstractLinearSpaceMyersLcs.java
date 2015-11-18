@@ -32,7 +32,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
      * reduces calculations an easy check can avoid a lot of work.
      */
     private LcsItem lcsTail(final int a0, final int n,
-            final int b0, final int m, final int equals, int[][] vv) {
+            final int b0, final int m, final int equals, int[] vv) {
         final int min = n < m ? n : m;
         LcsItem matchDown = null;
         LcsItem matchUp = null;
@@ -60,9 +60,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
 //            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
             int size;
             if (vv != null && equals < min &&
-                    ((size = n + m + 1 - u) * (size + 1)) < vv[0].length) {
+                    ((size = n + m + 1 - u) * (size + 1)) < vv.length) {
 //                System.out.println("MYERS= " + vv[0].length );
-                    lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv[0]);
+                    lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv);
             } else {
 //                System.out.println("LCS");
                 lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
@@ -72,7 +72,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
     }
 
     private LcsItem lcsRec(final int a0, final int n,
-            final int b0, final int m, int[][] vv) {
+            final int b0, final int m, int[] vv) {
         if (n == 1) {
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
@@ -90,8 +90,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
             return null;
         }
 
+        final int lengthv = n + m + 4;
         if (vv == null) {
-            vv = new int[2][n+m+4];
+            vv = new int[lengthv << 1];
         }
 
         LcsItem match = null;
@@ -106,14 +107,13 @@ public abstract class AbstractLinearSpaceMyersLcs {
             final int max = (n + m + 1) >> 1;
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
-            final int[] vf = vv[0];
-            final int[] vb = vv[1];
-            final int halfv = vf.length >> 1;
+            final int halfv = lengthv >> 1;
+            final int baseVb = lengthv + halfv;
 
-            vf[halfv + 1] = 0;
-            vf[halfv + delta] = 0;
-            vb[halfv - 1] = n;
-            vb[halfv - delta] = n;
+            vv[halfv + 1] = 0;
+            vv[halfv + delta] = 0;
+            vv[baseVb - 1] = n;
+            vv[baseVb - delta] = n;
 
             boolean isPrev;
             int k;
@@ -132,8 +132,8 @@ public abstract class AbstractLinearSpaceMyersLcs {
                 }
                 for (k = -d; k <= d; k += 2) {
                     vIndex = halfv + k;
-                    next = vf[vIndex + 1];
-                    prev = vf[vIndex - 1];
+                    next = vv[vIndex + 1];
+                    prev = vv[vIndex - 1];
                     isPrev = k == -d || (k != d && prev < next);
                     if (isPrev) {
                         xEnd = next; // down
@@ -148,9 +148,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
                         yEnd++;
                         fwEquals++;
                     }
-                    vf[vIndex] = xEnd;
+                    vv[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
-                            vb[vIndex - delta] <= xEnd) {
+                            vv[lengthv + vIndex - delta] <= xEnd) {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
@@ -167,10 +167,10 @@ public abstract class AbstractLinearSpaceMyersLcs {
                 kStart = delta - d;
                 kEnd = delta + d;
                 for (k = kStart; k <= kEnd; k += 2) {
-                    vIndex = halfv + k - delta;
+                    vIndex = baseVb + k - delta;
 
-                    next = vb[vIndex + 1];
-                    prev = vb[vIndex - 1];
+                    next = vv[vIndex + 1];
+                    prev = vv[vIndex - 1];
                     isPrev = k == kEnd || (k != kStart && prev < next);
                     if (isPrev) {
                         xStart = prev; // up
@@ -185,9 +185,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
                         yStart--;
                         bwEquals++;
                     }
-                    vb[vIndex] = xStart;
+                    vv[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
-                            xStart <= vf[vIndex + delta]) {
+                            xStart <= vv[halfv + k]) {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));

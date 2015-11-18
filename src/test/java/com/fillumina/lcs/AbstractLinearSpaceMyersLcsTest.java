@@ -6,10 +6,8 @@ import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.lcs.util.ListUtils;
 import java.util.List;
+import java.util.Objects;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -139,16 +137,6 @@ public class AbstractLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Test//(timeout = 2_000L)
     public void shouldPassVeryLongTest() {
-        RandomSequenceGenerator generator =
-//                new RandomSequenceGenerator(60,10, 26641683514364L);
-                new RandomSequenceGenerator(6000,5000);
-
-        System.out.println(generator.toString());
-
-        @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
-                .lcs(generator.getA(), generator.getB());
-
-        assertEquals(generator.getLcs(), lcsList);
+        randomLcs(6000, 5000, 1);
     }
 }

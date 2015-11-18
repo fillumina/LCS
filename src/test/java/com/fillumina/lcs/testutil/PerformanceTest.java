@@ -23,8 +23,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 600;
-    private static final int LCS = 50;
+    private static final int TOTAL = 100;
+    private static final int LCS = 5;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;

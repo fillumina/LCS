@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import com.fillumina.lcs.Lcs;
+import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -13,22 +14,32 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     public void randomLcs(int len, int lcs, int iterations) {
-        System.out.println("testing random sequences...");
         @SuppressWarnings("unchecked")
         final Lcs<Integer> algorithm = (Lcs<Integer>)getLcsAlgorithm();
         for (int i=0; i<iterations; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);
-            System.out.print("iteration " + i + " seed: " +
-                    generator.getSeed() +"L");
 
-            long t = System.currentTimeMillis();
             List<Integer> lcsList = algorithm
                     .lcs(generator.getA(), generator.getB());
 
-            System.out.println(" " + (System.currentTimeMillis() - t) + " ms");
-
-            assertEquals(generator.getLcs(), lcsList);
+            final List<Integer> expectedLcs = generator.getLcs();
+            final int size = expectedLcs.size();
+            StringBuilder buf = new StringBuilder();
+            for (int j=0; j<size; j++) {
+                final Integer expected = expectedLcs.get(j);
+                final Integer result = lcsList.get(j);
+                if (!Objects.equals(expected, result)) {
+                    buf.append("lists differe at index ").append(j).
+                            append(" expected=").append(expected).
+                            append(", result=").append(result).append("\n");
+                }
+            }
+            if (buf.length() != 0) {
+                throw new AssertionError("iteration " + i + " seed: " +
+                    generator.getSeed() +"L\n" +
+                        buf.toString());
+            }
         }
     }
 
@@ -239,15 +250,6 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test(timeout = 1_000L)
     public void shouldPassLengthTest() {
-        RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(60,10);
-
-        System.out.println("seed= " + generator.getSeed() + "L");
-
-        @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
-                .lcs(generator.getA(), generator.getB());
-
-        assertEquals(generator.getLcs(), lcsList);
+        randomLcs(60, 10, 1);
     }
 }

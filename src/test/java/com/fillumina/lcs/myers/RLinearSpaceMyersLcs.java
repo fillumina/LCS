@@ -40,7 +40,6 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         Snake snake = findMiddleSnake(a, n, b, m);
-        System.out.println(snake);
 
         if (snake.xStart == a0 && snake.xEnd == (a0 + n) &&
                 snake.yStart == b0 && snake.yEnd == (b0 + m)) {
@@ -249,13 +248,11 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         int x=0;
         boolean error=false;
         for (Snake snake : snakes) {
-//            System.out.print(snake);
             if (snake.xStart != x) {
                 error = true;
             }
             tmp.clear();
             snake.addEquals(tmp, a);
-//            System.out.println(" --> " + ListUtils.toString(tmp));
             list.addAll(tmp);
             x = snake.xEnd;
         }
