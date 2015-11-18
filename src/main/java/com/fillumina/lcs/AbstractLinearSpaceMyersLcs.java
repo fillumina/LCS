@@ -55,8 +55,6 @@ public abstract class AbstractLinearSpaceMyersLcs {
         }
         u += d;
         if (u < min) {
-            //lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, new int[max * (max + 1)]);
-
 //            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
             int size;
             if (vv != null && equals < min &&
@@ -90,7 +88,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
             return null;
         }
 
-        final int lengthv = n + m + 4;
+        final int lengthv = ((n > m ? n : m) << 1) + 4;
         if (vv == null) {
             vv = new int[lengthv << 1];
         }
