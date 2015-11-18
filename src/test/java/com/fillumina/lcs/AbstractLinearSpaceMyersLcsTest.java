@@ -20,7 +20,7 @@ public class AbstractLinearSpaceMyersLcsTest extends AbstractLcsTest {
             new AbstractLinearSpaceMyersLcsAdaptor<>();
 
     public static void main(String[] args) {
-        new AbstractLinearSpaceMyersLcsTest().randomLcs(1000, 5, 1);
+        new AbstractLinearSpaceMyersLcsTest().randomLcs(600, 50, 1);
     }
 
     @Override

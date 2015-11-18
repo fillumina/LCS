@@ -30,7 +30,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 final Integer expected = expectedLcs.get(j);
                 final Integer result = lcsList.get(j);
                 if (!Objects.equals(expected, result)) {
-                    buf.append("lists differe at index ").append(j).
+                    buf.append("lists differs at index ").append(j).
                             append(" expected=").append(expected).
                             append(", result=").append(result).append("\n");
                 }

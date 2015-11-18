@@ -57,9 +57,9 @@ public abstract class AbstractLinearSpaceMyersLcs {
         if (u < min) {
 //            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
             int size;
-            if (vv != null && equals < min &&
+            if (vv != null && equals < (min >> 1) &&
                     ((size = n + m + 1 - u) * (size + 1)) < vv.length) {
-//                System.out.println("MYERS= " + vv[0].length );
+//                System.out.println("MYERS= " + (size * (size + 1)) );
                     lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv);
             } else {
 //                System.out.println("LCS");
@@ -100,6 +100,7 @@ public abstract class AbstractLinearSpaceMyersLcs {
         int yEnd = -1;
         int fwEquals = 0;
         int bwEquals = 0;
+        int fx=-1, fy=-1, bx=-1, by=-1;
         {
             // different scope to have less garbage on the stack when recursing
             final int max = (n + m + 1) >> 1;
@@ -142,6 +143,10 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     xMid = xEnd;
                     while (xEnd < n && yEnd < m &&
                             equals(a0 + xEnd, b0 + yEnd)) {
+                        if (fwEquals == 0) {
+                            fx = a0 + xEnd;
+                            fy = b0 + yEnd;
+                        }
                         xEnd++;
                         yEnd++;
                         fwEquals++;
@@ -181,6 +186,10 @@ public abstract class AbstractLinearSpaceMyersLcs {
                             equals(a0 + xStart - 1, b0 + yStart - 1)) {
                         xStart--;
                         yStart--;
+                        if (bwEquals == 0) {
+                            bx = a0 + xStart;
+                            by = b0 + yStart;
+                        }
                         bwEquals++;
                     }
                     vv[vIndex] = xStart;
@@ -201,13 +210,26 @@ public abstract class AbstractLinearSpaceMyersLcs {
             }
         }
 
-        // TODO put this stuff closer to the snake calculation
-        LcsItem before = xStart <= 0 || yStart <= 0 || fwEquals == 0 ? null :
-                lcsTail(a0, xStart, b0, yStart, fwEquals, vv);
+        LcsItem before=null, after=null;
+        if (xStart > 0 && yStart > 0 && fwEquals != 0) {
+            if (fwEquals == 1 && match == null &&
+                    fx < a0 + xStart && fy < b0 + yStart) {
+//                System.out.println("EQUALS=1");
+                before = new LcsItem(fx, fy, 1);
+            } else {
+                before = lcsTail(a0, xStart, b0, yStart, fwEquals, vv);
+            }
+        }
 
-        LcsItem after = xEnd >= n || n - xEnd == 0 || m - yEnd == 0 || bwEquals == 0
-                ? null :
-                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, bwEquals, vv);
+        if (xEnd < n && n != xEnd && m != yEnd && bwEquals != 0) {
+            if (bwEquals == 1 && match == null &&
+                    (bx >= a0 + xEnd && by >= b0 + yEnd)) {
+//                System.out.println("EQUALS=1");
+                after = new LcsItem(bx, by, 1);
+            } else {
+                after = lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, bwEquals, vv);
+            }
+        }
 
         return LcsItem.chain(before, match, after);
     }
