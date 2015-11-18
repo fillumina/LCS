@@ -57,18 +57,14 @@ public abstract class AbstractLinearSpaceMyersLcs {
         if (u < min) {
             //lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, new int[max * (max + 1)]);
 
-            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
-            if (vv != null && equals < min) {
-                int size = n + m + 1 - u;
-                if ((size * (size + 1)) < vv[0].length) {
-                System.out.println("MYERS= " + vv[0].length );
+//            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
+            int size;
+            if (vv != null && equals < min &&
+                    ((size = n + m + 1 - u) * (size + 1)) < vv[0].length) {
+//                System.out.println("MYERS= " + vv[0].length );
                     lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv[0]);
-                } else {
-                    System.out.println("LCS");
-                    lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
-                }
             } else {
-                System.out.println("LCS");
+//                System.out.println("LCS");
                 lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
             }
         }
