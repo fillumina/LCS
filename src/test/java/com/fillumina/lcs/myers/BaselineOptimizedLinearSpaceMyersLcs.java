@@ -14,15 +14,17 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
+public class BaselineOptimizedLinearSpaceMyersLcs implements Lcs {
 
     @Override
-    public List<T> lcs(final List<T> a, final List<T> b) {
+    public <T> List<? extends T> lcs(final List<? extends T> a,
+            final List<? extends T> b) {
         final LcsItem matches = lcsMatch(a, b);
         return matches.extractLcsForFirstSequence(a);
     }
 
-    public LcsItem lcsMatch(final List<T> a, final List<T> b) {
+    public <T> LcsItem lcsMatch(final List<? extends T> a,
+            final List<? extends T> b) {
         final int n = a.size();
         final int m = b.size();
         @SuppressWarnings("unchecked")
@@ -32,13 +34,13 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
     }
 
 
-    public LcsItem lcsMatch(final T[] a, final T[] b) {
+    public <T> LcsItem lcsMatch(final T[] a, final T[] b) {
         final LcsItem match = lcsTails(a, a.length, b, b.length);
         return match == null ? LcsItem.NULL : match;
     }
 
     /** Recognizes equals head and tail so to speed up the calculations. */
-    private LcsItem lcsTails(final T[] a, final int n,
+    private <T> LcsItem lcsTails(final T[] a, final int n,
             final T[] b, final int m) {
         final int min = n < m ? n : m;
         LcsItem matchDown = null;
@@ -65,7 +67,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs<T> implements Lcs<T> {
         return chain(matchDown, lcsMatch, matchUp);
     }
 
-    protected LcsItem lcsRec(final T[] a, final int a0, final int n,
+    protected <T> LcsItem lcsRec(final T[] a, final int a0, final int n,
             final T[] b, final int b0, final int m, int[][]vv) {
 
         if (n == 0 || m == 0) {

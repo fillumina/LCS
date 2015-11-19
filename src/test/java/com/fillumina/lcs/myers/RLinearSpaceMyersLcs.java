@@ -15,17 +15,17 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
+public class RLinearSpaceMyersLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
-        final VList<T> va = new VList<>(a);
-        final VList<T> vb = new VList<>(b);
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        final VList<? extends T> va = new VList<>(a);
+        final VList<? extends T> vb = new VList<>(b);
         Snake snakes = lcs(va, vb);
         return extractLcs(snakes, va, vb);
     }
 
-    Snake lcs(VList<T> a, VList<T> b) {
+    <T> Snake lcs(VList<? extends T> a, VList<? extends T> b) {
         final int n = a.size();
         final int m = b.size();
 
@@ -56,7 +56,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return Snake.chain(before, snake, after);
     }
 
-    Snake findMiddleSnake(VList<T> a, int n, VList<T> b, int m) {
+    <T> Snake findMiddleSnake(VList<? extends T> a, int n,
+            VList<? extends T> b, int m) {
         final int max = (n + m + 1) / 2 + 1; //(int)Math.ceil((m + n)/2.0);
         final int delta = n - m;
         final boolean evenDelta = (delta & 1) == 0;
@@ -112,8 +113,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return true;
     }
 
-    private int findFurthestReachingDPath(int d, int k,
-            VList<T> a, int n, VList<T> b, int m,
+    private <T> int findFurthestReachingDPath(int d, int k,
+            VList<? extends T> a, int n, VList<? extends T> b, int m,
             BidirectionalVector vf) {
         int x, y;
 
@@ -134,9 +135,9 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return x;
     }
 
-    private Snake findLastSnake(int d, int k, int x, int x0, int y0,
+    private <T> Snake findLastSnake(int d, int k, int x, int x0, int y0,
             BidirectionalVector vf,
-            VList<T> a, VList<T> b) {
+            VList<? extends T> a, VList<? extends T> b) {
         int y = x - k;
 
         int xEnd = x;
@@ -176,8 +177,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
                 x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
-    private int findFurthestReachingDPathReverse(int d, int k,
-            VList<T> a, int n, VList<T> b, int m,
+    private <T> int findFurthestReachingDPathReverse(int d, int k,
+            VList<? extends T> a, int n, VList<? extends T> b, int m,
             int delta, BidirectionalVector vb) {
         int x, y;
 
@@ -200,9 +201,9 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         return x;
     }
 
-    private Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
+    private <T> Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
             BidirectionalVector vb, int delta,
-            VList<T> a, int n, VList<T> b, int m) {
+            VList<? extends T> a, int n, VList<? extends T> b, int m) {
         final int xStart = xe;
         final int yStart = xe - k;
         int xEnd, yEnd, xMid, yMid;
@@ -242,7 +243,8 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
     /**
      * @return the common subsequence elements.
      */
-    private List<T> extractLcs(Snake snakes, VList<T> a, VList<T> b) {
+    private <T> List<? extends T> extractLcs(Snake snakes,
+            VList<? extends T> a, VList<? extends T> b) {
         List<T> list = new ArrayList<>();
         List<T> tmp = new ArrayList<>();
         int x=0;
@@ -298,7 +300,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
 
         abstract public boolean isDiagonal();
 
-        abstract public <T> void addEquals(List<T> result, VList<T> a);
+        abstract public <T> void addEquals(List<? super T> result, VList<T> a);
 
         @Override
         public Iterator<Snake> iterator() {
@@ -341,7 +343,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         @Override
-        public <T> void addEquals(List<T> result, VList<T> a) {
+        public <T> void addEquals(List<? super T> result, VList<T> a) {
             // do nothing
         }
     }
@@ -359,7 +361,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         @Override
-        public <T> void addEquals(List<T> result, VList<T> a) {
+        public <T> void addEquals(List<? super T> result, VList<T> a) {
             for (int x = xMid + 1; x <= xEnd; x++) {
                 result.add(a.get(x));
             }
@@ -379,7 +381,7 @@ public class RLinearSpaceMyersLcs<T> implements Lcs<T> {
         }
 
         @Override
-        public <T> void addEquals(List<T> result, VList<T> a) {
+        public <T> void addEquals(List<? super T> result, VList<T> a) {
             for (int x=xStart + 1; x <= xMid; x++) {
                 result.add(a.get(x));
             }

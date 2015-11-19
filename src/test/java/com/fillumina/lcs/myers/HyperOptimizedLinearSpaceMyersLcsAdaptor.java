@@ -1,20 +1,18 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.*;
-import com.fillumina.lcs.myers.AbstractMyersLcs.LcsItem;
+import com.fillumina.lcs.myers.HyperOptimizedLinearSpaceMyersLcs.LcsItem;
 import java.util.Objects;
 
 /**
- * Adaptor to make {@link AbstractMyersLcs} be callable using the
- * {@link Lcs} interface.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class AbstractMyersLcsAdaptor extends AbstractLcsSizeEvaluatorAdaptor {
+public class HyperOptimizedLinearSpaceMyersLcsAdaptor
+        extends AbstractLcsSizeEvaluatorAdaptor {
     private LcsItem lcsItem;
 
-    @Override
-    protected <T> Iterable<Integer> lcsItems(T[] a, T[] b) {
+    public <T> Iterable<Integer> lcsItems(final T[] a, final T[] b) {
         lcsItem = new LinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
         return lcsItem.lcsIndexesOfTheFirstSequence();
     }
@@ -24,7 +22,8 @@ public class AbstractMyersLcsAdaptor extends AbstractLcsSizeEvaluatorAdaptor {
         return lcsItem.getSequenceSize();
     }
 
-    private static class LinearSpaceMyersLcsImpl<T> extends AbstractMyersLcs {
+    private static class LinearSpaceMyersLcsImpl<T>
+            extends HyperOptimizedLinearSpaceMyersLcs {
         private final T[] a, b;
 
         public LinearSpaceMyersLcsImpl(T[] a, T[] b) {

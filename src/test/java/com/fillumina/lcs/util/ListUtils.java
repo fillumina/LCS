@@ -13,7 +13,8 @@ import java.util.Objects;
 public class ListUtils {
 
     /** The given lists are not modified. */
-    public static <T> List<T> concatenate(List<T> a, List<T> b) {
+    public static <T> List<? extends T> concatenate(
+            List<? extends T> a, List<? extends T> b) {
         if (a.isEmpty()) {
             return b;
         }

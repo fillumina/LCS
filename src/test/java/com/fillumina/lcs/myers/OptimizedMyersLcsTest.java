@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class OptimizedMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new OptimizedMyersLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new OptimizedMyersLcs();
     }
 }

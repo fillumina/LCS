@@ -10,8 +10,9 @@ import com.fillumina.lcs.Lcs;
  */
 public class CharacterLcsTestHelper {
 
-    public static String executeLcs(Lcs<Character> lcs, String a, String b) {
-        List<Character> resultList = lcs.lcs(toList(a), toList(b));
+    public static String executeLcs(Lcs lcs, String a, String b) {
+        @SuppressWarnings("unchecked")
+        List<? extends Character> resultList = lcs.lcs(toList(a), toList(b));
         return toString(resultList);
     }
 
@@ -24,7 +25,7 @@ public class CharacterLcsTestHelper {
         return list;
     }
 
-    public static  String toString(List<Character> list) {
+    public static  String toString(List<? extends Character> list) {
         if (list == null || list.isEmpty()) {
             return "";
         }

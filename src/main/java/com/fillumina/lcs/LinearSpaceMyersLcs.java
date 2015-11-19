@@ -1,37 +1,36 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.AbstractLinearSpaceMyersLcs.LcsItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
+ * An helper that allows to pass to the LCS algorithm lists or arrays.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class AbstractLinearSpaceMyersLcsAdaptor<T> implements Lcs<T> {
+public class LinearSpaceMyersLcs {
 
-    @Override
-    public List<T> lcs(final List<T> a, final List<T> b) {
-        final LcsItem matches = lcsMatch(a, b);
-        List<T> lcs = new ArrayList<>(matches.getSequenceSize());
-        for (int index : matches.lcsIndexesOfTheFirstSequence()) {
+    public <T> List<T> lcs(
+            final List<? extends T> a,
+            final List<? extends T> b) {
+        LcsItem lcsItem = lcsSequence(a, b);
+        List<T> lcs = new ArrayList<>(lcsItem.getSequenceSize());
+        for (int index : lcsItem.lcsIndexesOfTheFirstSequence()) {
             lcs.add(a.get(index));
         }
         return lcs;
     }
 
-    @SuppressWarnings("unchecked")
-    public LcsItem lcsMatch(final List<T> a, final List<T> b) {
+    @SuppressWarnings(value = "unchecked")
+    public LcsItem lcsSequence(final List<?> a, final List<?> b) {
         final int n = a.size();
         final int m = b.size();
-        return lcsMatch((T[]) a.toArray(new Object[n]),
-                (T[]) b.toArray(new Object[m]));
+        return lcsSequence(a.toArray(new Object[n]), b.toArray(new Object[m]));
     }
 
-    public LcsItem lcsMatch(final T[] a, final T[] b) {
-        final LcsItem match = new LinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
-        return match == null ? LcsItem.NULL : match;
+    protected <T> LcsItem lcsSequence(T[] a, T[] b) {
+        return new LinearSpaceMyersLcsImpl<>(a,b).calculateLcs();
     }
 
     private static class LinearSpaceMyersLcsImpl<T>
@@ -58,4 +57,5 @@ public class AbstractLinearSpaceMyersLcsAdaptor<T> implements Lcs<T> {
             return b == null ? 0 : b.length;
         }
     }
+
 }

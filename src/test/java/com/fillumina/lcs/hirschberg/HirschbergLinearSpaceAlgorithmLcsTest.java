@@ -12,12 +12,12 @@ public class HirschbergLinearSpaceAlgorithmLcsTest
         extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new HirschbergLinearSpaceAlgorithmLcs<Character>() {
+    public Lcs getLcsAlgorithm() {
+        return new HirschbergLinearSpaceAlgorithmLcs() {
 
             @Override
-            public List<Character> lcs(List<Character> xs,
-                    List<Character> ys) {
+            public <T> List<? extends T> lcs(List<? extends T> xs,
+                    List<? extends T> ys) {
                 count(xs, ys);
                 return super.lcs(xs, ys);
             }

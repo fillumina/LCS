@@ -10,8 +10,8 @@ import com.fillumina.lcs.Lcs;
 public class ReverseMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new ReverseMyersLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new ReverseMyersLcs();
     }
 
 }

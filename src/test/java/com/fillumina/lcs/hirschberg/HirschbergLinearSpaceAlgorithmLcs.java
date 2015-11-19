@@ -20,10 +20,10 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
+public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         int n = a.size();
         int m = b.size();
 
@@ -40,15 +40,15 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
 
             default:
                 int i = n / 2;
-                List<T> aHead = a.subList(0, i);
-                List<T> aTail = a.subList(i, n);
+                List<? extends T> aHead = a.subList(0, i);
+                List<? extends T> aTail = a.subList(i, n);
                 int[] forward = calculateLcs(aHead, b);
                 int[] backward = calculateLcs(reverse(aTail), reverse(b));
 
                 int k = indexOfBiggerSum(forward, backward);
 
-                List<T> bHead = b.subList(0, k);
-                List<T> bTail = b.subList(k, m);
+                List<? extends T> bHead = b.subList(0, k);
+                List<? extends T> bTail = b.subList(k, m);
                 return concatenate(lcs(aHead, bHead), lcs(aTail, bTail));
         }
     }
@@ -65,7 +65,7 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
         return k;
     }
 
-    private int[] calculateLcs(List<T> a, List<T> b) {
+    private <T> int[] calculateLcs(List<? extends T> a, List<? extends T> b) {
         final int m = b.size();
 
         int[][] array = new int[2][m+1];
@@ -92,7 +92,8 @@ public class HirschbergLinearSpaceAlgorithmLcs<T> implements Lcs<T> {
     }
 
     /** The given lists are not modified. */
-    static <T> List<T> concatenate(List<T> a, List<T> b) {
+    static <T> List<? extends T> concatenate(
+            List<? extends T> a, List<? extends T> b) {
         if (a.isEmpty()) {
             return b;
         }

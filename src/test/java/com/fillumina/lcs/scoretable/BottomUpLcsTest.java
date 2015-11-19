@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class BottomUpLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new BottomUpLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new BottomUpLcs();
     }
 }

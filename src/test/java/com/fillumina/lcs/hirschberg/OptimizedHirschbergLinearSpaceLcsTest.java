@@ -1,7 +1,6 @@
 package com.fillumina.lcs.hirschberg;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.hirschberg.OptimizedHirschbergLinearSpaceLcs;
 import java.util.List;
 import com.fillumina.lcs.Lcs;
 
@@ -12,12 +11,12 @@ import com.fillumina.lcs.Lcs;
 public class OptimizedHirschbergLinearSpaceLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new OptimizedHirschbergLinearSpaceLcs<Character>() {
+    public Lcs getLcsAlgorithm() {
+        return new OptimizedHirschbergLinearSpaceLcs() {
 
             @Override
-            public List<Character> lcs(List<Character> xs,
-                    List<Character> ys) {
+            public <T> List<? extends T> lcs(List<? extends T> xs,
+                    List<? extends T> ys) {
                 count(xs, ys); // counts how many times lcs() is called
                 return super.lcs(xs, ys);
             }

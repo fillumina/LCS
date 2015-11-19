@@ -12,17 +12,17 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
+public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         final int m = b.size();
         return lcsRlw(a, 0, a.size(), b, 0, m,
             new int[3][m + 1]);
     }
 
-    List<T> lcsRlw(List<T> a, int aStart, int aEnd,
-            List<T> b, int bStart, int bEnd,
+    <T> List<? extends T> lcsRlw(List<? extends T> a, int aStart, int aEnd,
+            List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
         final int n = aEnd - aStart;
 
@@ -50,9 +50,9 @@ public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
         }
     }
 
-    private int calculateCuttingIndex(
-            List<T> a, int aStart, final int i, int aEnd,
-            List<T> b, int bStart, int bEnd,
+    private <T> int calculateCuttingIndex(
+            List<? extends T> a, int aStart, final int i, int aEnd,
+            List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
         int[] forward = calculateLcsForward(a, aStart, i, b, bStart, bEnd, buffer);
         int[] backward = calculateLcsReverse(a, i, aEnd, b, bStart, bEnd, buffer);
@@ -60,8 +60,8 @@ public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
     }
 
     private static <T> int[] calculateLcsForward(
-            List<T> a, int aStart, int aEnd,
-            List<T> b, int bStart, int bEnd,
+            List<? extends T> a, int aStart, int aEnd,
+            List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[0];
         zero(curr, bStart, bEnd + 1);
@@ -84,8 +84,8 @@ public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
     }
 
     private static <T> int[] calculateLcsReverse(
-            List<T> a, int aStart, int aEnd,
-            List<T> b, int bStart, int bEnd,
+            List<? extends T> a, int aStart, int aEnd,
+            List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[1];
         zero(curr, bStart, bEnd + 1);
@@ -126,20 +126,16 @@ public class OptimizedHirschbergLinearSpaceLcs<T> implements Lcs<T> {
         }
     }
 
-    static <T> List<T> add(List<T> a, List<T> b) {
+    static <T> List<? extends T> add(List<? extends T> a, List<? extends T> b) {
         if (a.isEmpty()) {
             return b;
         }
         if (b.isEmpty()) {
             return a;
         }
-        try {
-            a.addAll(b);
-            return a;
-        } catch (UnsupportedOperationException e) {
-            List<T> l = new ArrayList<>(a);
-            l.addAll(b);
-            return l;
-        }
+        List<T> l = new ArrayList<>(a.size() + b.size());
+        l.addAll(a);
+        l.addAll(b);
+        return l;
     }
 }

@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class MyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new MyersLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new MyersLcs();
     }
 }

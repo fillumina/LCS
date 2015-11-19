@@ -15,12 +15,12 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     public void randomLcs(int len, int lcs, int iterations) {
         @SuppressWarnings("unchecked")
-        final Lcs<Integer> algorithm = (Lcs<Integer>)getLcsAlgorithm();
+        final Lcs algorithm = getLcsAlgorithm();
         for (int i=0; i<iterations; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);
 
-            List<Integer> lcsList = algorithm
+            List<Integer> lcsList = (List<Integer>) algorithm
                     .lcs(generator.getA(), generator.getB());
 
             final List<Integer> expectedLcs = generator.getLcs();
@@ -50,8 +50,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
         a.add(null);
         b.add(null);
         @SuppressWarnings("unchecked")
-        List<Character> solution =
-                ((Lcs<Character>)getLcsAlgorithm()).lcs(a, b);
+        List<? extends Character> solution = getLcsAlgorithm().lcs(a, b);
         assertEquals(a, solution);
     }
 

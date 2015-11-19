@@ -27,17 +27,18 @@ import com.fillumina.lcs.Lcs;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ReverseMyersLcs<T> implements Lcs<T> {
+public class ReverseMyersLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
-        OneBasedVector<T> va = new OneBasedVector<>(a);
-        OneBasedVector<T> vb = new OneBasedVector<>(b);
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        OneBasedVector<? extends T> va = new OneBasedVector<>(a);
+        OneBasedVector<? extends T> vb = new OneBasedVector<>(b);
         List<Snake> snakes = lcsMyers(va, vb);
         return extractLcs(snakes, va);
     }
 
-    private List<Snake> lcsMyers(OneBasedVector<T> a, OneBasedVector<T> b) {
+    private <T> List<Snake> lcsMyers(OneBasedVector<? extends T> a,
+            OneBasedVector<? extends T> b) {
         final int n = a.size();
         final int m = b.size();
         if (n==0 || m==0) {
@@ -113,7 +114,8 @@ public class ReverseMyersLcs<T> implements Lcs<T> {
     }
 
     /** @return the common subsequence elements. */
-    private List<T> extractLcs(List<Snake> snakes, OneBasedVector<T> a) {
+    private <T> List<? extends T> extractLcs(List<Snake> snakes,
+            OneBasedVector<? extends T> a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int x=snake.xStart + 1; x<=snake.xMid; x++) {

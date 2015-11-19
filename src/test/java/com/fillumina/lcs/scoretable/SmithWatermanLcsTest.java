@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class SmithWatermanLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new SmithWatermanLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new SmithWatermanLcs();
     }
 }

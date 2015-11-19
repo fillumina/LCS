@@ -1,9 +1,5 @@
 package com.fillumina.lcs;
 
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 /**
  * Implementation of the Linear Space Myers LCS algorithm. For maximum
  * flexibility its input is provided by extending the class.
@@ -13,26 +9,37 @@ import java.util.NoSuchElementException;
  */
 public abstract class AbstractLinearSpaceMyersLcs {
 
+    /** Override to return the length of the first sequence. */
     protected abstract int getFirstSequenceLength();
+
+    /** Override to return the length of the second sequence. */
     protected abstract int getSecondSequenceLength();
+
+    /**
+     * @param x the index in the first sequence
+     * @param y the index in the second sequence
+     * @return {@code true} if the item with index x on the first sequence
+     *          is equal to the item with index y on the second sequence.
+     */
     protected abstract boolean equals(int x, int y);
 
+    /** Perform the calculation. */
     public LcsItem calculateLcs() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
         if (n == 0 || m == 0) {
-            return null;
+            return LcsItem.NULL;
         }
-        return lcsTail(0, n, 0, m, -1, null);
+        final LcsItem lcsItem = lcsTail(0, n, 0, m, null);
+        return lcsItem == null ? LcsItem.NULL : lcsItem;
     }
 
     /**
-     * At every step of the Myers Linear Space Algorithm it may happens
-     * that there could be an equal head and tail. Because decreasing n and m
-     * reduces calculations an easy check can avoid a lot of work.
+     * Optimizes the calculation by filtering out equals elements on the head
+     * and tail of the sequences.
      */
     private LcsItem lcsTail(final int a0, final int n,
-            final int b0, final int m, final int equals, int[] vv) {
+            final int b0, final int m, final int[][] vv) {
         final int min = n < m ? n : m;
         LcsItem matchDown = null;
         LcsItem matchUp = null;
@@ -46,31 +53,22 @@ public abstract class AbstractLinearSpaceMyersLcs {
             }
         }
         int u = 0;
-        final int x0 = a0 + n - 1;
-        final int y0 = b0 + m - 1;
-        if (equals(x0, y0)) {
+        if (equals(a0 + n - 1, b0 + m - 1)) {
+            final int x0 = a0 + n - 1;
+            final int y0 = b0 + m - 1;
             final int maxu = min - d;
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
             matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
         }
-        u += d;
-        if (u < min) {
-//            System.out.println("equals=" + equals + " max=" + Math.max(n,m) + " min=" + min);
-            int size;
-            if (vv != null && equals < (min >> 1) &&
-                    ((size = n + m + 1 - u) * (size + 1)) < vv.length) {
-//                System.out.println("MYERS= " + (size * (size + 1)) );
-                    lcsMatch = lcsForwardMyers(a0 + d, n - u, b0 + d, m - u, vv);
-            } else {
-//                System.out.println("LCS");
-                lcsMatch = lcsRec(a0 + d, n - u, b0 + d, m - u, vv);
-            }
+        if (u + d < min) {
+            lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
         }
         return LcsItem.chain(matchDown, lcsMatch, matchUp);
     }
 
+    /** Recursive linear space Myers algorithm. */
     private LcsItem lcsRec(final int a0, final int n,
-            final int b0, final int m, int[] vv) {
+            final int b0, final int m, int[][] vv) {
         if (n == 1) {
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
@@ -88,9 +86,8 @@ public abstract class AbstractLinearSpaceMyersLcs {
             return null;
         }
 
-        final int lengthv = ((n > m ? n : m) << 1) + 4;
         if (vv == null) {
-            vv = new int[lengthv << 1];
+            vv = new int[2][n+m+4];
         }
 
         LcsItem match = null;
@@ -98,21 +95,23 @@ public abstract class AbstractLinearSpaceMyersLcs {
         int yStart = -1;
         int xEnd = -1;
         int yEnd = -1;
-        int fwEquals = 0;
-        int bwEquals = 0;
-        int fx=-1, fy=-1, bx=-1, by=-1;
         {
-            // different scope to have less garbage on the stack when recursing
+            // the find_middle_snake() function is embedded into the main
+            // function so to avoid a method call and to have easy access
+            // to all the required parameters. It uses a different scope
+            // to have less garbage on the stack when recursing.
+
             final int max = (n + m + 1) >> 1;
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
-            final int halfv = lengthv >> 1;
-            final int baseVb = lengthv + halfv;
+            final int[] vf = vv[0];
+            final int[] vb = vv[1];
+            final int halfv = vf.length >> 1;
 
-            vv[halfv + 1] = 0;
-            vv[halfv + delta] = 0;
-            vv[baseVb - 1] = n;
-            vv[baseVb - delta] = n;
+            vf[halfv + 1] = 0;
+            vf[halfv + delta] = 0;
+            vb[halfv - 1] = n;
+            vb[halfv - delta] = n;
 
             boolean isPrev;
             int k;
@@ -125,14 +124,15 @@ public abstract class AbstractLinearSpaceMyersLcs {
 
             FIND_MIDDLE_SNAKE:
             for (int d = 0; d <= max; d++) {
+                // forward Myers algorithm
                 if (d != 0) {
                     kStart = delta - (d - 1);
                     kEnd = delta + (d - 1);
                 }
                 for (k = -d; k <= d; k += 2) {
                     vIndex = halfv + k;
-                    next = vv[vIndex + 1];
-                    prev = vv[vIndex - 1];
+                    next = vf[vIndex + 1];
+                    prev = vf[vIndex - 1];
                     isPrev = k == -d || (k != d && prev < next);
                     if (isPrev) {
                         xEnd = next; // down
@@ -143,17 +143,12 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     xMid = xEnd;
                     while (xEnd < n && yEnd < m &&
                             equals(a0 + xEnd, b0 + yEnd)) {
-                        if (fwEquals == 0) {
-                            fx = a0 + xEnd;
-                            fy = b0 + yEnd;
-                        }
                         xEnd++;
                         yEnd++;
-                        fwEquals++;
                     }
-                    vv[vIndex] = xEnd;
+                    vf[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
-                            vv[lengthv + vIndex - delta] <= xEnd) {
+                            vb[vIndex - delta] <= xEnd) {
                         if (xEnd > xMid) {
                             xStart = isPrev ? next : prev + 1;
                             yStart = xStart - (k + (isPrev ? 1 : -1));
@@ -167,13 +162,14 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     }
                 }
 
+                // reverse Myers algorithm
                 kStart = delta - d;
                 kEnd = delta + d;
                 for (k = kStart; k <= kEnd; k += 2) {
-                    vIndex = baseVb + k - delta;
+                    vIndex = halfv + k - delta;
 
-                    next = vv[vIndex + 1];
-                    prev = vv[vIndex - 1];
+                    next = vb[vIndex + 1];
+                    prev = vb[vIndex - 1];
                     isPrev = k == kEnd || (k != kStart && prev < next);
                     if (isPrev) {
                         xStart = prev; // up
@@ -186,15 +182,10 @@ public abstract class AbstractLinearSpaceMyersLcs {
                             equals(a0 + xStart - 1, b0 + yStart - 1)) {
                         xStart--;
                         yStart--;
-                        if (bwEquals == 0) {
-                            bx = a0 + xStart;
-                            by = b0 + yStart;
-                        }
-                        bwEquals++;
                     }
-                    vv[vIndex] = xStart;
+                    vb[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
-                            xStart <= vv[halfv + k]) {
+                            xStart <= vf[vIndex + delta]) {
                         if (xMid > xStart) {
                             xEnd = isPrev ? prev : next - 1;
                             yEnd = xEnd - (k + (isPrev ? -1 : 1));
@@ -209,270 +200,22 @@ public abstract class AbstractLinearSpaceMyersLcs {
                 }
             }
         }
-
-        LcsItem before=null, after=null;
-        if (xStart > 0 && yStart > 0 && fwEquals != 0) {
-            if (fwEquals == 1 && match == null &&
-                    fx < a0 + xStart && fy < b0 + yStart) {
-//                System.out.println("EQUALS=1");
-                before = new LcsItem(fx, fy, 1);
-            } else {
-                before = lcsTail(a0, xStart, b0, yStart, fwEquals, vv);
-            }
+        final boolean fromStart = xStart <= 0 || yStart <= 0;
+        final boolean toEnd = xEnd >= n || n - xEnd == 0 || m - yEnd == 0;
+        if (fromStart && toEnd) {
+            return match;
         }
+        LcsItem before = fromStart ? null :
+                lcsTail(a0, xStart, b0, yStart, vv);
 
-        if (xEnd < n && n != xEnd && m != yEnd && bwEquals != 0) {
-            if (bwEquals == 1 && match == null &&
-                    (bx >= a0 + xEnd && by >= b0 + yEnd)) {
-//                System.out.println("EQUALS=1");
-                after = new LcsItem(bx, by, 1);
-            } else {
-                after = lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, bwEquals, vv);
-            }
-        }
+        LcsItem after = toEnd ? null :
+                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
 
         return LcsItem.chain(before, match, after);
     }
 
-
-    private LcsItem lcsForwardMyers(int a0, int n, int b0, int m, int[] vv) {
-        int max = n + m + 1;
-        //int[] vv = new int[max * (max + 1)];
-
-        int maxk, next, prev, x, y, d, k, vPrev, vNext = 1;
-        for (d = 0; d < max; d++) {
-            vPrev = vNext;
-            vNext += (d << 1) + 1;
-            for (k = -d; k <= d; k += 2) {
-                maxk = vPrev + k;
-                next = vv[maxk + 1]; // down
-                prev = vv[maxk - 1]; // right
-                if (k == -d || (k != d && prev < next)) {
-                    x = next;
-                } else {
-                    x = prev + 1;
-                }
-                y = x - k;
-                while (x < n && y < m && equals(a0 + x, b0 + y)) {
-                    x++;
-                    y++;
-                }
-                vv[vNext + k] = x;
-
-                if (x >= n && y >= m) {
-                    LcsItem head=null;
-                    int xStart, xMid;
-
-                    for (; d >= 0 && x > 0; d--) {
-                        maxk = vPrev + k;
-                        next = vv[maxk + 1];
-                        prev = vv[maxk - 1];
-                        if (k == -d || (k != d && prev < next)) {
-                            xStart = next;
-                            xMid = next;
-                            k++;
-                        } else {
-                            xStart = prev;
-                            xMid = prev + 1;
-                            k--;
-                        }
-
-                        if (x != xMid) {
-                            LcsItem  tmp = new LcsItem(
-                                    a0 + xMid, b0 + xMid - k, x - xMid);
-                            if (head == null) {
-                                head = tmp;
-                            } else {
-                                head = tmp.chain(head);
-                            }
-                        }
-
-                        x = xStart;
-                        vPrev -= ((d-1) << 1) + 1;
-                    }
-                    return head;
-                }
-            }
-        }
-        return null;
+    /** *  Override if you need to control how {@link LcsItem} is created. */
+    public LcsItem crateateLcsItem(int x, int y, int steps) {
+        return new LcsItem(x, y, steps);
     }
-
-    public static class LcsItem
-            implements Iterable<LcsItem>, Serializable {
-        private static final long serialVersionUID = 1L;
-        public static final LcsItem NULL = new LcsItem(-1, -1, 0);
-        private final int x;
-        private final int y;
-        private final int steps;
-        private LcsItem next;
-        private LcsItem last;
-        private int lcs;
-
-        LcsItem(int x, int y, int steps) {
-            this.x = x;
-            this.y = y;
-            this.steps = steps;
-            this.lcs = steps;
-        }
-
-        /**
-         * This is NOT a general chain algorithm, it works because the way
-         * matches are generated in the Myers LCS algorithms.
-         */
-        LcsItem chain(final LcsItem other) {
-            LcsItem current = this;
-            if (last != null) {
-                current = last;
-            }
-            current.next = other;
-            lcs += other.lcs;
-            if (other.last != null) {
-                current = other.last;
-            } else {
-                current = other;
-            }
-            last = current;
-            return this;
-        }
-
-        /** The value is valid only for the head match of the sequence. */
-        public int getSequenceSize() {
-            return lcs;
-        }
-
-        public int getFirstSequenceIndex() {
-            return x;
-        }
-
-        public int getSecondSequenceIndex() {
-            return y;
-        }
-
-        public int getSteps() {
-            return steps;
-        }
-
-        abstract class IndexIterator implements Iterator<Integer> {
-            private final Iterator<LcsItem> i = LcsItem.this.iterator();
-            protected int step = 0;
-            protected LcsItem current;
-            protected boolean hasNext;
-
-            public IndexIterator() {
-                increment();
-            }
-
-            protected final void increment() {
-                while (current == null ||
-                        current.steps == 0 ||
-                        (step + 1) == current.steps) {
-                    if (i.hasNext()) {
-                        current = i.next();
-                        step = -1;
-                    } else {
-                        hasNext = false;
-                        return;
-                    }
-                }
-                step++;
-                hasNext = true;
-            }
-
-            @Override
-            public boolean hasNext() {
-                return hasNext;
-            }
-        }
-
-        public Iterable<Integer> lcsIndexesOfTheFirstSequence() {
-            return new Iterable<Integer>() {
-                @Override
-                public Iterator<Integer> iterator() {
-                    return new IndexIterator() {
-
-                        @Override
-                        public Integer next() {
-                            if (!hasNext) {
-                                throw new NoSuchElementException();
-                            }
-                            final int result = current.x + step;
-                            increment();
-                            return result;
-                        }
-                    };
-                }
-            };
-        }
-
-        public Iterable<Integer> lcsIndexesOfTheSecondSequence() {
-            return new Iterable<Integer>() {
-                @Override
-                public Iterator<Integer> iterator() {
-                    return new IndexIterator() {
-
-                        @Override
-                        public Integer next() {
-                            if (!hasNext) {
-                                throw new NoSuchElementException();
-                            }
-                            final int result = current.y + step;
-                            increment();
-                            return result;
-                        }
-                    };
-                }
-            };
-        }
-
-        @Override
-        public Iterator<LcsItem> iterator() {
-            return new Iterator<LcsItem>() {
-                private LcsItem current = LcsItem.this;
-
-                @Override
-                public boolean hasNext() {
-                    return current != null && current != NULL;
-                }
-
-                @Override
-                public LcsItem next() {
-                    LcsItem tmp = current;
-                    current = current.next;
-                    return tmp;
-                }
-            };
-        }
-
-        @Override
-        public String toString() {
-            if (this == NULL) {
-                return "Match{NULL}";
-            }
-            return getClass().getSimpleName() +
-                    "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
-        }
-
-        static LcsItem chain(LcsItem before, LcsItem middle, LcsItem after) {
-            if (middle == null) {
-                if (after == null) {
-                    return before;
-                }
-                if (before == null) {
-                    return after;
-                }
-                return before.chain(after);
-            }
-            if (after == null) {
-                if (before == null) {
-                    return middle;
-                }
-                return before.chain(middle);
-            }
-            if (before == null) {
-                return middle.chain(after);
-            }
-            return before.chain(middle.chain(after));
-        }
-    }
-
 }

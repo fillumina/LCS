@@ -19,12 +19,12 @@ import com.fillumina.lcs.Lcs;
 
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class IbmLcs<T> implements Lcs<T> {
+public class IbmLcs implements Lcs {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> lcs(List<T> xs, List<T> ys) {
-        LcsImpl lcs = new LcsImpl(xs, ys);
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        LcsImpl lcs = new LcsImpl(a, b);
         LCSSettings settings = new LCSSettings();
         lcs.longestCommonSubsequence(settings);
         return (List<T>) lcs.getSolution();

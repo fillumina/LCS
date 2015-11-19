@@ -1,33 +1,33 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.*;
-import com.fillumina.lcs.myers.AbstractMyersLcs.LcsItem;
+import com.fillumina.lcs.AbstractLcsSizeEvaluatorAdaptor;
 import java.util.Objects;
+import com.fillumina.lcs.myers.AbstractParallelLinearSpaceMyersLcs.LcsItem;
 
 /**
- * Adaptor to make {@link AbstractMyersLcs} be callable using the
- * {@link Lcs} interface.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class AbstractMyersLcsAdaptor extends AbstractLcsSizeEvaluatorAdaptor {
+public class AbstractParallelLinearSpaceMyersLcsAdaptor
+        extends AbstractLcsSizeEvaluatorAdaptor {
     private LcsItem lcsItem;
 
     @Override
     protected <T> Iterable<Integer> lcsItems(T[] a, T[] b) {
-        lcsItem = new LinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
-        return lcsItem.lcsIndexesOfTheFirstSequence();
+        lcsItem = new ParallelLinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
+        return lcsItem.lcsIndexes();
     }
 
     @Override
     public int getLcs() {
-        return lcsItem.getSequenceSize();
+        return lcsItem.getLcs();
     }
 
-    private static class LinearSpaceMyersLcsImpl<T> extends AbstractMyersLcs {
+    private static class ParallelLinearSpaceMyersLcsImpl<T>
+            extends AbstractParallelLinearSpaceMyersLcs {
         private final T[] a, b;
 
-        public LinearSpaceMyersLcsImpl(T[] a, T[] b) {
+        public ParallelLinearSpaceMyersLcsImpl(T[] a, T[] b) {
             this.a = a;
             this.b = b;
         }

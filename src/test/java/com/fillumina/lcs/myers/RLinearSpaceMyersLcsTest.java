@@ -11,8 +11,8 @@ import com.fillumina.lcs.Lcs;
 public class RLinearSpaceMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new RLinearSpaceMyersLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new RLinearSpaceMyersLcs();
     }
 
     public static void main(String[] args) {

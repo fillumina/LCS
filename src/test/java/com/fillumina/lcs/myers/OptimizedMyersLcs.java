@@ -10,10 +10,10 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedMyersLcs<T> implements Lcs<T> {
+public class OptimizedMyersLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         @SuppressWarnings("unchecked")
         final T[] aa = a.toArray((T[])new Object[a.size()]);
         @SuppressWarnings("unchecked")
@@ -21,7 +21,7 @@ public class OptimizedMyersLcs<T> implements Lcs<T> {
         return lcsMyers(aa, bb);
     }
 
-    private List<T> lcsMyers(T[] a, T[] b) {
+    private <T> List<? extends T> lcsMyers(T[] a, T[] b) {
         int n = a.length;
         int m = b.length;
         int max = n + m + 1;

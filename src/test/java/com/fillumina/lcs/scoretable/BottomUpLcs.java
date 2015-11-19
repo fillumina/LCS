@@ -15,15 +15,15 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BottomUpLcs<T> implements Lcs<T> {
+public class BottomUpLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         final Grid grid = createGrid(a, b);
         return readLcs(a, b, grid);
     }
 
-    private Grid createGrid(List<T> a, List<T> b) {
+    private <T> Grid createGrid(List<? extends T> a, List<? extends T> b) {
         final int n = a.size();
         final int m = b.size();
 
@@ -57,7 +57,8 @@ public class BottomUpLcs<T> implements Lcs<T> {
         return grid;
     }
 
-    private List<T> readLcs(List<T> a, List<T> b, Grid grid) {
+    private <T> List<? extends T> readLcs(
+            List<? extends T> a, List<? extends T> b, Grid grid) {
         List<T> lcs = new ArrayList<>();
         int i = a.size() - 1;
         int j = b.size() - 1;
@@ -154,7 +155,8 @@ public class BottomUpLcs<T> implements Lcs<T> {
     /**
      * Produces a grid string representation. Useful for debugging.
      */
-    private static <T> String gridToString(List<T> a, List<T> b, Grid grid) {
+    static <T> String gridToString(
+            List<? extends T> a, List<? extends T> b, Grid grid) {
         StringBuilder buf = new StringBuilder();
         buf.append("  ");
         for (int j = 0; j < b.size(); j++) {

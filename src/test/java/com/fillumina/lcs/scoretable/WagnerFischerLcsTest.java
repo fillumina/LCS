@@ -15,12 +15,10 @@ public class WagnerFischerLcsTest {
         new AbstractLcsTestExecutor() {
 
             @Override
-            protected Lcs<?> getLcsAlgorithm() {
-                return new WagnerFischerLcs<>();
+            public Lcs getLcsAlgorithm() {
+                return new WagnerFischerLcs();
             }
-
-        }.lcs("HUMAN", "CHIMPANZEE")
-                .assertResult("HMAN");
+        };
     }
 
 

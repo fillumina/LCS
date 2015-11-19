@@ -15,10 +15,10 @@ import com.fillumina.lcs.Lcs;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class SmithWatermanLcs<T> implements Lcs<T> {
+public class SmithWatermanLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         int n = a.size();
         int m = b.size();
 

@@ -6,24 +6,25 @@ import java.util.List;
 import static com.fillumina.lcs.util.ListUtils.concatenate;
 
 /**
- * Some optimizations that can improve considerably
- * the speed of any LCS algorithm.
+ * Some general optimizations that can improve considerably
+ * the speed of any LCS algorithm by reducing the length of the
+ * sequences it has to work with.
  *
  * @see <a href="https://neil.fraser.name/writing/diff/">
  *  Neil Fraser: Diff Strategies
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CommonOptimizations<T> implements Lcs<T> {
+public class CommonOptimizations implements Lcs {
 
-    private final Lcs<T> delegate;
+    private final Lcs delegate;
 
-    public CommonOptimizations(Lcs<T> delegate) {
+    public CommonOptimizations(Lcs delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    public List<T> lcs(List<T> xs, List<T> ys) {
+    public <T> List<? extends T> lcs(List<? extends T> xs, List<? extends T> ys) {
 
         // 0) emptyness
         if (xs.isEmpty()) {
@@ -67,7 +68,7 @@ public class CommonOptimizations<T> implements Lcs<T> {
         final int min = Math.min(n, m);
         int d,u;
         for (d=0; d<min && xs.get(d).equals(ys.get(d)); d++);
-        final List<T> before = (d > 0) ? xs.subList(0, d) : null;
+        final List<? extends T> before = (d > 0) ? xs.subList(0, d) : null;
         if (d == min) {
             return before;
         }
@@ -75,8 +76,9 @@ public class CommonOptimizations<T> implements Lcs<T> {
         if (d == 0 && u == 0) {
             return delegate.lcs(xs, ys);
         }
-        final List<T> middle = delegate.lcs(xs.subList(d,n-u), ys.subList(d,m-u));
-        final List<T> after = (u > 0) ? xs.subList(n-u,n) : null;
+        final List<? extends T> middle =
+                delegate.lcs(xs.subList(d,n-u), ys.subList(d,m-u));
+        final List<? extends T> after = (u > 0) ? xs.subList(n-u,n) : null;
         if (d > 0) {
             if (!middle.isEmpty()) {
                 if (u > 0) {

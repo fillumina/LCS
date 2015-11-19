@@ -8,7 +8,7 @@ import java.util.Iterator;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class ParallelLinearSpaceMyersLcs {
+public abstract class AbstractParallelLinearSpaceMyersLcs {
     private ThreadLocal<int[][]> cache;
 
     protected abstract int getFirstSequenceLength();
@@ -47,7 +47,8 @@ public abstract class ParallelLinearSpaceMyersLcs {
         if (u + d != min) {
             lcsMatch = new RecursiveLcs(d, n - d - u, d, m - d - u).compute();
         }
-        return LcsItem.chain(matchDown, lcsMatch, matchUp);
+        lcsMatch = LcsItem.chain(matchDown, lcsMatch, matchUp);
+        return lcsMatch == null ? LcsItem.NULL : lcsMatch;
     }
 
     private class RecursiveLcs extends RecursiveTask<LcsItem> {
@@ -74,13 +75,13 @@ public abstract class ParallelLinearSpaceMyersLcs {
             }
             if (n == 1) {
                 if (m == 1) {
-                    if (ParallelLinearSpaceMyersLcs.this.equals(a0, b0)) {
+                    if (AbstractParallelLinearSpaceMyersLcs.this.equals(a0, b0)) {
                         return new LcsItem(a0, b0, 1);
                     }
                     return null;
                 }
                 for (int i = b0; i < b0 + m; i++) {
-                    if (ParallelLinearSpaceMyersLcs.this.equals(a0, i)) {
+                    if (AbstractParallelLinearSpaceMyersLcs.this.equals(a0, i)) {
                         return new LcsItem(a0, i, 1);
                     }
                 }
@@ -88,7 +89,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
             }
             if (m == 1) {
                 for (int i = a0; i < a0 + n; i++) {
-                    if (ParallelLinearSpaceMyersLcs.this.equals(i, b0)) {
+                    if (AbstractParallelLinearSpaceMyersLcs.this.equals(i, b0)) {
                         return new LcsItem(i, b0, 1);
                     }
                 }
@@ -144,7 +145,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                         yEnd = xEnd - k;
                         xMid = xEnd;
                         while (xEnd < n && yEnd < m &&
-                                ParallelLinearSpaceMyersLcs.this.equals(a0 + xEnd, b0 + yEnd)) {
+                                AbstractParallelLinearSpaceMyersLcs.this.equals(a0 + xEnd, b0 + yEnd)) {
                             xEnd++;
                             yEnd++;
                         }
@@ -178,7 +179,7 @@ public abstract class ParallelLinearSpaceMyersLcs {
                         yStart = xStart - k;
                         xMid = xStart;
                         while (xStart > 0 && yStart > 0 &&
-                                ParallelLinearSpaceMyersLcs.this.equals(a0 + xStart - 1,
+                                AbstractParallelLinearSpaceMyersLcs.this.equals(a0 + xStart - 1,
                                 b0 + yStart - 1)) {
                             xStart--;
                             yStart--;

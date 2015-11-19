@@ -11,8 +11,8 @@ import com.fillumina.lcs.Lcs;
 public class IbmLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new IbmLcs<>();
+    public Lcs getLcsAlgorithm() {
+        return new IbmLcs();
     }
 
     @Test(timeout = 1_000L)

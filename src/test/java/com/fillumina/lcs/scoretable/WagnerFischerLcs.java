@@ -19,10 +19,10 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class WagnerFischerLcs<T> implements Lcs<T> {
+public class WagnerFischerLcs implements Lcs {
 
     @Override
-    public List<T> lcs(List<T> a, List<T> b) {
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         int n = a.size();
         int m = b.size();
 
@@ -31,7 +31,8 @@ public class WagnerFischerLcs<T> implements Lcs<T> {
         return readLcs(n, m, d, a);
     }
 
-    private int[][] computeDistance(List<T> a, int n, List<T> b, int m) {
+    private <T> int[][] computeDistance(List<? extends T> a, int n,
+            List<? extends T> b, int m) {
         int[][] d = new int[n+1][m+1];
 
         // score table initialization
@@ -60,7 +61,8 @@ public class WagnerFischerLcs<T> implements Lcs<T> {
         return d;
     }
 
-    private List<T> readLcs(int m, int n, int[][] d, List<T> s) {
+    private<T> List<? extends T> readLcs(int m, int n, int[][] d,
+            List<? extends T> s) {
         int lcsLength = d[m][n];
         List<T> lcs = new ArrayList<>(lcsLength);
         T se;
@@ -81,7 +83,7 @@ public class WagnerFischerLcs<T> implements Lcs<T> {
         return lcs;
     }
 
-    private int min(int a, int b, int c) {
+    static int min(int a, int b, int c) {
         if (a < b) {
             if (c < a) {
                 return c;

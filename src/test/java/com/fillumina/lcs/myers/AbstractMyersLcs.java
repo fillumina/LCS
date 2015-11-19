@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
+ * Optimized implementation of the forward Myers algorithm. It is especially
+ * fast for small sequences and when there are few matches. It is crafted
+ * to be easily embedded into the {@link AbstractLinearSpaceMyersLcs}
+ * as it has been done in {@link HyperOptimizedLinearSpaceMyersLcs} which
+ * unfortunately resulted in a slower algorithm.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -17,8 +22,10 @@ public abstract class AbstractMyersLcs {
     public LcsItem calculateLcs() {
         final int n = getFirstSequenceLength();
         final int m = getSecondSequenceLength();
-        LcsItem result = (n == 0 || m == 0) ? null :
-            lcsTail(0, n, 0, m);
+        if (n == 0 || m == 0) {
+            return LcsItem.NULL;
+        }
+        LcsItem result = lcsTail(0, n, 0, m);
         if (result == null) {
             return LcsItem.NULL;
         }

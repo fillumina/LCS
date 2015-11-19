@@ -1,47 +1,21 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.testutil.CharacterLcsTestHelper;
-import com.fillumina.lcs.testutil.RandomSequenceGenerator;
+import com.fillumina.lcs.*;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.myers.ParallelLinearSpaceMyersLcs.LcsItem;
-import com.fillumina.lcs.util.ListUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Ignore;
-import com.fillumina.lcs.Lcs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
+public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
 
-    private ParallelLinearSpaceMyersLcsAdaptor<Character> algo =
-            new ParallelLinearSpaceMyersLcsAdaptor<>();
-
-    public static void main(String[] args) {
-        new ParallelLinearSpaceMyersLcsTest().randomLcs(60, 10, 100);
-    }
+    public abstract LcsSizeEvaluator getLcsSequenceGenerator();
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new ParallelLinearSpaceMyersLcsAdaptor<>();
+    public Lcs getLcsAlgorithm() {
+        return getLcsSequenceGenerator();
     }
 
     @Test(timeout = 100L)
@@ -147,23 +121,13 @@ public class ParallelLinearSpaceMyersLcsTest extends AbstractLcsTest {
     private void countLcs(String a, String b, int expectedLcs) {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);
-        LcsItem m = algo.lcsMatch(listA, listB);
-        assertEquals(ListUtils.toString(m), expectedLcs, m.getLcs());
+        final LcsSizeEvaluator algorithm = getLcsSequenceGenerator();
+        algorithm.lcs(listA, listB);
+        assertEquals(expectedLcs, algorithm.getLcs());
     }
 
-    @Ignore @Test(timeout = 1_000L)
+    @Test//(timeout = 2_000L)
     public void shouldPassVeryLongTest() {
-        RandomSequenceGenerator generator =
-//                new RandomSequenceGenerator(60,10, 26641683514364L);
-                new RandomSequenceGenerator(6000,5000);
-
-        System.out.println(generator.toString());
-
-        @SuppressWarnings("unchecked")
-        List<Integer> lcsList = ((Lcs)getLcsAlgorithm())
-                .lcs(generator.getA(), generator.getB());
-
-        assertEquals(generator.getLcs(), lcsList);
+        randomLcs(6000, 5000, 1);
     }
-
 }

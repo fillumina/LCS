@@ -12,14 +12,14 @@ import com.fillumina.lcs.Lcs;
 public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    protected Lcs<?> getLcsAlgorithm() {
-        return new MemoizedRecursiveLcs<Character>() {
+    public Lcs getLcsAlgorithm() {
+        return new MemoizedRecursiveLcs() {
 
             @Override
-            public List<Character> lcs(List<Character> xs, int n,
-                    List<Character> ys, int m) {
-                count(xs, ys);
-                return super.lcs(xs, n, ys, m);
+            public <T> List<? extends T> lcs(List<? extends T> a, int n,
+                    List<? extends T> b, int m) {
+                count(a, b);
+                return super.lcs(a, n, b, m);
             }
         };
     }

@@ -1,6 +1,6 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.AbstractLinearSpaceMyersLcsAdaptor;
+import com.fillumina.lcs.LinearSpaceMyersLcsAdaptor;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
@@ -9,11 +9,25 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.AbstractMyersLcsAdaptor;
-import com.fillumina.lcs.myers.BaselineLinearSpaceMyersLcsAdaptor;
+import com.fillumina.lcs.myers.HyperOptimizedLinearSpaceMyersLcsAdaptor;
 import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.MyersLcs;
 import com.fillumina.lcs.myers.OptimizedMyersLcs;
 import com.fillumina.lcs.myers.docx4j.IbmLcs;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -45,9 +59,9 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
     }
 
     private class LcsRunnable implements Runnable {
-        private final Lcs<Integer> lcsAlgorithm;
+        private final Lcs lcsAlgorithm;
 
-        public LcsRunnable(Lcs<Integer> lcsAlgorithm) {
+        public LcsRunnable(Lcs lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 
@@ -62,43 +76,44 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
     public void init(ProgressionConfigurator config) {
         config.setBaseIterations(100);
         config.setTimeout(30, TimeUnit.MINUTES);
+        config.setMaxStandardDeviation(2);
     }
 
     @Override
     public void addTests(TestContainer tests) {
 
-//        tests.addTest("BottomUp", new LcsRunnable(new BottomUpLcs<Integer>()));
+//        tests.addTest("BottomUp", new LcsRunnable(new BottomUpLcs()));
 //        tests.addTest("OptimizedHirschbergLinearSpace",
-//                new LcsRunnable(new OptimizedHirschbergLinearSpaceLcs<Integer>()));
+//                new LcsRunnable(new OptimizedHirschbergLinearSpaceLcs()));
 //        tests.addTest("HirschbergLinearSpaceAlgorithm",
-//                new LcsRunnable(new HirschbergLinearSpaceAlgorithmLcs<Integer>()));
+//                new LcsRunnable(new HirschbergLinearSpaceAlgorithmLcs()));
 //        tests.addTest("MemoizedRecursive",
-//                new LcsRunnable(new MemoizedRecursiveLcs<Integer>()));
-//        tests.addTest("NotRecursive", new LcsRunnable(new NotRecursiveLcs<Integer>()));
+//                new LcsRunnable(new MemoizedRecursiveLcs()));
+//        tests.addTest("NotRecursive", new LcsRunnable(new NotRecursiveLcs()));
 //        tests.addTest("OptimizedRecursive",
-//                new LcsRunnable(new OptimizedRecursiveLcs<Integer>()));
+//                new LcsRunnable(new OptimizedRecursiveLcs()));
 //        tests.addTest("WagnerFischer",
-//                new LcsRunnable(new WagnerFischerLcs<Integer>()));
+//                new LcsRunnable(new WagnerFischerLcs()));
 //        tests.addTest("SmithWaterman",
-//                new LcsRunnable(new SmithWatermanLcs<Integer>()));
+//                new LcsRunnable(new SmithWatermanLcs()));
 
 
-//        tests.addTest("Myers", new LcsRunnable(new MyersLcs<Integer>()));
-//        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs<Integer>()));
-//        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs<Integer>()));
+//        tests.addTest("Myers", new LcsRunnable(new MyersLcs()));
+//        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs()));
+//        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs()));
 //        tests.addTest("RLinearSpaceMyers",
-//                new LcsRunnable(new RLinearSpaceMyersLcs<Integer>()));
+//                new LcsRunnable(new RLinearSpaceMyersLcs()));
 //        tests.addTest("AbstractMyers",
-//                new LcsRunnable(new AbstractMyersLcsAdaptor<Integer>()));
+//                new LcsRunnable(new AbstractMyersLcsAdaptor()));
 //        tests.addTest("BaselineOptimizedLinearSpaceMyers",
-//                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs<Integer>()));
+//                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs()));
         tests.addTest("BaselineLinearSpaceMyers",
-                new LcsRunnable(new BaselineLinearSpaceMyersLcsAdaptor<Integer>()));
+                new LcsRunnable(new HyperOptimizedLinearSpaceMyersLcsAdaptor()));
         tests.addTest("LinearSpaceMyers",
-                new LcsRunnable(new AbstractLinearSpaceMyersLcsAdaptor<Integer>()));
+                new LcsRunnable(new LinearSpaceMyersLcsAdaptor()));
 //        test.addTest("ParallelLinearSpaceMyers",
-//                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper<Integer>()));
-//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs<Integer>()));
+//                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper()));
+//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs()));
     }
 
     @Override

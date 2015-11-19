@@ -12,14 +12,16 @@ import java.util.Map;
  * @see RecursiveLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MemoizedRecursiveLcs<T> extends RecursiveLcs<T> {
-    private final Map<Long, List<T>> resultsMap = new HashMap<>();
+public class MemoizedRecursiveLcs extends RecursiveLcs {
+    private final Map<Long, List<?>> resultsMap = new HashMap<>();
 
     @Override
-    public List<T> lcs(List<T> a, int n, List<T> b, int m) {
+    public <T> List<? extends T> lcs(List<? extends T> a, int n,
+            List<? extends T> b, int m) {
         // packs two integer indexes in a single long for efficiency
         long l = (long)n << 32 | m & 0xFFFFFFFFL; // long64 = (int32,int32)
-        List<T> result = resultsMap.get(l);
+        @SuppressWarnings("unchecked")
+        List<? extends T> result = (List<? extends T>) resultsMap.get(l);
         if (result != null) {
             return result;
         }
