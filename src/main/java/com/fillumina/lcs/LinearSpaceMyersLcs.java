@@ -8,10 +8,10 @@ import java.util.Objects;
 /**
  * Myers Linear LCS Algorithm for collections and arrays.
  *
- * @see AbstractLinearSpaceMyersLcs
+ * @see AbstractLinearSpaceMyersLcSequence
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcs {
+public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
     private final Object[] a, b;
 
     public static <T> LinearSpaceMyersLcs lcs(
@@ -31,7 +31,7 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcs {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> getLcsList() {
+    public <T> List<T> calcaulateLcsList() {
         final List<T> lcs = new ArrayList<>(getLcsLength());
         for (int index : lcsIndexesOfTheFirstSequence()) {
             lcs.add((T) a[index]);

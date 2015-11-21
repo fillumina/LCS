@@ -1,30 +1,12 @@
 package com.fillumina.lcs;
 
 import java.io.Serializable;
-import java.util.Collections;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public interface LcsItem extends Serializable {
-//    LcsItem NULL = new LcsItem() {
-//        private static final long serialVersionUID = 1L;
-//
-//        @Override public int getFirstSequenceIndex() { return -1; }
-//        @Override public int getSecondSequenceIndex() { return -1; }
-//        @Override public int getSteps() { return 0; }
-//
-//        @Override
-//        public Iterable<Integer> lcsIndexesOfTheFirstSequence() {
-//            return Collections.<Integer>emptyList();
-//        }
-//
-//        @Override
-//        public Iterable<Integer> lcsIndexesOfTheSecondSequence() {
-//            return Collections.<Integer>emptyList();
-//        }
-//    };
 
     /**
      * @return the index in the first sequence from which the match starts.

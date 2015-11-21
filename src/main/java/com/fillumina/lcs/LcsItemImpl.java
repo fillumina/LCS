@@ -181,28 +181,4 @@ public class LcsItemImpl extends AbstractCollection<LcsItem>
         return getClass().getSimpleName() +
                 "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
     }
-
-    static LcsItemImpl chain(final LcsItemImpl before,
-            final LcsItemImpl middle, final LcsItemImpl after) {
-        if (middle == null) {
-            if (after == null) {
-                return before;
-            }
-            if (before == null) {
-                return after;
-            }
-            return before.chain(after);
-        }
-        if (after == null) {
-            if (before == null) {
-                return middle;
-            }
-            return before.chain(middle);
-        }
-        if (before == null) {
-            return middle.chain(after);
-        }
-        return before.chain(middle.chain(after));
-    }
-
 }
