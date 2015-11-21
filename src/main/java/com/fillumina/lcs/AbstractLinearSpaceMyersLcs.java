@@ -1,13 +1,19 @@
 package com.fillumina.lcs;
 
+import java.util.Collection;
+
 /**
  * Implementation of the Linear Space Myers LCS algorithm. For maximum
  * flexibility its input is provided by extending the class.
- * It returns an ordered sequence of {@link LcsItem}s.
+ * It returns an ordered sequence of {@link LcsItemImpl}s.
+ * Note that this class can be used for one calculation only.
  *
+ * @see LinearSpaceMyersLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLinearSpaceMyersLcs {
+    private int[][] vv;
+    private LcsItemImpl head;
 
     /** Override to return the length of the first sequence. */
     protected abstract int getFirstSequenceLength();
@@ -23,56 +29,83 @@ public abstract class AbstractLinearSpaceMyersLcs {
      */
     protected abstract boolean equals(int x, int y);
 
-    /** Perform the calculation. */
-    public LcsItem calculateLcs() {
-        final int n = getFirstSequenceLength();
-        final int m = getSecondSequenceLength();
-        if (n == 0 || m == 0) {
-            return LcsItem.NULL;
-        }
-        final LcsItem lcsItem = lcsTail(0, n, 0, m, null);
-        return lcsItem == null ? LcsItem.NULL : lcsItem;
+    /**
+     * @return an iterable of matching indexes on the first sequence
+     * starting from the present match.
+     */
+    public Iterable<Integer> lcsIndexesOfTheFirstSequence() {
+        return head.lcsIndexesOfTheFirstSequence();
     }
 
     /**
-     * Optimizes the calculation by filtering out equals elements on the head
+     * @return an iterable of matching indexes on the second sequence
+     * starting from the present match.
+     */
+    public Iterable<Integer> lcsIndexesOfTheSecondSequence() {
+        return head.lcsIndexesOfTheSecondSequence();
+    }
+
+    public int getLcsLength() {
+        return head.size();
+    }
+
+    public Collection<LcsItem> getLcs() {
+        return head;
+    }
+
+    /** Perform the calculation. */
+    @SuppressWarnings("unchecked")
+    public Collection<LcsItem> calculateLcs() {
+        final int n = getFirstSequenceLength();
+        final int m = getSecondSequenceLength();
+        if (n == 0 || m == 0) {
+            head = (LcsItemImpl) LcsItemImpl.NULL;
+            return (Collection<LcsItem>) head;
+        }
+        final LcsItemImpl lcsItem = lcsTail(0, n, 0, m);
+        head = (LcsItemImpl) (lcsItem == null ? LcsItemImpl.NULL : lcsItem);
+        return (Collection<LcsItem>) head;
+    }
+
+    /**
+     * Optimizes the calculation by filtering out equal elements on the head
      * and tail of the sequences.
      */
-    private LcsItem lcsTail(final int a0, final int n,
-            final int b0, final int m, final int[][] vv) {
+    private LcsItemImpl lcsTail(final int a0, final int n,
+            final int b0, final int m) {
         final int min = n < m ? n : m;
-        LcsItem matchDown = null;
-        LcsItem matchUp = null;
-        LcsItem lcsMatch = null;
+        LcsItemImpl matchDown = null;
         int d = 0;
         if (equals(a0, b0)) {
             for (d = 1; d < min && equals(a0 + d, b0 + d); d++);
-            matchDown = new LcsItem(a0, b0, d);
+            matchDown = new LcsItemImpl(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
         }
+        LcsItemImpl matchUp = null;
         int u = 0;
         if (equals(a0 + n - 1, b0 + m - 1)) {
             final int x0 = a0 + n - 1;
             final int y0 = b0 + m - 1;
             final int maxu = min - d;
             for (u = 1; u < maxu && equals(x0 - u, y0 - u); u++);
-            matchUp = new LcsItem(a0 + n - u, b0 + m - u, u);
+            matchUp = new LcsItemImpl(a0 + n - u, b0 + m - u, u);
         }
+        LcsItemImpl lcsMatch = null;
         if (u + d < min) {
-            lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u, vv);
+            lcsMatch = lcsRec(a0 + d, n - d - u, b0 + d, m - d - u);
         }
-        return LcsItem.chain(matchDown, lcsMatch, matchUp);
+        return LcsItemImpl.chain(matchDown, lcsMatch, matchUp);
     }
 
     /** Recursive linear space Myers algorithm. */
-    private LcsItem lcsRec(final int a0, final int n,
-            final int b0, final int m, int[][] vv) {
+    private LcsItemImpl lcsRec(final int a0, final int n,
+            final int b0, final int m) {
         if (n == 1) {
             for (int i = b0; i < b0 + m; i++) {
                 if (equals(a0, i)) {
-                    return new LcsItem(a0, i, 1);
+                    return new LcsItemImpl(a0, i, 1);
                 }
             }
             return null;
@@ -80,17 +113,19 @@ public abstract class AbstractLinearSpaceMyersLcs {
         if (m == 1) {
             for (int i = a0; i < a0 + n; i++) {
                 if (equals(i, b0)) {
-                    return new LcsItem(i, b0, 1);
+                    return new LcsItemImpl(i, b0, 1);
                 }
             }
             return null;
         }
 
-        if (vv == null) {
-            vv = new int[2][n+m+4];
+        if (this.vv == null) {
+            this.vv = new int[2][n+m+4];
         }
+        // make a local variable which is faster to access
+        final int[][] vv = this.vv;
 
-        LcsItem match = null;
+        LcsItemImpl match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
@@ -101,7 +136,6 @@ public abstract class AbstractLinearSpaceMyersLcs {
             // to all the required parameters. It uses a different scope
             // to have less garbage on the stack when recursing.
 
-            final int max = (n + m + 1) >> 1;
             final int delta = n - m;
             final boolean evenDelta = (delta & 1) == 0;
             final int[] vf = vv[0];
@@ -121,6 +155,8 @@ public abstract class AbstractLinearSpaceMyersLcs {
             int xMid;
             int kStart = delta - 1;
             int kEnd = delta + 1;
+
+            final int max = (n + m + 1) >> 1;
 
             FIND_MIDDLE_SNAKE:
             for (int d = 0; d <= max; d++) {
@@ -149,14 +185,11 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     vf[vIndex] = xEnd;
                     if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
                             vb[vIndex - delta] <= xEnd) {
+                        xStart = isPrev ? next : prev;
+                        yStart = xStart - (k + (isPrev ? 1 : -1));
                         if (xEnd > xMid) {
-                            xStart = isPrev ? next : prev + 1;
-                            yStart = xStart - (k + (isPrev ? 1 : -1));
-                            match = new LcsItem(a0 + xMid, b0 + (xMid - k),
+                            match = new LcsItemImpl(a0 + xMid, b0 + (xMid - k),
                                     xEnd - xMid);
-                        } else {
-                            xStart = isPrev ? next : prev;
-                            yStart = xStart - (k + (isPrev ? 1 : -1));
                         }
                         break FIND_MIDDLE_SNAKE;
                     }
@@ -186,14 +219,11 @@ public abstract class AbstractLinearSpaceMyersLcs {
                     vb[vIndex] = xStart;
                     if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
                             xStart <= vf[vIndex + delta]) {
+                        xEnd = isPrev ? prev : next;
+                        yEnd = xEnd - (k + (isPrev ? -1 : 1));
                         if (xMid > xStart) {
-                            xEnd = isPrev ? prev : next - 1;
-                            yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                            match = new LcsItem(a0 + xStart, b0 + yStart,
+                            match = new LcsItemImpl(a0 + xStart, b0 + yStart,
                                     xMid - xStart);
-                        } else {
-                            xEnd = isPrev ? prev : next;
-                            yEnd = xEnd - (k + (isPrev ? -1 : 1));
                         }
                         break FIND_MIDDLE_SNAKE;
                     }
@@ -205,17 +235,12 @@ public abstract class AbstractLinearSpaceMyersLcs {
         if (fromStart && toEnd) {
             return match;
         }
-        LcsItem before = fromStart ? null :
-                lcsTail(a0, xStart, b0, yStart, vv);
+        LcsItemImpl before = fromStart ? null :
+                lcsTail(a0, xStart, b0, yStart);
 
-        LcsItem after = toEnd ? null :
-                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd, vv);
+        LcsItemImpl after = toEnd ? null :
+                lcsTail(a0 + xEnd, n - xEnd, b0 + yEnd, m - yEnd);
 
-        return LcsItem.chain(before, match, after);
-    }
-
-    /** *  Override if you need to control how {@link LcsItem} is created. */
-    public LcsItem crateateLcsItem(int x, int y, int steps) {
-        return new LcsItem(x, y, steps);
+        return LcsItemImpl.chain(before, match, after);
     }
 }

@@ -14,12 +14,12 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     public void randomLcs(int len, int lcs, int iterations) {
-        @SuppressWarnings("unchecked")
         final Lcs algorithm = getLcsAlgorithm();
         for (int i=0; i<iterations; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);
 
+            @SuppressWarnings("unchecked")
             List<Integer> lcsList = (List<Integer>) algorithm
                     .lcs(generator.getA(), generator.getB());
 

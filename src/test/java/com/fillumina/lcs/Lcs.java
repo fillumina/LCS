@@ -9,6 +9,5 @@ import java.util.List;
  */
 public interface Lcs {
 
-    // TODO return simply a List<T>
     <T> List<? extends T> lcs(List<? extends T> xs, List<? extends T> ys);
 }

@@ -1,24 +1,25 @@
 package com.fillumina.lcs;
 
+import java.util.List;
+
 /**
  * Adaptor that makes {@link AbstractLinearSpaceMyersLcs} callable using
  * the {@link Lcs} interface.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsAdaptor extends LinearSpaceMyersLcs
-        implements LcsSizeEvaluator {
-
-    private LcsItem sequence;
+public class LinearSpaceMyersLcsAdaptor implements LcsSizeEvaluator {
+    private LinearSpaceMyersLcs linearSpaceMyersLcs;
 
     @Override
     public int getLcs() {
-        return sequence.getSequenceSize();
+        return linearSpaceMyersLcs.getLcsLength();
     }
 
     @Override
-    protected <T> LcsItem lcsSequence(T[] a, T[] b) {
-        this.sequence = super.lcsSequence(a, b);
-        return sequence;
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        linearSpaceMyersLcs = LinearSpaceMyersLcs.lcs(a, b);
+        linearSpaceMyersLcs.calculateLcs();
+        return linearSpaceMyersLcs.getLcsList();
     }
 }

@@ -7,7 +7,8 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class AbstractLcsSizeEvaluatorAdaptor implements LcsSizeEvaluator {
+public abstract class AbstractLcsSizeEvaluatorAdaptor
+        implements LcsSizeEvaluator {
 
     @Override
     public <T> List<T> lcs(

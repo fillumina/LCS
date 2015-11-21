@@ -8,27 +8,8 @@ import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.myers.AbstractMyersLcsAdaptor;
 import com.fillumina.lcs.myers.HyperOptimizedLinearSpaceMyersLcsAdaptor;
-import com.fillumina.lcs.myers.BaselineOptimizedLinearSpaceMyersLcs;
-import com.fillumina.lcs.myers.MyersLcs;
-import com.fillumina.lcs.myers.OptimizedMyersLcs;
 import com.fillumina.lcs.myers.docx4j.IbmLcs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -38,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
     private static final int TOTAL = 600;
-    private static final int LCS = 5;
+    private static final int LCS = 500;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -107,13 +88,13 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new AbstractMyersLcsAdaptor()));
 //        tests.addTest("BaselineOptimizedLinearSpaceMyers",
 //                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs()));
-        tests.addTest("BaselineLinearSpaceMyers",
-                new LcsRunnable(new HyperOptimizedLinearSpaceMyersLcsAdaptor()));
+//        tests.addTest("BaselineLinearSpaceMyers",
+//                new LcsRunnable(new HyperOptimizedLinearSpaceMyersLcsAdaptor()));
         tests.addTest("LinearSpaceMyers",
                 new LcsRunnable(new LinearSpaceMyersLcsAdaptor()));
 //        test.addTest("ParallelLinearSpaceMyers",
 //                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper()));
-//        tests.addTest("Ibm", new LcsRunnable(new IbmLcs()));
+        tests.addTest("Ibm", new LcsRunnable(new IbmLcs()));
     }
 
     @Override
