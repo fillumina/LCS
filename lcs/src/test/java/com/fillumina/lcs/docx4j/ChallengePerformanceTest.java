@@ -1,26 +1,26 @@
 package com.fillumina.lcs.docx4j;
 
-import com.fillumina.lcs.AbstractLinearSpaceMyersLcIndex;
-import com.fillumina.lcs.LcsItem;
+import com.fillumina.lcs.LinearSpaceMyersLcsLength;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * A performance test that compares the LCS implementation of this project
+ * with the one present in IBM DOCX4J.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class ChallengePerformanceTest
         extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 6000;
-    private static final int LCS = 5000;
+    private static final int TOTAL = 600;
+    private static final int LCS = 50;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -56,7 +56,6 @@ public class ChallengePerformanceTest
             @Override
             public void run() {
                 final IbmLcsLength ibmLcsLength = new IbmLcsLength(a, b);
-                ibmLcsLength.run();
                 assertEquals(LCS, ibmLcsLength.getLcs());
             }
         });
@@ -64,9 +63,8 @@ public class ChallengePerformanceTest
         tests.addTest("mine", new Runnable() {
             @Override
             public void run() {
-                final MyLcsLength myLcsLength =
-                        new MyLcsLength(a, b);
-                myLcsLength.run();
+                final LinearSpaceMyersLcsLength myLcsLength =
+                        new LinearSpaceMyersLcsLength(a, b);
                 assertEquals(LCS, myLcsLength.getLcs());
             }
         });
@@ -74,91 +72,5 @@ public class ChallengePerformanceTest
 
     @Override
     public void addAssertions(PerformanceAssertion assertion) {
-    }
-
-    private static class IbmLcsLength extends LCS implements Runnable {
-        private static final LCSSettings LCS_SETTINGS = new LCSSettings();
-        private final Object[] a, b;
-        private int lcs;
-
-        public IbmLcsLength(List<?> a, List<?> b) {
-            this.a = a.toArray(new Object[a.size()]);
-            this.b = b.toArray(new Object[b.size()]);
-        }
-
-        public int getLcs() {
-            return lcs;
-        }
-
-        @Override
-        protected int getLength2() {
-            return b.length;
-        }
-
-        @Override
-        protected int getLength1() {
-            return a.length;
-        }
-
-        @Override
-        protected boolean isRangeEqual(int i1, int i2) {
-            return Objects.equals(a[i1], b[i2]);
-        }
-
-        @Override
-        protected void setLcs(int sl1, int sl2) {
-            lcs++;
-        }
-
-        @Override
-        protected void initializeLcs(int lcsLength) {
-        }
-
-        @Override
-        public void run() {
-            longestCommonSubsequence(LCS_SETTINGS);
-        }
-    }
-
-    private static class MyLcsLength
-            extends AbstractLinearSpaceMyersLcIndex
-            implements Runnable {
-        private final Object[] a, b;
-        private int lcs;
-
-        public MyLcsLength(List<?> a, List<?> b) {
-            this.a = a.toArray(new Object[a.size()]);
-            this.b = b.toArray(new Object[b.size()]);
-        }
-
-        public int getLcs() {
-            return lcs;
-        }
-
-        @Override
-        protected int getFirstSequenceLength() {
-            return a.length;
-        }
-
-        @Override
-        protected int getSecondSequenceLength() {
-            return b.length;
-        }
-
-        @Override
-        protected boolean equals(int x, int y) {
-            return Objects.equals(a[x], b[y]);
-        }
-
-        @Override
-        protected LcsItem match(int x, int y, int steps) {
-            lcs += steps;
-            return null;
-        }
-
-        @Override
-        public void run() {
-            calculateLcs();
-        }
     }
 }

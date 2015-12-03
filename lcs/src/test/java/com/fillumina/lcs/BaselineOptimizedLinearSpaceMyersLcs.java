@@ -1,11 +1,10 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
 
 /**
  * This is an old implementation of {@link LinearSpaceMyersLcs} used as
@@ -14,6 +13,7 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
+//TODO add a performance test with this baseline to see how much has been lost
 public class BaselineOptimizedLinearSpaceMyersLcs implements Lcs {
 
     @Override

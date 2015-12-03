@@ -12,8 +12,8 @@ import java.util.Objects;
  * @see AbstractLinearSpaceMyersLcSequence
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
-    private final Object[] a, b;
+public class LinearSpaceMyersLcs<T> extends AbstractLinearSpaceMyersLcSequence {
+    private final T[] a, b;
 
     /**
      * Performs the LCS calculation and return an object that can be
@@ -23,7 +23,7 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
      * @param b   second sequence
      * @return    result object that can be queried for various data
      */
-    public static <T> LinearSpaceMyersLcs lcs(
+    public static <T> LinearSpaceMyersLcs<T> lcs(
             final Collection<? extends T> a,
             final Collection<? extends T> b) {
         final int n = a.size();
@@ -32,8 +32,8 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
         final T[] oa = (T[]) a.toArray(new Object[n]);
         @SuppressWarnings("unchecked")
         final T[] ob = (T[]) b.toArray(new Object[m]);
-        final LinearSpaceMyersLcs linearSpaceMyersLcs =
-                new LinearSpaceMyersLcs(oa, ob);
+        final LinearSpaceMyersLcs<T> linearSpaceMyersLcs =
+                new LinearSpaceMyersLcs<>(oa, ob);
         linearSpaceMyersLcs.calculateLcs();
         return linearSpaceMyersLcs;
     }
@@ -46,23 +46,23 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
      * @param ob  second sequence
      * @return    result object that can be queried for various data
      */
-    public static <T> LinearSpaceMyersLcs lcs(final T[] oa, final T[] ob) {
-        final LinearSpaceMyersLcs linearSpaceMyersLcs =
-                new LinearSpaceMyersLcs(oa, ob);
+    public static <T> LinearSpaceMyersLcs<T> lcs(final T[] oa, final T[] ob) {
+        final LinearSpaceMyersLcs<T> linearSpaceMyersLcs =
+                new LinearSpaceMyersLcs<>(oa, ob);
         linearSpaceMyersLcs.calculateLcs();
         return linearSpaceMyersLcs;
     }
 
-    private LinearSpaceMyersLcs(Object[] a, Object[] b) {
+    private LinearSpaceMyersLcs(T[] a, T[] b) {
         this.a = a;
         this.b = b;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> calcaulateLcsList() {
+    public List<T> extractLcsList() {
         final List<T> lcs = new ArrayList<>(getLcsLength());
         for (int index : lcsIndexesOfTheFirstSequence()) {
-            lcs.add((T) a[index]);
+            lcs.add(a[index]);
         }
         return lcs;
     }

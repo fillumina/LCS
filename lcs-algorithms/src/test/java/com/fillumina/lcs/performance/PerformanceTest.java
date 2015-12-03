@@ -1,6 +1,5 @@
 package com.fillumina.lcs.performance;
 
-import com.fillumina.lcs.LinearSpaceMyersLcsAdaptor;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
@@ -15,6 +14,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
+// TODO do a performance test with all the myers implementation (including mine)
 public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 
     private static final int TOTAL = 600;
@@ -89,8 +89,8 @@ public class PerformanceTest extends AutoProgressionPerformanceTemplate {
 //                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs()));
 //        tests.addTest("BaselineLinearSpaceMyers",
 //                new LcsRunnable(new HyperOptimizedLinearSpaceMyersLcsAdaptor()));
-        tests.addTest("LinearSpaceMyers",
-                new LcsRunnable(new LinearSpaceMyersLcsAdaptor()));
+//        tests.addTest("LinearSpaceMyers",
+//                new LcsRunnable(new LinearSpaceMyersLcsAdaptor()));
 //        test.addTest("ParallelLinearSpaceMyers",
 //                new LcsRunnable(new ParallelLinearSpaceMyersLcsHelper()));
 //        tests.addTest("Ibm", new LcsRunnable(new IbmLcs()));

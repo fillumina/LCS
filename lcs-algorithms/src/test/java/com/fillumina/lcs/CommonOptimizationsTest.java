@@ -1,7 +1,6 @@
 package com.fillumina.lcs;
 
 import com.fillumina.lcs.CommonOptimizations;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.scoretable.BottomUpLcs;
 

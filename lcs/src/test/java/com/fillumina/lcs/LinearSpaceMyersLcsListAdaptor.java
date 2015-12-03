@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import com.fillumina.lcs.LcsSizeEvaluator;
 import java.util.List;
 
 /**
@@ -9,8 +8,8 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcsAdaptor implements LcsSizeEvaluator {
-    private LinearSpaceMyersLcs linearSpaceMyersLcs;
+public class LinearSpaceMyersLcsListAdaptor implements LcsSizeEvaluator {
+    private LinearSpaceMyersLcs<?> linearSpaceMyersLcs;
 
     @Override
     public int getLcs() {
@@ -18,8 +17,9 @@ public class LinearSpaceMyersLcsAdaptor implements LcsSizeEvaluator {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         linearSpaceMyersLcs = LinearSpaceMyersLcs.lcs(a, b);
-        return linearSpaceMyersLcs.calcaulateLcsList();
+        return (List<? extends T>) linearSpaceMyersLcs.extractLcsList();
     }
 }

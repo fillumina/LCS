@@ -1,6 +1,7 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.*;
+import com.fillumina.lcs.LcsSizeEvaluator;
+import com.fillumina.lcs.Lcs;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
