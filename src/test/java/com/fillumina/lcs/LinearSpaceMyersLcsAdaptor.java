@@ -19,7 +19,6 @@ public class LinearSpaceMyersLcsAdaptor implements LcsSizeEvaluator {
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         linearSpaceMyersLcs = LinearSpaceMyersLcs.lcs(a, b);
-        linearSpaceMyersLcs.calculateLcs();
         return linearSpaceMyersLcs.calcaulateLcsList();
     }
 }

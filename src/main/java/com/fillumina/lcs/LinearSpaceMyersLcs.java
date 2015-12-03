@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Myers Linear LCS Algorithm for collections and arrays.
+ * Myers Linear LCS Algorithm for collections and arrays. This implementation
+ * provides the LCS for collections and arrays.
  *
  * @see AbstractLinearSpaceMyersLcSequence
  * @author Francesco Illuminati <fillumina@gmail.com>
@@ -14,6 +15,14 @@ import java.util.Objects;
 public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
     private final Object[] a, b;
 
+    /**
+     * Performs the LCS calculation and return an object that can be
+     * queried for the results.
+     * @param <T> type of the lists
+     * @param a   first sequence
+     * @param b   second sequence
+     * @return    result object that can be queried for various data
+     */
     public static <T> LinearSpaceMyersLcs lcs(
             final Collection<? extends T> a,
             final Collection<? extends T> b) {
@@ -23,11 +32,30 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
         final T[] oa = (T[]) a.toArray(new Object[n]);
         @SuppressWarnings("unchecked")
         final T[] ob = (T[]) b.toArray(new Object[m]);
-        return new LinearSpaceMyersLcs(oa, ob);
+        final LinearSpaceMyersLcs linearSpaceMyersLcs =
+                new LinearSpaceMyersLcs(oa, ob);
+        linearSpaceMyersLcs.calculateLcs();
+        return linearSpaceMyersLcs;
     }
 
+    /**
+     * Performs the LCS calculation and return an object that can be
+     * queried for the results.
+     * @param <T> type of the lists
+     * @param oa  first sequence
+     * @param ob  second sequence
+     * @return    result object that can be queried for various data
+     */
     public static <T> LinearSpaceMyersLcs lcs(final T[] oa, final T[] ob) {
-        return new LinearSpaceMyersLcs(oa, ob);
+        final LinearSpaceMyersLcs linearSpaceMyersLcs =
+                new LinearSpaceMyersLcs(oa, ob);
+        linearSpaceMyersLcs.calculateLcs();
+        return linearSpaceMyersLcs;
+    }
+
+    private LinearSpaceMyersLcs(Object[] a, Object[] b) {
+        this.a = a;
+        this.b = b;
     }
 
     @SuppressWarnings("unchecked")
@@ -37,11 +65,6 @@ public class LinearSpaceMyersLcs extends AbstractLinearSpaceMyersLcSequence {
             lcs.add((T) a[index]);
         }
         return lcs;
-    }
-
-    private LinearSpaceMyersLcs(Object[] a, Object[] b) {
-        this.a = a;
-        this.b = b;
     }
 
     @Override

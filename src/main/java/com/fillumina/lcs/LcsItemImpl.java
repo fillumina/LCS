@@ -7,10 +7,10 @@ import java.util.NoSuchElementException;
 /**
  * Item of a linked list of ordered LCS matches.
  */
-public class LcsItemImpl extends AbstractCollection<LcsItem>
+class LcsItemImpl extends AbstractCollection<LcsItem>
         implements LcsItem {
     private static final long serialVersionUID = 1L;
-    public static final LcsItem NULL = new LcsItemImpl(-1, -1, 0);
+    static final LcsItemImpl NULL = new LcsItemImpl(-1, -1, 0);
     private final int x;
     private final int y;
     private final int steps;

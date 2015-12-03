@@ -118,6 +118,16 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
         countLcs("123AAAAAAA123", "123BBBBBBB123", 6);
     }
 
+    @Test(timeout = 500L)
+    public void shouldPassLengthTestSize() {
+        final int lcs = 500;
+        final int tot = 600;
+        RandomSequenceGenerator seqGen = new RandomSequenceGenerator(tot, lcs);
+        final LcsSizeEvaluator algorithm = getLcsSequenceGenerator();
+        List<?> result = algorithm.lcs(seqGen.getA(), seqGen.getB());
+        assertEquals(lcs, result.size());
+    }
+
     private void countLcs(String a, String b, int expectedLcs) {
         final List<Character> listA = CharacterLcsTestHelper.toList(a);
         final List<Character> listB = CharacterLcsTestHelper.toList(b);

@@ -3,6 +3,7 @@ package com.fillumina.lcs;
 import java.io.Serializable;
 
 /**
+ * Item of the LCS sequence.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -18,7 +19,7 @@ public interface LcsItem extends Serializable {
      */
     int getSecondSequenceIndex();
 
-    /** @return how many subsequent indexes are there. */
+    /** @return how many subsequent indexes matches. */
     int getSteps();
 
     /**
