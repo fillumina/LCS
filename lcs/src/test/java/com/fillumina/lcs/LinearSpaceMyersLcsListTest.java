@@ -54,9 +54,11 @@ public class LinearSpaceMyersLcsListTest extends AbstractLcsLengthTest  {
 
     @Test
     public void shouldCheckLcs() {
+        final int tot = 60;
         final int lcs = 50;
         final RandomSequenceGenerator seqGen =
-                new RandomSequenceGenerator(60, lcs);
+                new RandomSequenceGenerator(tot, lcs);
+
         final List<Integer> firstSequence = seqGen.getA();
         final List<Integer> secondSequence = seqGen.getB();
 

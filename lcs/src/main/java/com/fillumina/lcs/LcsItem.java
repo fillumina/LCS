@@ -3,7 +3,9 @@ package com.fillumina.lcs;
 import java.io.Serializable;
 
 /**
- * Item of the LCS sequence.
+ * Item of the LCS sequence. Note that the steps value doesn't correspond
+ * to the maximum sequence of consecutive matches: there could be another
+ * successive item with an element consecutive to the given one.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -19,7 +21,9 @@ public interface LcsItem extends Serializable {
      */
     int getSecondSequenceIndex();
 
-    /** @return how many subsequent indexes matches. */
+    /**
+     * @return how many subsequent indexes matches (counting the present one).
+     */
     int getSteps();
 
     /**

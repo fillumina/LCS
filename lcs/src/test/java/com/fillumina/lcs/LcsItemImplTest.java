@@ -1,6 +1,5 @@
 package com.fillumina.lcs;
 
-import java.util.Iterator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -9,6 +8,10 @@ import static org.junit.Assert.*;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class LcsItemImplTest {
+    private final LcsItemImpl a = new LcsItemImpl(0, 0, 1);
+    private final LcsItemImpl b = new LcsItemImpl(1, 1, 1);
+    private final LcsItemImpl c = new LcsItemImpl(2, 2, 1);
+    private final LcsItemImpl d = new LcsItemImpl(3, 3, 1);
 
     @Test
     public void shouldReturnX() {
@@ -47,10 +50,10 @@ public class LcsItemImplTest {
     public void shouldChainTwoItems() {
         LcsItemImpl head = new LcsItemImpl(0, 0, 0);
         LcsItemImpl tail = new LcsItemImpl(1, 1, 1);
+
         head.chain(tail);
-        final Iterator<LcsItem> iterator = head.iterator();
-        assertEquals(head, iterator.next());
-        assertEquals(tail, iterator.next());
+
+        assertSequence(head, tail);
     }
 
     @Test
@@ -58,80 +61,81 @@ public class LcsItemImplTest {
         LcsItemImpl head = new LcsItemImpl(0, 0, 0);
         LcsItemImpl middle = new LcsItemImpl(1, 1, 1);
         LcsItemImpl tail = new LcsItemImpl(2, 2, 2);
+
         head.chain(middle);
         middle.chain(tail);
-        final Iterator<LcsItem> iterator = head.iterator();
-        assertEquals(head, iterator.next());
-        assertEquals(middle, iterator.next());
-        assertEquals(tail, iterator.next());
+
+        assertSequence(head, middle, tail);
     }
 
+    /** Myers algorithm always add the lowest match to a chain. */
     @Test
-    public void shouldChainFourItems() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 0);
-        LcsItemImpl b = new LcsItemImpl(1, 1, 1);
-        LcsItemImpl c = new LcsItemImpl(2, 2, 2);
-        LcsItemImpl d = new LcsItemImpl(3, 3, 3);
+    public void shouldChainFourItemsInA_WRONG_WayProduceWrongResults() {
         a.chain(b);
         c.chain(d);
         b.chain(c);
-        final Iterator<LcsItem> iterator = a.iterator();
-        assertEquals(a, iterator.next());
-        assertEquals(b, iterator.next());
-        assertEquals(c, iterator.next());
-        assertEquals(d, iterator.next());
+
+        // a is not updated after adding c and b
+        assertNotSame(4, a.size());
+
+        assertSequence(a, b, c, d);
     }
 
     @Test
-    public void shouldChainFourItemsInDifferentOrder() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 0);
-        LcsItemImpl b = new LcsItemImpl(1, 1, 1);
-        LcsItemImpl c = new LcsItemImpl(2, 2, 2);
-        LcsItemImpl d = new LcsItemImpl(3, 3, 3);
+    public void shouldChainFourItemsInRightOrder() {
         c.chain(d);
         b.chain(c);
         a.chain(b);
-        final Iterator<LcsItem> iterator = a.iterator();
-        assertEquals(a, iterator.next());
-        assertEquals(b, iterator.next());
-        assertEquals(c, iterator.next());
-        assertEquals(d, iterator.next());
+
+        assertEquals(4, a.size());
+        assertSequence(a, b, c, d);
     }
 
     @Test
     public void shouldGetTheSequenceLengthIfLenghtIsOne() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 1);
         assertEquals(1, a.size());
     }
 
     @Test
     public void shouldGetTheSequenceLengthIfLenghtIsTwo() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 1);
-        LcsItemImpl b = new LcsItemImpl(1, 1, 1);
         a.chain(b);
         assertEquals(2, a.size());
     }
 
     @Test
     public void shouldGetTheSequenceLengthIfLenghtIsThree() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 1);
-        LcsItemImpl b = new LcsItemImpl(1, 1, 1);
-        LcsItemImpl c = new LcsItemImpl(2, 2, 1);
         b.chain(c);
         a.chain(b);
         assertEquals(3, a.size());
+        assertSequence(a, b, c);
     }
 
     @Test
     public void shouldGetTheSequenceLengthIfLenghtIsFour() {
-        LcsItemImpl a = new LcsItemImpl(0, 0, 1);
-        LcsItemImpl b = new LcsItemImpl(1, 1, 1);
-        LcsItemImpl c = new LcsItemImpl(2, 2, 1);
-        LcsItemImpl d = new LcsItemImpl(3, 3, 1);
-        b.chain(c);
         c.chain(d);
+        b.chain(c);
         a.chain(b);
-        // FIXME
-        //assertEquals(4, a.size());
+
+        assertEquals(4, a.size());
+        assertSequence(a, b, c , d);
+    }
+
+    @Test
+    public void shouldReturnAString() {
+        assertEquals("LcsItemImpl{xStart=0, yStart=0, steps=1}", a.toString());
+    }
+
+    @Test
+    public void shouldRecognizeNULL() {
+        assertEquals("LcsItemImpl{NULL}", LcsItemImpl.NULL.toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void assertSequence(LcsItem... items) {
+        int index = 0;
+        for (LcsItem item : (Iterable<LcsItem>)items[0]) {
+            assertEquals("mismatch on index " + index, items[index], item);
+            index++;
+        }
     }
 }

@@ -6,6 +6,9 @@ import java.util.NoSuchElementException;
 
 /**
  * Item of a linked list of ordered LCS matches.
+ * LcsItems are created by always adding a lower match to a chain of matches.
+ * Because of that the first element of the chain (the head) is always the last
+ * added one and so it contains an updated LCS length.
  */
 class LcsItemImpl extends AbstractCollection<LcsItem>
         implements LcsItem {
@@ -31,10 +34,7 @@ class LcsItemImpl extends AbstractCollection<LcsItem>
      * @return always return {@code this}.
      */
     LcsItemImpl chain(final LcsItemImpl other) {
-        LcsItemImpl current = this;
-        if (last != null) {
-            current = last;
-        }
+        LcsItemImpl current = (last != null) ? last : this;
         current.next = other;
         lcs += other.lcs;
         if (other.last != null) {
@@ -175,10 +175,11 @@ class LcsItemImpl extends AbstractCollection<LcsItem>
 
     @Override
     public String toString() {
+        final String className = getClass().getSimpleName();
         if (this == NULL) {
-            return "Match{NULL}";
+            return className + "{NULL}";
         }
-        return getClass().getSimpleName() +
+        return className +
                 "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
     }
 }
