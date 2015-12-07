@@ -9,11 +9,19 @@ import java.util.Map;
  * calculated branch using
  * <a href='https://en.wikipedia.org/wiki/Memoization'>memoization</a>.
  *
+ * This class is NOT thread safe!
+ *
  * @see RecursiveLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class MemoizedRecursiveLcs extends RecursiveLcs {
     private final Map<Long, List<?>> resultsMap = new HashMap<>();
+
+    @Override
+    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        resultsMap.clear();
+        return super.lcs(a, b); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, int n,

@@ -1,8 +1,6 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.LcsSizeEvaluator;
-import com.fillumina.lcs.*;
-import com.fillumina.lcs.myers.AbstractMyersLcsAdaptor;
 import com.fillumina.lcs.testutil.AbstractLcsLengthTest;
 
 /**

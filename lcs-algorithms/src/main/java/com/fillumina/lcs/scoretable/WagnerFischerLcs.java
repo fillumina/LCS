@@ -1,8 +1,11 @@
 package com.fillumina.lcs.scoretable;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.util.ArrayPrinter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * This algorithm uses a score table that needs to be initialized first and
@@ -16,6 +19,7 @@ import com.fillumina.lcs.Lcs;
  * @see <a href="http://stackoverflow.com/questions/30792428/wagner-fischer-algorithm">
  *  Stackoverflow
  * </a>
+ * @see WagnerFisherLevenshteinDistance
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -26,12 +30,12 @@ public class WagnerFischerLcs implements Lcs {
         int n = a.size();
         int m = b.size();
 
-        int[][] d = computeDistance(a, n, b, m);
-
-        return readLcs(n, m, d, a);
+        int[][] d = computeDistanceMatrix(a, n, b, m);
+//        System.out.println(ArrayPrinter.toString(a, b, d));
+        return backtrack(d, n, m, a);
     }
 
-    private <T> int[][] computeDistance(List<? extends T> a, int n,
+    private <T> int[][] computeDistanceMatrix(List<? extends T> a, int n,
             List<? extends T> b, int m) {
         int[][] d = new int[n+1][m+1];
 
@@ -48,52 +52,58 @@ public class WagnerFischerLcs implements Lcs {
         // table creation
         for (int j=1; j<=m; j++) {
             for (int i=1; i<=n; i++) {
-                if (a.get(i-1).equals(b.get(j-1))) {
+                // lists start from 0
+                if (Objects.equals(a.get(i-1), b.get(j-1))) {
                     d[i][j] = d[i-1][j-1];
                 } else {
-                    d[i][j] = 1 + min(
-                            d[i-1][j],      // deletion
-                            d[i][j-1],      // insertion
-                            d[i-1][j-1]);   // substitution
+                    // modified to accomplish LCS in which the only operations
+                    // are add and remove
+                    d[i][j] = 1 + Math.min(d[i-1][j], d[i][j-1]);
                 }
             }
         }
         return d;
     }
 
-    private<T> List<? extends T> readLcs(int m, int n, int[][] d,
-            List<? extends T> s) {
-        int lcsLength = d[m][n];
-        List<T> lcs = new ArrayList<>(lcsLength);
-        T se;
-        // the table is read forward
-        int i = 0, j = 0;
-        while (i < m && j < n) {
-            se = s.get(i);
-            if (d[i][j] == d[i+1][j+1]) { // equals
-                lcs.add(se);
-                i++;
-                j++;
-            } else if (d[i+1][j] < d[i][j+1]) {
-                i++;
-            } else {
-                j++;
+    private <T> List<? extends T> backtrack(int[][] d, int n, int m, List<T> a) {
+        int lcs = (n + m - d[n][m]) >> 1;
+        List<T> lcsSeq = new ArrayList<>(lcs);
+        int i = n, j = m;
+        while (i>0 && j>0) {
+            switch (minIndex(d[i-1][j-1], d[i-1][j], d[i][j-1])) {
+                case 1:
+                    if (d[i][j] == d[i-1][j-1]) {
+                        T value = a.get(i-1);
+                        lcsSeq.add(value);
+                    }
+                    i--;
+                    j--;
+                    break;
+
+                case 2:
+                    i--;
+                    break;
+
+                case 3:
+                    j--;
+                    break;
             }
         }
-        return lcs;
+        Collections.reverse(lcsSeq);
+        return lcsSeq;
     }
 
-    static int min(int a, int b, int c) {
+    static int minIndex(int a, int b, int c) {
         if (a < b) {
             if (c < a) {
-                return c;
+                return 3;
             }
-            return a;
+            return 1;
         } else {
             if (c < b) {
-                return c;
+                return 3;
             }
-            return b;
+            return 2;
         }
     }
 }

@@ -20,7 +20,7 @@ import com.fillumina.lcs.Lcs;
  * a match from the farthest distance possible (because they always start from
  * the beginning of a row in the score table).
  * This implementation tries to be
- * as close as possible to the one described by author on his paper.
+ * as close as possible to the one described by the author on his paper.
  *
  * @see
  * <a href="http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-of">

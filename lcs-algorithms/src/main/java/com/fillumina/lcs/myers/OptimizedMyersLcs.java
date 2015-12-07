@@ -86,7 +86,7 @@ public class OptimizedMyersLcs implements Lcs {
             x = xStart;
         }
         // the snakes are collected backwards
-        List<T> list = Arrays.asList(result);
+        List<T> list = Arrays.asList(result); //TODO use better code
         return list.subList(index+1, max);
     }
 }

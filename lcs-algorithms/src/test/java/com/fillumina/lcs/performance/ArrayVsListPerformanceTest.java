@@ -1,4 +1,4 @@
-package com.fillumina.lcs.other;
+package com.fillumina.lcs.performance;
 
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;

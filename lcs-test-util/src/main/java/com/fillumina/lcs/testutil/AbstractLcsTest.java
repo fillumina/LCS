@@ -106,7 +106,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     @Test(timeout = 1_000L)
     public void shouldWorkHORSEBACK() {
         lcs("HORSEBACK", "SNOWFLAKE")
-                .assertResult("OAE", "OAK", "SAK");
+                .assertResult("OAK", "SAK");
     }
 
     @Test(timeout = 1_000L)

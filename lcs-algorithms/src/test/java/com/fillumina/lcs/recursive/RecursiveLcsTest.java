@@ -4,7 +4,6 @@ import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Test;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.recursive.RecursiveLcs;
 
 /**
  *
