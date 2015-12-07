@@ -2,7 +2,6 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.util.BidirectionalArray;
 import com.fillumina.lcs.util.BidirectionalVector;
-import com.fillumina.lcs.util.OneBasedVector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,14 +30,11 @@ public class ReverseMyersLcs implements Lcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        OneBasedVector<? extends T> va = new OneBasedVector<>(a);
-        OneBasedVector<? extends T> vb = new OneBasedVector<>(b);
-        List<Snake> snakes = lcsMyers(va, vb);
-        return extractLcs(snakes, va);
+        List<Snake> snakes = lcsMyers(a, b);
+        return extractLcs(snakes, a);
     }
 
-    private <T> List<Snake> lcsMyers(OneBasedVector<? extends T> a,
-            OneBasedVector<? extends T> b) {
+    private <T> List<Snake> lcsMyers(List<? extends T> a, List<? extends T> b) {
         final int n = a.size();
         final int m = b.size();
         if (n==0 || m==0) {
@@ -65,7 +61,7 @@ public class ReverseMyersLcs implements Lcs {
                 }
                 y = x - k;
                 while (x > 0 && y > 0 && x <= n && y <= m &&
-                        Objects.equals(a.get(x), b.get(y))) {
+                        Objects.equals(a.get(x - 1), b.get(y - 1))) {
                     x--;
                     y--;
                 }
@@ -115,11 +111,11 @@ public class ReverseMyersLcs implements Lcs {
 
     /** @return the common subsequence elements. */
     private <T> List<? extends T> extractLcs(List<Snake> snakes,
-            OneBasedVector<? extends T> a) {
+            List<? extends T> a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int x=snake.xStart + 1; x<=snake.xMid; x++) {
-                list.add(a.get(x));
+                list.add(a.get(x - 1));
             }
         }
         return list;
