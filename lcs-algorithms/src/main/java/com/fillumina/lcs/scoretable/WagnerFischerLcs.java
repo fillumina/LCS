@@ -2,14 +2,15 @@ package com.fillumina.lcs.scoretable;
 
 import java.util.List;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.util.ArrayPrinter;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * This algorithm uses a score table that needs to be initialized first and
- * it's read forward starting from the top-left (1975).
+ * This algorithm is an adaptation from the original used to calculate the
+ * Levenshtein distance. Because LCS doesn't account for substitutions the
+ * correspondent code was left out. It builds a score table that needs to
+ * be initialized first and then it is read backward to give the solution.
+ *
  * <p>
  * <img src="WagnerFisher.gif" />
  *
@@ -67,14 +68,14 @@ public class WagnerFischerLcs implements Lcs {
 
     private <T> List<? extends T> backtrack(int[][] d, int n, int m, List<T> a) {
         int lcs = (n + m - d[n][m]) >> 1;
-        List<T> lcsSeq = new ArrayList<>(lcs);
+        @SuppressWarnings("unchecked")
+        T[] lcsSeq = (T[]) new Object[lcs];
         int i = n, j = m;
         while (i>0 && j>0) {
             switch (minIndex(d[i-1][j-1], d[i-1][j], d[i][j-1])) {
                 case 1:
                     if (d[i][j] == d[i-1][j-1]) {
-                        T value = a.get(i-1);
-                        lcsSeq.add(value);
+                        lcsSeq[--lcs] = a.get(i-1);
                     }
                     i--;
                     j--;
@@ -89,8 +90,7 @@ public class WagnerFischerLcs implements Lcs {
                     break;
             }
         }
-        Collections.reverse(lcsSeq);
-        return lcsSeq;
+        return Arrays.asList(lcsSeq);
     }
 
     static int minIndex(int a, int b, int c) {

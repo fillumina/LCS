@@ -18,6 +18,7 @@ import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
 import com.fillumina.lcs.scoretable.BottomUpLcs;
 import com.fillumina.lcs.scoretable.SmithWatermanLcs;
+import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
@@ -74,16 +75,16 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     @Override
     public void addTests(TestContainer tests) {
-        // this is WAY slower than anything else (more than 100 times)
+        // these are WAY slower than anything else (always avoid recursing)!
 //        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
-        tests.addTest("MemoizedRecursive",
-                new LcsRunnable(new MemoizedRecursiveLcs()));
+//        tests.addTest("MemoizedRecursive",
+//                new LcsRunnable(new MemoizedRecursiveLcs()));
 
         tests.addTest("BottomUp", new LcsRunnable(new BottomUpLcs()));
         tests.addTest("SmithWaterman",
                 new LcsRunnable(new SmithWatermanLcs()));
-//        tests.addTest("WagnerFischer",
-//                new LcsRunnable(new WagnerFischerLcs()));
+        tests.addTest("WagnerFischer",
+                new LcsRunnable(new WagnerFischerLcs()));
 
 
         tests.addTest("HirschbergLinearSpaceAlgorithm",
