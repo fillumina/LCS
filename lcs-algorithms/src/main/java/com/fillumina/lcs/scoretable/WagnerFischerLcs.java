@@ -7,10 +7,10 @@ import java.util.Objects;
 
 /**
  * This algorithm is an adaptation from the original used to calculate the
- * Levenshtein distance. Because LCS doesn't account for substitutions the
- * correspondent code was left out. It builds a score table that needs to
+ * Levenshtein distance between two sequences.
+ * Because LCS doesn't account for substitutions the
+ * correspondent code is left out. It builds a score table that needs to
  * be initialized first and then it is read backward to give the solution.
- *
  * <p>
  * <img src="WagnerFisher.gif" />
  *
@@ -33,7 +33,7 @@ public class WagnerFischerLcs implements Lcs {
 
         int[][] d = computeDistanceMatrix(a, n, b, m);
 //        System.out.println(ArrayPrinter.toString(a, b, d));
-        return backtrack(d, n, m, a);
+        return backtrack(n, m, d, a);
     }
 
     private <T> int[][] computeDistanceMatrix(List<? extends T> a, int n,
@@ -66,7 +66,7 @@ public class WagnerFischerLcs implements Lcs {
         return d;
     }
 
-    private <T> List<? extends T> backtrack(int[][] d, int n, int m, List<T> a) {
+    private <T> List<? extends T> backtrack(int n, int m, int[][] d, List<T> a) {
         int lcs = (n + m - d[n][m]) >> 1;
         @SuppressWarnings("unchecked")
         T[] lcsSeq = (T[]) new Object[lcs];

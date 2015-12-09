@@ -4,6 +4,10 @@ import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Test;
 import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.recursive.RecursiveLcs.Stack;
+import java.util.Arrays;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -16,11 +20,10 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         return new RecursiveLcs() {
 
             @Override
-            public <T> List<? extends T> lcs(
-                    List<? extends T> a, int n,
+            <T> Stack<T> recursiveLcs(List<? extends T> a, int n,
                     List<? extends T> b, int m) {
                 count(a, b);
-                return super.lcs(a, n, b, m);
+                return super.recursiveLcs(a, n, b, m);
             }
         };
     }
@@ -51,4 +54,64 @@ public class RecursiveLcsTest extends AbstractLcsTest {
     public void shouldPerformRandomLengthTests() {
         randomLcs(7, 4, 100);
     }
+
+    @Test
+    public void shouldModifyTheOriginalNotAffectTheOther()
+            throws CloneNotSupportedException {
+        Stack<Character> stack = new Stack<>('h')
+                .push('e')
+                .push('l')
+                .push('l')
+                .push('o');
+
+        final Stack<Character> appended = stack.push('!');
+
+        assertEquals(5, stack.size());
+        assertEquals(6, appended.size());
+    }
+
+    @Test
+    public void shouldModifyTwoStacks()
+            throws CloneNotSupportedException {
+        Stack<Character> a = new Stack<>('c')
+                .push('a');
+
+        final Stack<Character> cam = a.push('m');
+        final Stack<Character> cat = a.push('t');
+
+        assertEquals(Arrays.asList('c', 'a', 't'), cat.asList());
+        assertEquals(Arrays.asList('c', 'a', 'm'), cam.asList());
+    }
+
+    @Test
+    public void shouldReturnSizeOneForSingleton() {
+        Stack<Character> stack = new Stack<>('h');
+
+        assertEquals(1, stack.size());
+    }
+
+    @Test
+    public void shouldReturnTheList() {
+        Stack<Character> stack = new Stack<>('h')
+                .push('e')
+                .push('l')
+                .push('l')
+                .push('o');
+
+        assertEquals(Arrays.asList('h', 'e', 'l', 'l', 'o'),
+                stack.asList());
+    }
+
+    @Test
+    public void shouldReturnTheSingleton() {
+        Stack<Character> stack = new Stack<>('o');
+
+        assertEquals(Arrays.asList('o'), stack.asList());
+    }
+
+    @Test
+    public void shouldReturnNULL() {
+        assertTrue(Stack.NULL.asList().isEmpty());
+    }
+
 }

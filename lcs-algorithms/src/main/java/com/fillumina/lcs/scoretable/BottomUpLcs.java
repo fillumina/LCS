@@ -16,6 +16,7 @@ import com.fillumina.lcs.Lcs;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class BottomUpLcs implements Lcs {
+    private static final Cell DEFAULT_INVALID_CELL = new Cell(0, Move.INVALID);
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
@@ -27,7 +28,7 @@ public class BottomUpLcs implements Lcs {
         final int n = a.size();
         final int m = b.size();
 
-        final Grid grid = new Grid(n, m, new Cell(0, Move.INVALID));
+        final Grid grid = new Grid(n, m, DEFAULT_INVALID_CELL);
 
         Cell cell;
         int left, over;
@@ -102,7 +103,6 @@ public class BottomUpLcs implements Lcs {
     }
 
     private static class Cell {
-
         private final int len;
         private final Move move;
 

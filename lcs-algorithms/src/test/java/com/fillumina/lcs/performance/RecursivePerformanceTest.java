@@ -7,18 +7,9 @@ import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.Lcs;
-import com.fillumina.lcs.hirschberg.HirschbergLinearSpaceAlgorithmLcs;
-import com.fillumina.lcs.hirschberg.OptimizedHirschbergLinearSpaceLcs;
-import com.fillumina.lcs.myers.MyersLcs;
-import com.fillumina.lcs.myers.OptimizedMyersLcs;
-import com.fillumina.lcs.myers.RLinearSpaceMyersLcs;
-import com.fillumina.lcs.myers.ReverseMyersLcs;
 import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.recursive.RecursiveLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
-import com.fillumina.lcs.scoretable.BottomUpLcs;
-import com.fillumina.lcs.scoretable.SmithWatermanLcs;
-import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -26,10 +17,10 @@ import static org.junit.Assert.assertEquals;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 // TODO do a performance test with all the myers implementation (including mine)
-public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
+public class RecursivePerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 60;
-    private static final int LCS = 40;
+    private static final int TOTAL = 15;
+    private static final int LCS = 10;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -38,10 +29,10 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     public static void main(String[] args) {
         System.out.println("performance evaluation, please wait...");
-        new AlgorithmsPerformanceTest().executeWithIntermediateOutput();
+        new RecursivePerformanceTest().executeWithIntermediateOutput();
     }
 
-    public AlgorithmsPerformanceTest() {
+    public RecursivePerformanceTest() {
         super();
         RandomSequenceGenerator generator =
                 new RandomSequenceGenerator(TOTAL, LCS, SEED);
@@ -66,35 +57,16 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(100);
+        config.setBaseIterations(30);
         config.setTimeout(30, TimeUnit.MINUTES);
         config.setMaxStandardDeviation(2);
     }
 
     @Override
     public void addTests(TestContainer tests) {
-        // these are WAY slower than anything else (always avoid recursing)!
-//        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
-//        tests.addTest("MemoizedRecursive",
-//                new LcsRunnable(new MemoizedRecursiveLcs()));
-
-        tests.addTest("BottomUp", new LcsRunnable(new BottomUpLcs()));
-        tests.addTest("SmithWaterman",
-                new LcsRunnable(new SmithWatermanLcs()));
-        tests.addTest("WagnerFischer",
-                new LcsRunnable(new WagnerFischerLcs()));
-
-
-        tests.addTest("HirschbergLinearSpaceAlgorithm",
-                new LcsRunnable(new HirschbergLinearSpaceAlgorithmLcs()));
-        tests.addTest("OptimizedHirschbergLinearSpace",
-                new LcsRunnable(new OptimizedHirschbergLinearSpaceLcs()));
-
-        tests.addTest("Myers", new LcsRunnable(new MyersLcs()));
-        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs()));
-        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs()));
-        tests.addTest("RLinearSpaceMyers",
-                new LcsRunnable(new RLinearSpaceMyersLcs()));
+        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
+        tests.addTest("MemoizedRecursive",
+                new LcsRunnable(new MemoizedRecursiveLcs()));
     }
 
     @Override

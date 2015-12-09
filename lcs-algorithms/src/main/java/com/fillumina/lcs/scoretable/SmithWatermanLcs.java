@@ -24,7 +24,7 @@ public class SmithWatermanLcs implements Lcs {
 
         int[][] d = new int[n + 1][m + 1];
 
-        // row 0 and column 0 are initialized to 0 already
+        // row 0 and column 0 are initialized to 0 already by java
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (Objects.equals(a.get(i), b.get(j))) {
@@ -41,7 +41,7 @@ public class SmithWatermanLcs implements Lcs {
         // read the substring out from the matrix
         @SuppressWarnings("unchecked")
         T[] sb = (T[]) new Object[index];
-        index--;
+        index--; // last index
         for (int x = n, y = m; x != 0 && y != 0;) {
             if (d[x][y] == d[x - 1][y]) {
                 x--;
