@@ -66,8 +66,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(100);
-        config.setTimeout(30, TimeUnit.MINUTES);
+        config.setBaseIterations(1_000);
+        config.setTimeout(360, TimeUnit.SECONDS);
         config.setMaxStandardDeviation(2);
     }
 

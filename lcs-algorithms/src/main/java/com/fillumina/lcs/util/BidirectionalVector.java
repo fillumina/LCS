@@ -8,7 +8,6 @@ public class BidirectionalVector {
     private final int size;
 
     /**
-     *
      * @param size vector indexes goes from {@code -size} to {@code size}
      *             extremities excluded.
      */

@@ -43,7 +43,6 @@ public class ReverseMyersLcs implements Lcs {
         final int dmax = n + m + 1;
         final int delta = n - m;
 
-        //BidirectionalArray vv = new BidirectionalArray(dmax);
         BidirectionalVector[] vv = new BidirectionalVector[dmax];
         BidirectionalVector v = new BidirectionalVector(dmax);
 
@@ -60,7 +59,7 @@ public class ReverseMyersLcs implements Lcs {
                     x = next - 1;   // left
                 }
                 y = x - k;
-                while (x > 0 && y > 0 && x <= n && y <= m &&
+                while (x > 0 && y > 0 &&
                         Objects.equals(a.get(x - 1), b.get(y - 1))) {
                     x--;
                     y--;
@@ -80,11 +79,11 @@ public class ReverseMyersLcs implements Lcs {
     private List<Snake> calculateSolution(int lastD, BidirectionalVector[] vs,
             int xLast, int yLast, int delta, int n, int m) {
         List<Snake> snakes = new ArrayList<>();
+        int d, next, prev, xMid, yMid, xEnd, yEnd;
 
         int xStart = xLast;
         int yStart = yLast;
 
-        int d, next, prev, xMid, yMid, xEnd, yEnd;
         for (d = lastD; d >= 0 && xStart < n && yStart < m; d--) {
             int k = xStart - yStart;
 
@@ -101,7 +100,7 @@ public class ReverseMyersLcs implements Lcs {
             }
             yMid = xMid - k;
 
-            snakes.add(new Snake(xStart, yStart, xMid, yMid, xEnd, yEnd));
+            snakes.add(new Snake(xStart, yStart, xMid, yMid));
 
             xStart = xEnd;
             yStart = yEnd;
@@ -129,23 +128,19 @@ public class ReverseMyersLcs implements Lcs {
      */
     static class Snake {
 
-        public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
+        public final int xStart, yStart, xMid, yMid;
 
-        public Snake(int xStart, int yStart, int xMid, int yMid, int xEnd,
-                int yEnd) {
+        public Snake(int xStart, int yStart, int xMid, int yMid) {
             this.xStart = xStart;
             this.yStart = yStart;
             this.xMid = xMid;
             this.yMid = yMid;
-            this.xEnd = xEnd;
-            this.yEnd = yEnd;
         }
 
         @Override
         public String toString() {
             return "Snake{" + "xStart=" + xStart + ", yStart=" + yStart +
-                    ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
-                    ", yEnd=" + yEnd + '}';
+                    ", xMid=" + xMid + ", yMid=" + yMid + '}';
         }
     }
 }

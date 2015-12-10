@@ -61,8 +61,7 @@ public class MyersLcs implements Lcs {
                     x = prev + 1;   // right
                 }
                 y = x - k;
-                while (x >= 0 && y >= 0 && x < n && y < m &&
-                        Objects.equals(a.get(x), b.get(y))) {
+                while (x < n && y < m && Objects.equals(a.get(x), b.get(y))) {
                     x++;
                     y++;
                 }
@@ -84,16 +83,13 @@ public class MyersLcs implements Lcs {
     private List<Snake> calculateSolution(int lastD,
             BidirectionalVector[] vv, int xLast, int yLast) {
         List<Snake> snakes = new ArrayList<>();
+        int xStart, yStart, xMid, yMid, next, prev;
 
-        int x = xLast;
-        int y = yLast;
+        int xEnd = xLast;
+        int yEnd = yLast;
 
-        int d, xStart, yStart, xMid, yMid, xEnd, yEnd, next, prev;
-        for (d = lastD; d >= 0 && x > 0 && y > 0; d--) {
-            int k = x - y;
-
-            xEnd = x;
-            yEnd = y;
+        for (int d = lastD; d >= 0 && xEnd > 0 && yEnd > 0; d--) {
+            int k = xEnd - yEnd;
 
             next = vv[d].get(k + 1);
             prev = vv[d].get(k - 1);
@@ -109,10 +105,10 @@ public class MyersLcs implements Lcs {
 
             yMid = xMid - k;
 
-            snakes.add(new Snake(xStart, yStart, xMid, yMid, xEnd, yEnd));
+            snakes.add(new Snake(xMid, yMid, xEnd, yEnd));
 
-            x = xStart;
-            y = yStart;
+            xEnd = xStart;
+            yEnd = yStart;
         }
         // the snakes are collected backwards
         Collections.reverse(snakes);
@@ -137,12 +133,9 @@ public class MyersLcs implements Lcs {
      * or horizontal edge going from Start to Mid.
      */
     protected static class Snake  {
-        public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
+        public final int xMid, yMid, xEnd, yEnd;
 
-        public Snake(int xStart, int yStart, int xMid, int yMid, int xEnd,
-                int yEnd) {
-            this.xStart = xStart;
-            this.yStart = yStart;
+        public Snake(int xMid, int yMid, int xEnd, int yEnd) {
             this.xMid = xMid;
             this.yMid = yMid;
             this.xEnd = xEnd;
@@ -151,7 +144,7 @@ public class MyersLcs implements Lcs {
 
         @Override
         public String toString() {
-            return "Snake{" + "xStart=" + xStart + ", yStart=" + yStart +
+            return "Snake{" +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
                     ", yEnd=" + yEnd + '}';
         }
