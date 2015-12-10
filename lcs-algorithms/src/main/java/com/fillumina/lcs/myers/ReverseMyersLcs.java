@@ -1,6 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.util.BidirectionalArray;
 import com.fillumina.lcs.util.BidirectionalVector;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +43,8 @@ public class ReverseMyersLcs implements Lcs {
         final int dmax = n + m + 1;
         final int delta = n - m;
 
-        BidirectionalArray vv = new BidirectionalArray(dmax);
+        //BidirectionalArray vv = new BidirectionalArray(dmax);
+        BidirectionalVector[] vv = new BidirectionalVector[dmax];
         BidirectionalVector v = new BidirectionalVector(dmax);
 
         v.set(delta-1, n);
@@ -52,10 +52,10 @@ public class ReverseMyersLcs implements Lcs {
         int next, prev, x, y;
         for (int d = 0; d < dmax; d++) {
             for (int k = -d+delta; k <= d+delta; k += 2) {
-                next = v.get(k + 1); // left
-                prev = v.get(k - 1); // up
+                next = v.get(k + 1);
+                prev = v.get(k - 1);
                 if (k == d+delta || (k != -d+delta && prev < next)) {
-                    x = prev;   // up
+                    x = prev;       // up
                 } else {
                     x = next - 1;   // left
                 }
@@ -67,18 +67,18 @@ public class ReverseMyersLcs implements Lcs {
                 }
                 v.set(k, x);
                 if (x <= 0 && y <= 0) {
-                    vv.copyVectorOnLine(d, v);
+                    vv[d] = v.copy();
 
                     return calculateSolution(d, vv, x, y, delta, n, m);
                 }
             }
-            vv.copyVectorOnLine(d, v);
+            vv[d] = v.copy();
         }
         return Collections.<Snake>emptyList();
     }
 
-    private List<Snake> calculateSolution(int lastD,
-            BidirectionalArray vs, int xLast, int yLast, int delta, int n, int m) {
+    private List<Snake> calculateSolution(int lastD, BidirectionalVector[] vs,
+            int xLast, int yLast, int delta, int n, int m) {
         List<Snake> snakes = new ArrayList<>();
 
         int xStart = xLast;
@@ -88,8 +88,8 @@ public class ReverseMyersLcs implements Lcs {
         for (d = lastD; d >= 0 && xStart < n && yStart < m; d--) {
             int k = xStart - yStart;
 
-            next = vs.get(d, k + 1);
-            prev = vs.get(d, k - 1);
+            next = vs[d].get(k + 1);
+            prev = vs[d].get(k - 1);
             if (k == d+delta || (k != -d+delta && prev != 0 && prev < next)) {
                 xEnd = prev;
                 yEnd = prev - k + 1;

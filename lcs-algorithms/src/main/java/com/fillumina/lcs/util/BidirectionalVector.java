@@ -5,56 +5,49 @@ import java.util.Arrays;
 /** A vector that allows for negative indexes. */
 public class BidirectionalVector {
     private final int[] array;
-    private final int halfSize;
-
-    public BidirectionalVector(int size) {
-        this(size, 0);
-    }
-
-    public BidirectionalVector(int[] array) {
-        this.halfSize = array.length >> 1;
-        this.array = array;
-//        Arrays.fill(array, -999);
-    }
+    private final int size;
 
     /**
-     * @param size specify the positive size (the total size will be
-     *             {@code size * 2 + 1}.
-     * @param constant is always subtracted to the given index
+     *
+     * @param size vector indexes goes from {@code -size} to {@code size}
+     *             extremities excluded.
      */
-    public BidirectionalVector(int size, int constant) {
-        int length = size + Math.abs(constant);
-        this.array = new int[(length << 1) + 1];
-        this.halfSize = length - constant;
-        Arrays.fill(array, -999);
+    public BidirectionalVector(int size) {
+        this.size = size;
+        this.array = new int[(size << 1) + 1];
+    }
+
+    private BidirectionalVector(int[] array) {
+        this.size = array.length >> 1;
+        this.array = array;
     }
 
     public int get(int x) {
-        int index = halfSize + x;
-        if (index < 0 || index >= array.length) {
+        int index = size + x;
+        try {
+            return array[index];
+        } catch (IndexOutOfBoundsException e) {
             return -1;
         }
-        return array[index];
     }
 
     public void set(int x, int value) {
-        int index = halfSize + x;
-        if (index < 0 || index >= array.length) {
-            return;
+        try {
+            array[size + x] = value;
+        } catch (IndexOutOfBoundsException e) {
+            // ignore it
         }
-        array[index] = value;
-    }
-
-    public void copyTo(int[] vector) {
-        if (vector.length < array.length) {
-            throw new IllegalArgumentException("vector too small");
-        }
-        System.arraycopy(array, 0, vector, 0, array.length);
     }
 
     @Override
     public String toString() {
-        return "" + halfSize + ":" + Arrays.toString(array);
+        return "" + size + ":" + Arrays.toString(array);
     }
 
+    /** Same as {@link Object#clone()} but without throwing anything. */
+    public BidirectionalVector copy() {
+        int [] cloned = new int[array.length];
+        System.arraycopy(array, 0, cloned, 0, array.length);
+        return new BidirectionalVector(cloned);
+    }
 }

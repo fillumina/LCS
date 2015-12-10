@@ -9,7 +9,7 @@ import java.util.Collections;
 /**
  * The simplest LCS algorithm. It is based on recursion so it's quite
  * impractical (it's time is exponential) but it offers a very concise and
- * clear implementation (O(e^n)).
+ * clear implementation.
  *
  * @see MomoizedRecursiveLcs
  * @author Francesco Illuminati <fillumina@gmail.com>

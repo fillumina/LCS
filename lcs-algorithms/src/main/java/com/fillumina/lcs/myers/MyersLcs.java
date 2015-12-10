@@ -1,7 +1,6 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.util.BidirectionalVector;
-import com.fillumina.lcs.util.BidirectionalArray;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,20 +47,18 @@ public class MyersLcs implements Lcs {
         int m = b.size();
         int max = n + m + 1;
 
-        BidirectionalArray vv = new BidirectionalArray(max);
+        BidirectionalVector[] vv = new BidirectionalVector[max];
         BidirectionalVector v = new BidirectionalVector(max);
-
-        v.set(1, 0);
 
         int next, prev, x, y;
         for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {
-                next = v.get(k + 1); // down
-                prev = v.get(k - 1); // right
+                next = v.get(k + 1);
+                prev = v.get(k - 1);
                 if (k == -d || (k != d && prev < next)) {
-                    x = next;
+                    x = next;       // down
                 } else {
-                    x = prev + 1;
+                    x = prev + 1;   // right
                 }
                 y = x - k;
                 while (x >= 0 && y >= 0 && x < n && y < m &&
@@ -73,19 +70,19 @@ public class MyersLcs implements Lcs {
                 if (x >= n && y >= m) {
                     // reached the end of the 'table'
                     if (d < max) {
-                        vv.copyVectorOnLine(d, v);
+                        vv[d] = v.copy();
                     }
 
                     return calculateSolution(d, vv, x, y);
                 }
             }
-            vv.copyVectorOnLine(d, v);
+            vv[d] = v.copy();
         }
         return Collections.<Snake>emptyList();
     }
 
     private List<Snake> calculateSolution(int lastD,
-            BidirectionalArray vv, int xLast, int yLast) {
+            BidirectionalVector[] vv, int xLast, int yLast) {
         List<Snake> snakes = new ArrayList<>();
 
         int x = xLast;
@@ -98,8 +95,8 @@ public class MyersLcs implements Lcs {
             xEnd = x;
             yEnd = y;
 
-            next = vv.get(d, k + 1);
-            prev = vv.get(d, k - 1);
+            next = vv[d].get(k + 1);
+            prev = vv[d].get(k - 1);
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
                 yStart = next - k - 1;

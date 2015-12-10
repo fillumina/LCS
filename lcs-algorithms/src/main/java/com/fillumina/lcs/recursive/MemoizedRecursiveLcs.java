@@ -8,7 +8,7 @@ import java.util.Map;
  * Improves the recursive algorithm by avoiding recurring on an already
  * calculated branch using
  * <a href='https://en.wikipedia.org/wiki/Memoization'>memoization</a>.
- *
+ * <p>
  * This class is NOT thread safe!
  *
  * @see RecursiveLcs

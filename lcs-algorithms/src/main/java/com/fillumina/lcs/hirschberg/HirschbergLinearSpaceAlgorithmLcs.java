@@ -53,10 +53,11 @@ public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
         }
     }
 
-    private int indexOfBiggerSum(int[] fw, int[] bw) {
-        int tmp, k = -1, max = -1, m = fw.length - 1;
+    /** Returns the index in which the two LCS meet. */
+    private int indexOfBiggerSum(int[] forward, int[] backward) {
+        int tmp, k = -1, max = -1, m = forward.length - 1;
         for (int j = 0; j <= m; j++) {
-            tmp = fw[j] + bw[m - j];
+            tmp = forward[j] + backward[m - j];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -65,13 +66,19 @@ public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
         return k;
     }
 
+    /**
+     * Uses the Smith-Waterman algorithm to calculate the score table
+     * (or distance table) using only 2 rows.
+     * @see com.fillumina.lcs.scoretable.SmithWatermanLcs
+     * @return the last row of the score table
+     */
     private <T> int[] calculateLcs(List<? extends T> a, List<? extends T> b) {
         final int m = b.size();
 
         int[][] array = new int[2][m+1];
-        int[] tmp;
         int[] curr = array[0];
         int[] prev = array[1];
+        int[] tmp;
 
         for (T x : a) {
             // swap(curr, prev)
@@ -79,6 +86,7 @@ public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
             curr = prev;
             prev = tmp;
 
+            // it's the Smith-Waterman algorithm
             for (int i=0; i<m; i++) {
                 T y = b.get(i);
                 if (Objects.equals(x, y)) {
@@ -106,6 +114,7 @@ public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
         return l;
     }
 
+    /** The given list is not modified. */
     static <T> List<T> reverse(final List<T> list) {
         List<T> l = new ArrayList<>(list);
         Collections.reverse(l);
