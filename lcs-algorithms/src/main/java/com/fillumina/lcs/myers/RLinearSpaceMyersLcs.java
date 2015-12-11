@@ -1,5 +1,6 @@
 package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.util.BidirectionalVector;
 import com.fillumina.lcs.util.VList;
 import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
@@ -267,7 +268,9 @@ public class RLinearSpaceMyersLcs implements Lcs {
     }
 
     public static abstract class Snake implements Iterable<Snake> {
-        public final int xStart, yStart, xMid, yMid, xEnd, yEnd;
+        public final int xStart, yStart;
+        public final int xMid, yMid;
+        public final int xEnd, yEnd;
         private Snake next;
 
         private Snake(
@@ -299,8 +302,6 @@ public class RLinearSpaceMyersLcs implements Lcs {
             return head;
         }
 
-        abstract public boolean isDiagonal();
-
         abstract public <T> void addEquals(List<? super T> result, VList<T> a);
 
         @Override
@@ -327,8 +328,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
             return getClass().getSimpleName() +
                     "{xStart=" + xStart + ", yStart=" + yStart +
                     ", xMid=" + xMid + ", yMid=" + yMid + ", xEnd=" + xEnd +
-                    ", yEnd=" + yEnd +
-                    (isDiagonal() ? " diagonal " : "") + '}';
+                    ", yEnd=" + yEnd + '}';
         }
     }
 
@@ -336,11 +336,6 @@ public class RLinearSpaceMyersLcs implements Lcs {
 
         public NullSnake(int xStart, int yStart, int xEnd, int yEnd) {
             super(xStart, yStart, xStart, yStart, xEnd, yEnd);
-        }
-
-        @Override
-        public boolean isDiagonal() {
-            return false;
         }
 
         @Override
@@ -354,11 +349,6 @@ public class RLinearSpaceMyersLcs implements Lcs {
         public ForwardSnake(int xStart, int yStart, int xMid,
                 int yMid, int xEnd, int yEnd) {
             super(xStart, yStart, xMid, yMid, xEnd, yEnd);
-        }
-
-        @Override
-        public boolean isDiagonal() {
-            return xMid + 1 <= xEnd;
         }
 
         @Override
@@ -377,11 +367,6 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
 
         @Override
-        public boolean isDiagonal() {
-            return xStart + 1 <= xMid;
-        }
-
-        @Override
         public <T> void addEquals(List<? super T> result, VList<T> a) {
             for (int x=xStart + 1; x <= xMid; x++) {
                 result.add(a.get(x-1));
@@ -389,48 +374,4 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
 
     }
-
-    public static class BidirectionalVector {
-        private final int[] array;
-        private final int halfSize;
-
-        public BidirectionalVector(int size) {
-            this(size, 0);
-        }
-
-        /**
-         * @param size specify the positive size (the total size will be
-         *             {@code size * 2 + 1}.
-         * @param constant is always subtracted to the given index
-         */
-        public BidirectionalVector(int size, int constant) {
-            int length = size + Math.abs(constant);
-            this.array = new int[(length << 1) + 1];
-            this.halfSize = length - constant;
-            Arrays.fill(array, -999);
-        }
-
-        public int get(int x) {
-            int index = halfSize + x;
-            if (index < 0 || index >= array.length) {
-                throw new AssertionError(x);
-            }
-            return array[index];
-        }
-
-        public void set(int x, int value) {
-            int index = halfSize + x;
-            if (index < 0 || index >= array.length) {
-                throw new AssertionError(x);
-            }
-            array[index] = value;
-        }
-
-        @Override
-        public String toString() {
-            return "" + halfSize + ":" + Arrays.toString(array);
-        }
-
-    }
-
 }

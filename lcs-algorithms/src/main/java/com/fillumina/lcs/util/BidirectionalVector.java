@@ -2,51 +2,53 @@ package com.fillumina.lcs.util;
 
 import java.util.Arrays;
 
-/** A vector that allows for negative indexes. */
+/**
+ *
+ * @author Francesco Illuminati <fillumina@gmail.com>
+ */
 public class BidirectionalVector {
-    private final int[] array;
-    private final int size;
 
-    /**
-     * @param size vector indexes goes from {@code -size} to {@code size}
-     *             extremities excluded.
-     */
+    private final int[] array;
+    private final int zero;
+
     public BidirectionalVector(int size) {
-        this.size = size;
-        this.array = new int[(size << 1) + 1];
+        this(size, 0);
     }
 
-    private BidirectionalVector(int[] array) {
-        this.size = array.length >> 1;
+    /**
+     * @param size specify the positive size (the total size will be
+     *             {@code size * 2 + 1}.
+     * @param offset is always subtracted to the given index
+     */
+    public BidirectionalVector(int size, int offset) {
+        int length = size + Math.abs(offset);
+        this.array = new int[(length << 1) + 1];
+        this.zero = length - offset;
+    }
+
+    private BidirectionalVector(int zero, int[] array) {
+        this.zero = zero;
         this.array = array;
     }
 
     public int get(int x) {
-        int index = size + x;
-        try {
-            return array[index];
-        } catch (IndexOutOfBoundsException e) {
-            return -1;
-        }
+        return array[zero + x];
     }
 
     public void set(int x, int value) {
-        try {
-            array[size + x] = value;
-        } catch (IndexOutOfBoundsException e) {
-            // ignore it
-        }
+        array[zero + x] = value;
     }
 
     @Override
     public String toString() {
-        return "" + size + ":" + Arrays.toString(array);
+        return "" + zero + ":" + Arrays.toString(array);
     }
 
     /** Same as {@link Object#clone()} but without throwing anything. */
     public BidirectionalVector copy() {
         int [] cloned = new int[array.length];
         System.arraycopy(array, 0, cloned, 0, array.length);
-        return new BidirectionalVector(cloned);
+        return new BidirectionalVector(zero, cloned);
     }
+
 }

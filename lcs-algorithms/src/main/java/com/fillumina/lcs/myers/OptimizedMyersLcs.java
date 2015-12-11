@@ -27,18 +27,16 @@ public class OptimizedMyersLcs implements Lcs {
         int max = n + m + 1;
 
         int size = (max << 1) + 1;
-        int[][] vv = new int[max][size];
-        int[] vNext, vPrev;
+        int[][] vv = new int[max][];
+        int[] v = new int[size];
 
         int maxk, next, prev, x=-1, y, d, k=-1, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
-            vPrev = vv[d == 0 ? 0 : d-1];
-            vNext = vv[d];
             for (k = -d; k <= d; k += 2) {
                 maxk = max + k;
-                next = vPrev[maxk + 1]; // down
-                prev = vPrev[maxk - 1]; // right
+                next = v[maxk + 1]; // down
+                prev = v[maxk - 1]; // right
                 if (k == -d || (k != d && prev < next)) {
                     x = next;
                 } else {
@@ -49,20 +47,24 @@ public class OptimizedMyersLcs implements Lcs {
                     x++;
                     y++;
                 }
-                vNext[maxk] = x;
+                v[maxk] = x;
                 if (x >= n && y >= m) {
+                    vv[d] = new int[size];
+                    System.arraycopy(v, 0, vv[d], 0, size);
                     break FILL_THE_TABLE;
                 }
             }
+            vv[d] = new int[size];
+            System.arraycopy(v, 0, vv[d], 0, size);
         }
 
+        int xStart, xMid, index = (n + m - d) >> 1;
         @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[max];
+        T[] result = (T[]) new Object[index];
 
-        int xStart, xMid, index = max-1;
         for (; d >= 0 && x > 0; d--) {
             maxk = max + k;
-            vNext = vv[d == 0 ? 0 : d-1];
+            int[] vNext = vv[d == 0 ? 0 : d-1];
 
             next = vNext[maxk + 1];
             prev = vNext[maxk - 1];
@@ -78,15 +80,14 @@ public class OptimizedMyersLcs implements Lcs {
 
             if (x != xMid) {
                 for (s=x-1; s>=xMid; s--) {
-                    result[index] = a[s];
                     index--;
+                    result[index] = a[s];
                 }
             }
 
             x = xStart;
         }
         // the snakes are collected backwards
-        List<T> list = Arrays.asList(result);
-        return list.subList(index+1, max);
+        return Arrays.asList(result);
     }
 }

@@ -44,7 +44,7 @@ public class ReverseMyersLcs implements Lcs {
         final int delta = n - m;
 
         BidirectionalVector[] vv = new BidirectionalVector[dmax];
-        BidirectionalVector v = new BidirectionalVector(dmax);
+        BidirectionalVector v = new BidirectionalVector(dmax, delta);
 
         v.set(delta-1, n);
 
