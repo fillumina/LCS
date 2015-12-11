@@ -6,7 +6,12 @@ import java.util.Objects;
 import com.fillumina.lcs.Lcs;
 
 /**
- * An optimization of the Myers algorithm.
+ * An optimization of the Myers algorithm that only copies the part of the
+ * vector which was actually used thus avoiding to access main memory to
+ * copy arrays elements which are not actually used by the algorithm.
+ * Main memory is really slow to access compared to local one (first and
+ * second level caches). Other optimizations like using arrays instead of
+ * list access and avoiding a method call are of marginal importance.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -30,9 +35,10 @@ public class OptimizedMyersLcs implements Lcs {
         int[][] vv = new int[max][];
         int[] v = new int[size];
 
-        int maxk=-1, next, prev, x=-1, y, d, k=-1, s;
+        int maxk, next, prev, x=-1, y, d, k=-1, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
+            size = (d<<1) + 3;
             for (k = -d; k <= d; k += 2) {
                 maxk = max + k;
                 next = v[maxk + 1]; // down
@@ -50,12 +56,12 @@ public class OptimizedMyersLcs implements Lcs {
                 v[maxk] = x;
                 if (x >= n && y >= m) {
                     vv[d] = new int[size];
-                    System.arraycopy(v, max-d-1, vv[d], max-d-1,  (d<<1) + 2);
+                    System.arraycopy(v, max-d-1, vv[d], 0, size);
                     break FILL_THE_TABLE;
                 }
             }
             vv[d] = new int[size];
-            System.arraycopy(v, max-d-1, vv[d], max-d-1, (d<<1) + 2);
+            System.arraycopy(v, max-d-1, vv[d], 0, size);
         }
 
         int xStart, xMid, index = (n + m - d) >> 1;
@@ -63,8 +69,8 @@ public class OptimizedMyersLcs implements Lcs {
         T[] result = (T[]) new Object[index];
 
         for (; d >= 0 && x > 0; d--) {
-            maxk = max + k;
-            int[] vNext = vv[d == 0 ? 0 : d-1];
+            maxk = d + 1 + k;
+            int[] vNext = vv[d];
 
             next = vNext[maxk + 1];
             prev = vNext[maxk - 1];
