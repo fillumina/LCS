@@ -1,6 +1,5 @@
 package com.fillumina.lcs.hirschberg;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.fillumina.lcs.Lcs;
@@ -56,10 +55,13 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             List<? extends T> a, int aStart, final int aBisect, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
+
         int[] forward = calculateLcsForward(
                 a, aStart, aBisect, b, bStart, bEnd, buffer);
+
         int[] backward = calculateLcsReverse(
                 a, aBisect, aEnd, b, bStart, bEnd, buffer);
+
         return indexOfBiggerSum(forward, backward, bStart, bEnd) ;
     }
 
@@ -67,13 +69,16 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             List<? extends T> a, int aStart, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
-        int[] curr = buffer[0];
-        zero(curr, bStart, bEnd + 1);
+        int[] curr = zero(buffer[0], bStart, bEnd + 1);
         int[] prev = buffer[2];
+        int[] tmp;
 
         for (int j=aStart; j<aEnd; j++) {
             T x = a.get(j);
-            System.arraycopy(curr, bStart, prev, bStart, bEnd - bStart + 1);
+            tmp = prev;
+            prev = curr;
+            curr = tmp;
+            curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
                 T y = b.get(i);
@@ -84,20 +89,26 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
                 }
             }
         }
-        return curr;
+        if (curr == buffer[2]) {
+            System.arraycopy(buffer[2], bStart, buffer[0], bStart, bEnd - bStart + 1);
+        }
+        return buffer[0];
     }
 
     private static <T> int[] calculateLcsReverse(
             List<? extends T> a, int aStart, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
-        int[] curr = buffer[1];
-        zero(curr, bStart, bEnd + 1);
+        int[] curr = zero(buffer[1], bStart, bEnd + 1);
         int[] prev = buffer[2];
+        int[] tmp;
 
         for (int j=aEnd-1; j>=aStart; j--) {
             T x = a.get(j);
-            System.arraycopy(curr, bStart, prev, bStart, bEnd - bStart + 1);
+            tmp = prev;
+            prev = curr;
+            curr = tmp;
+            curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
                 T y = b.get(bEnd - i + bStart - 1);
@@ -108,7 +119,10 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
                 }
             }
         }
-        return curr;
+        if (curr == buffer[2]) {
+            System.arraycopy(buffer[2], bStart, buffer[1], bStart, bEnd - bStart + 1);
+        }
+        return buffer[1];
     }
 
     private static int indexOfBiggerSum(int[] forward, int[] reverse,
@@ -124,10 +138,11 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
         return k;
     }
 
-    static void zero(int[] array, int from, int to) {
+    static int[] zero(int[] array, int from, int to) {
         for (int i = from; i < to; i++) {
             array[i] = 0;
         }
+        return array;
     }
 
     /** A list optimized for concatenation. */
