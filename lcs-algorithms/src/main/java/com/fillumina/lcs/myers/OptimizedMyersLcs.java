@@ -50,12 +50,12 @@ public class OptimizedMyersLcs implements Lcs {
                 v[maxk] = x;
                 if (x >= n && y >= m) {
                     vv[d] = new int[size];
-                    System.arraycopy(v, max-d-1, vv[d], max-d-1, max+d+1);
+                    System.arraycopy(v, max-d-1, vv[d], max-d-1,  (d<<1) + 2);
                     break FILL_THE_TABLE;
                 }
             }
             vv[d] = new int[size];
-            System.arraycopy(v, max-d-1, vv[d], max-d-1, max+d+1);
+            System.arraycopy(v, max-d-1, vv[d], max-d-1, (d<<1) + 2);
         }
 
         int xStart, xMid, index = (n + m - d) >> 1;
