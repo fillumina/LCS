@@ -30,7 +30,7 @@ public class OptimizedMyersLcs implements Lcs {
         int[][] vv = new int[max][];
         int[] v = new int[size];
 
-        int maxk, next, prev, x=-1, y, d, k=-1, s;
+        int maxk=-1, next, prev, x=-1, y, d, k=-1, s;
         FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
             for (k = -d; k <= d; k += 2) {
@@ -50,12 +50,12 @@ public class OptimizedMyersLcs implements Lcs {
                 v[maxk] = x;
                 if (x >= n && y >= m) {
                     vv[d] = new int[size];
-                    System.arraycopy(v, 0, vv[d], 0, size);
+                    System.arraycopy(v, max-d-1, vv[d], max-d-1, max+d+1);
                     break FILL_THE_TABLE;
                 }
             }
             vv[d] = new int[size];
-            System.arraycopy(v, 0, vv[d], 0, size);
+            System.arraycopy(v, max-d-1, vv[d], max-d-1, max+d+1);
         }
 
         int xStart, xMid, index = (n + m - d) >> 1;
