@@ -82,7 +82,7 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
 
             for (int i=bStart; i<bEnd; i++) {
                 T y = b.get(i);
-                if (x.equals(y)) {
+                if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);
@@ -102,6 +102,7 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
         int[] curr = zero(buffer[1], bStart, bEnd + 1);
         int[] prev = buffer[2];
         int[] tmp;
+        int offset = bEnd + bStart - 1;
 
         for (int j=aEnd-1; j>=aStart; j--) {
             T x = a.get(j);
@@ -111,8 +112,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
-                T y = b.get(bEnd - i + bStart - 1);
-                if (x.equals(y)) {
+                T y = b.get(offset - i);
+                if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);
@@ -127,9 +128,9 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
 
     private static int indexOfBiggerSum(int[] forward, int[] reverse,
             int start, int end) {
-        int tmp, k = -1, max = -1;
+        int tmp, k = -1, max = -1, offset = end + start;
         for (int j=start; j<=end; j++) {
-            tmp = forward[j] + reverse[end-j+start];
+            tmp = forward[j] + reverse[offset - j];
             if (tmp > max) {
                 max = tmp;
                 k = j;
@@ -168,7 +169,7 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
         @SuppressWarnings("unchecked")
         public boolean add(T e) {
             if (array == null) {
-                resize(10);
+                init(10);
             }
             try {
                 array[size++] = e;
@@ -187,23 +188,27 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             if (size == 0) {
                 return c;
             }
-            if (array == null || size + c.size > array.length) {
-                resize(size + c.size);
+            final int newsize = size + c.size;
+            if (array == null) {
+                init(newsize);
+            } else if (newsize > array.length) {
+                resize(newsize);
             }
             System.arraycopy(c.array, 0, array, size, c.size);
-            size += c.size;
+            size = newsize;
             return this;
         }
 
         @SuppressWarnings("unchecked")
+        private void init(final int length) {
+            this.array = (T[]) new Object[length];
+        }
+
+        @SuppressWarnings("unchecked")
         private void resize(final int length) {
-            if (this.array == null) {
-                this.array = (T[]) new Object[length];
-            } else {
-                Object[] tmp = new Object[length];
-                System.arraycopy(array, 0, tmp, 0, size);
-                this.array = (T[]) tmp;
-            }
+            Object[] tmp = new Object[length];
+            System.arraycopy(array, 0, tmp, 0, size);
+            this.array = (T[]) tmp;
         }
 
         @Override
