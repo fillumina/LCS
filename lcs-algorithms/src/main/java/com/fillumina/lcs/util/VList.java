@@ -8,19 +8,15 @@ import java.util.List;
 public class VList<T> {
 
     private final List<T> list;
-    private final int size;
     private final int start;
-    private final int end;
 
     public VList(List<T> list) {
-        this(list, 0, list == null ? 0 : list.size());
+        this(0, list);
     }
 
-    public VList(List<T> list, int start, int end) {
+    private VList(int start, List<T> list) {
         this.list = list;
         this.start = start;
-        this.end = end;
-        this.size = end - start;
     }
 
     /**
@@ -34,40 +30,16 @@ public class VList<T> {
      * Note that the first index is 1 and not 0.
      */
     public T get(int index) {
-        final int idx = calculateIndex(index);
-        if (idx < start || idx >= end) {
-            throw new IndexOutOfBoundsException(
-                    "index (size=" + size + "): " + index);
-        }
-        return list.get(idx);
+        return list.get(index);
     }
 
     @SuppressWarnings(value = "unchecked")
     public VList<T> subList(int fromIndex, int toIndex) {
-        if (toIndex < fromIndex) {
-            throw new IllegalArgumentException(
-                    "end index cannot be less than start");
-        }
-        if (fromIndex < 0 || fromIndex > size ||
-                toIndex < 0 || toIndex > size) {
-            throw new IndexOutOfBoundsException(
-                    "indexes cannot be outside interval " + start +
-                            " to " + end);
-        }
-        final int correctedFromIndex = calculateIndex(fromIndex);
-        int correctedToIndex = calculateIndex(toIndex);
-        if (correctedFromIndex + size < correctedToIndex) {
-            throw new IndexOutOfBoundsException("toIndex=" + toIndex);
-        }
-        return new VList<>(list, correctedFromIndex, correctedToIndex);
-    }
-
-    private int calculateIndex(int index) {
-        return start + index;
+        return new VList<>(start + fromIndex, list.subList(fromIndex, toIndex));
     }
 
     public int size() {
-        return size;
+        return list.size();
     }
 
     @Override
@@ -77,7 +49,7 @@ public class VList<T> {
         }
         StringBuilder buf = new StringBuilder().append('[');
         buf.append(get(0));
-        for (int i = 1; i < size;
+        for (int i = 1; i < list.size();
                 i++) {
             buf.append(", ").append(get(i));
         }
