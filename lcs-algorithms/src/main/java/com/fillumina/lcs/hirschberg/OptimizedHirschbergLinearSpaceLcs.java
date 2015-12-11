@@ -90,7 +90,9 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             }
         }
         if (curr == buffer[2]) {
-            System.arraycopy(buffer[2], bStart, buffer[0], bStart, bEnd - bStart + 1);
+            tmp = buffer[0];
+            buffer[0] = buffer[2];
+            buffer[2] = tmp;
         }
         return buffer[0];
     }
@@ -121,7 +123,9 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             }
         }
         if (curr == buffer[2]) {
-            System.arraycopy(buffer[2], bStart, buffer[1], bStart, bEnd - bStart + 1);
+            tmp = buffer[1];
+            buffer[1] = buffer[2];
+            buffer[2] = tmp;
         }
         return buffer[1];
     }

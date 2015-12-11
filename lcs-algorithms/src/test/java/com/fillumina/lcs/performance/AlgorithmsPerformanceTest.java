@@ -73,7 +73,7 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     @Override
     public void addTests(TestContainer tests) {
-        // these are WAY slower than anything else (always avoid recursing)!
+        // Recursive is WAY slower than anything else
 //        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
 //        tests.addTest("MemoizedRecursive",
 //                new LcsRunnable(new MemoizedRecursiveLcs()));
