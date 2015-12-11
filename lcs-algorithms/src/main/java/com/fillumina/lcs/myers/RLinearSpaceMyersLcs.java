@@ -58,7 +58,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
 
     <T> Snake findMiddleSnake(VList<? extends T> a, int n,
             VList<? extends T> b, int m) {
-        final int max = (n + m + 1) / 2 + 1; //(int)Math.ceil((m + n)/2.0);
+        final int max = ((n + m + 1) >> 1) + 1; //(int)Math.ceil((m + n)/2.0);
         final int delta = n - m;
         final boolean evenDelta = (delta & 1) == 0;
 
