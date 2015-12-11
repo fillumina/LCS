@@ -8,10 +8,7 @@ import com.fillumina.lcs.Lcs;
 /**
  * An optimization of the Myers algorithm that only copies the part of the
  * vector which was actually used thus avoiding to access main memory to
- * copy arrays elements which are not actually used by the algorithm.
- * Main memory is really slow to access compared to local one (first and
- * second level caches). Other optimizations like using arrays instead of
- * list access and avoiding a method call are of marginal importance.
+ * copy array elements which are not actually used by the algorithm.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -32,7 +29,7 @@ public class OptimizedMyersLcs implements Lcs {
         int max = n + m + 1;
 
         int[][] vv = new int[max][];
-        int[] v = new int[(max << 1) + 1];
+        int[] v = new int[(max << 1) + 3];
 
         int size, maxk, next, prev, x=-1, y, d, k=-1;
         FILL_THE_TABLE:

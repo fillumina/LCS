@@ -4,7 +4,6 @@ import com.fillumina.lcs.util.BidirectionalVector;
 import com.fillumina.lcs.util.VList;
 import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
