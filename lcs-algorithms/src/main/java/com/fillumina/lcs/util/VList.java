@@ -1,15 +1,11 @@
 package com.fillumina.lcs.util;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Reversable, sublistable vector with starting index 1.
+ * Sublistable vector that keeps track of its start index.
  */
 public class VList<T> {
-
-    @SuppressWarnings(value = "unchecked")
-    public static final VList<?> EMPTY = new VList<>(Collections.EMPTY_LIST);
 
     private final List<T> list;
     private final int size;
@@ -43,45 +39,33 @@ public class VList<T> {
             throw new IndexOutOfBoundsException(
                     "index (size=" + size + "): " + index);
         }
-        if (idx < 0 || idx >= list.size()) {
-            throw new IndexOutOfBoundsException(
-                    "index (list size=" + size + "): " + index);
-        }
         return list.get(idx);
-    }
-
-    private int calculateIndex(int index) {
-        return start + index - 1;
     }
 
     @SuppressWarnings(value = "unchecked")
     public VList<T> subList(int fromIndex, int toIndex) {
-        if (fromIndex < 1 || toIndex < 0) {
-            throw new IndexOutOfBoundsException(
-                    "indexes cannot be less than 1, to=" + toIndex + ", from=" +
-                            fromIndex + " " + toString());
-        }
         if (toIndex < fromIndex) {
-            toIndex = fromIndex;
+            throw new IllegalArgumentException(
+                    "end index cannot be less than start");
+        }
+        if (fromIndex < 0 || fromIndex > size ||
+                toIndex < 0 || toIndex > size) {
+            throw new IndexOutOfBoundsException(
+                    "indexes cannot be outside interval " + start +
+                            " to " + end);
         }
         final int correctedFromIndex = calculateIndex(fromIndex);
         int correctedToIndex = calculateIndex(toIndex);
-        if (correctedFromIndex < 0 || correctedFromIndex > list.size()) {
-            throw new IndexOutOfBoundsException(
-                    "from index out of boundaries " + correctedFromIndex + " " +
-                            toString());
-        }
         if (correctedFromIndex + size < correctedToIndex) {
-            throw new IndexOutOfBoundsException(
-                    "toIndex=" + toIndex + " " + toString());
-            //correctedToIndex = correctedFromIndex + size;
+            throw new IndexOutOfBoundsException("toIndex=" + toIndex);
         }
         return new VList<>(list, correctedFromIndex, correctedToIndex);
     }
 
-    /**
-     * Note that the last index is {@code size}.
-     */
+    private int calculateIndex(int index) {
+        return start + index;
+    }
+
     public int size() {
         return size;
     }
@@ -92,8 +76,8 @@ public class VList<T> {
             return "[]";
         }
         StringBuilder buf = new StringBuilder().append('[');
-        buf.append(get(1));
-        for (int i = 2; i <= size;
+        buf.append(get(0));
+        for (int i = 1; i < size;
                 i++) {
             buf.append(", ").append(get(i));
         }

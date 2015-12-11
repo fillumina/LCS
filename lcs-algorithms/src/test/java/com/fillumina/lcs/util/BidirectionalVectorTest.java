@@ -1,6 +1,5 @@
 package com.fillumina.lcs.util;
 
-import com.fillumina.lcs.util.BidirectionalVector;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -9,6 +8,13 @@ import org.junit.Test;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class BidirectionalVectorTest {
+
+    @Test
+    public void shouldCreateAnEmptyVector() {
+        BidirectionalVector v = new BidirectionalVector(0);
+        v.set(0, 1);
+        assertEquals(1, v.get(0));
+    }
 
     @Test
     public void shouldGetBidirectionalVector() {

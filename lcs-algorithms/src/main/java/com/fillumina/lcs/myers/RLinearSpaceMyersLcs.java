@@ -47,11 +47,11 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
 
         Snake before =
-            lcs(a.subList(1, snake.xStart + 1 - a0),
-                    b.subList(1, snake.yStart + 1 - b0));
+            lcs(a.subList(0, snake.xStart - a0),
+                    b.subList(0, snake.yStart - b0));
         Snake after =
-            lcs(a.subList(snake.xEnd + 1 - a0, n + 1),
-                    b.subList(snake.yEnd + 1 - b0, m + 1));
+            lcs(a.subList(snake.xEnd - a0, n),
+                    b.subList(snake.yEnd - b0, m));
 
         return Snake.chain(before, snake, after);
     }
@@ -127,7 +127,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
         y = x - k;
         while (x >= 0 && y >= 0 && x < n && y < m &&
-                Objects.equals(a.get(x + 1), b.get(y + 1))) {
+                Objects.equals(a.get(x), b.get(y))) {
             x++;
             y++;
         }
@@ -165,7 +165,8 @@ public class RLinearSpaceMyersLcs implements Lcs {
         if (xMid == xEnd && yMid == yEnd) {
             xMid = xStart;
             yMid = yStart;
-            while (xStart >0 && yStart >0 && a.get(xStart).equals(b.get(yStart))) {
+            while (xStart >0 && yStart >0 &&
+                    a.get(xStart-1).equals(b.get(yStart-1))) {
                 xStart--;
                 yStart--;
             }
@@ -191,7 +192,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
         y = x - k;
         while (x > 0 && y > 0 && x <= n && y <= m &&
-                Objects.equals(a.get(x), b.get(y))) {
+                Objects.equals(a.get(x-1), b.get(y-1))) {
             x--;
             y--;
         }
@@ -228,7 +229,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
         if (xMid == xStart && yMid == yStart) {
             xMid = xEnd;
             yMid = yEnd;
-            while (xEnd < n && yEnd < m && a.get(xEnd+1).equals(b.get(yEnd+1))) {
+            while (xEnd < n && yEnd < m && a.get(xEnd).equals(b.get(yEnd))) {
                 xEnd++;
                 yEnd++;
             }
@@ -363,7 +364,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
         @Override
         public <T> void addEquals(List<? super T> result, VList<T> a) {
             for (int x = xMid + 1; x <= xEnd; x++) {
-                result.add(a.get(x));
+                result.add(a.get(x-1));
             }
         }
     }
@@ -383,7 +384,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
         @Override
         public <T> void addEquals(List<? super T> result, VList<T> a) {
             for (int x=xStart + 1; x <= xMid; x++) {
-                result.add(a.get(x));
+                result.add(a.get(x-1));
             }
         }
 
