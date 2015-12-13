@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import com.fillumina.lcs.Lcs;
 import java.util.AbstractList;
+import java.util.Collections;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
@@ -16,10 +17,15 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
         final int m = b.size();
-        return lcsRlw(a, 0, a.size(), b, 0, m, new int[3][m + 1]);
+        List<? extends T> list =
+                lcsRlw(a, 0, a.size(), b, 0, m, new int[3][m + 1]);
+        if (list == null) {
+            return Collections.<T>emptyList();
+        }
+        return list;
     }
 
-    <T> ArrayListImpl<T> lcsRlw(
+    <T> ConcatList<T> lcsRlw(
             List<? extends T> a, int aStart, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
@@ -27,16 +33,16 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
 
         switch (n) {
             case 0:
-                return new ArrayListImpl<>();
+                return ConcatList.<T>empty();
 
             case 1:
                 final T t = a.get(aStart);
                 for (int i=bStart; i<bEnd; i++) {
                     if (Objects.equals(t, b.get(i))) {
-                        return new ArrayListImpl<>(t);
+                        return new ConcatList<>(t);
                     }
                 }
-                return new ArrayListImpl<>();
+                return ConcatList.<T>empty();
 
             default:
                 final int aBisect = aStart + n / 2;
@@ -176,17 +182,23 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
     }
 
     /** A list optimized for concatenation. */
-    static class ArrayListImpl<T> extends AbstractList<T> {
+    static class ConcatList<T> extends AbstractList<T> {
+        private static final ConcatList<?> EMPTY = new ConcatList();
         private T[] array;
         private int size;
 
+        @SuppressWarnings("unchecked")
+        static <T> ConcatList<T> empty() {
+            return (ConcatList<T>) EMPTY;
+        }
+
         /** Creates an empty list. */
-        public ArrayListImpl() {
+        public ConcatList() {
         }
 
         /** Creates a one item list. */
         @SuppressWarnings("unchecked")
-        public ArrayListImpl(T t) {
+        public ConcatList(T t) {
             this.array = (T[]) new Object[]{t};
             size = 1;
         }
@@ -196,24 +208,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             return array[index];
         }
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public boolean add(T e) {
-            if (array == null) {
-                init(10);
-            }
-            try {
-                array[size++] = e;
-                return true;
-            } catch (IndexOutOfBoundsException ex) {
-                resize(size << 1);
-                array[size] = e;
-                return true;
-            }
-        }
-
-        public ArrayListImpl<T> concat(ArrayListImpl<T> c) {
-            if (c.size == 0) {
+        public ConcatList<T> concat(ConcatList<T> c) {
+            if (c == null || c.size == 0) {
                 return this;
             }
             if (size == 0) {
@@ -221,9 +217,9 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             }
             final int newsize = size + c.size;
             if (array == null) {
-                init(newsize);
+                init(Math.max(10, newsize));
             } else if (newsize > array.length) {
-                resize(newsize);
+                resize(newsize << 1);
             }
             System.arraycopy(c.array, 0, array, size, c.size);
             size = newsize;
