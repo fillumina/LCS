@@ -69,12 +69,26 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             List<? extends T> a, int aStart, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
-        int[] curr = zero(buffer[0], bStart, bEnd + 1);
+        int[] curr = buffer[0];
         int[] prev = buffer[2];
         int[] tmp;
 
-        for (int j=aStart; j<aEnd; j++) {
-            T x = a.get(j);
+        T x = a.get(aStart);
+        curr[bStart] = 0;
+        for (int i=bStart; i<bEnd; i++) {
+            T y = b.get(i);
+            if (Objects.equals(x, y)) {
+                for (int ii=i+1; ii<=bEnd; ii++) {
+                    curr[ii] = 1;
+                }
+                break;
+            } else {
+                curr[i + 1] = 0;
+            }
+        }
+
+        for (int j=aStart+1; j<aEnd; j++) {
+            x = a.get(j);
             tmp = prev;
             prev = curr;
             curr = tmp;
@@ -89,6 +103,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
                 }
             }
         }
+
+        // swap the buffers so that curr is always buffer[0]
         if (curr == buffer[2]) {
             tmp = buffer[0];
             buffer[0] = buffer[2];
@@ -101,13 +117,27 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
             List<? extends T> a, int aStart, int aEnd,
             List<? extends T> b, int bStart, int bEnd,
             int[][] buffer) {
-        int[] curr = zero(buffer[1], bStart, bEnd + 1);
+        int[] curr = buffer[1];
         int[] prev = buffer[2];
         int[] tmp;
         int offset = bEnd + bStart - 1;
 
-        for (int j=aEnd-1; j>=aStart; j--) {
-            T x = a.get(j);
+        T x = a.get(aEnd-1);
+        curr[bStart] = 0;
+        for (int i=bStart; i<bEnd; i++) {
+            T y = b.get(offset - i);
+            if (Objects.equals(x, y)) {
+                for (int ii=i+1; ii<=bEnd; ii++) {
+                    curr[ii] = 1;
+                }
+                break;
+            } else {
+                curr[i + 1] = 0;
+            }
+        }
+
+        for (int j=aEnd-2; j>=aStart; j--) {
+            x = a.get(j);
             tmp = prev;
             prev = curr;
             curr = tmp;
@@ -122,6 +152,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
                 }
             }
         }
+
+        // swap the buffers so that curr is always buffer[1]
         if (curr == buffer[2]) {
             tmp = buffer[1];
             buffer[1] = buffer[2];
@@ -143,21 +175,16 @@ public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
         return k;
     }
 
-    static int[] zero(int[] array, int from, int to) {
-        for (int i = from; i < to; i++) {
-            array[i] = 0;
-        }
-        return array;
-    }
-
     /** A list optimized for concatenation. */
     static class ArrayListImpl<T> extends AbstractList<T> {
         private T[] array;
         private int size;
 
+        /** Creates an empty list. */
         public ArrayListImpl() {
         }
 
+        /** Creates a one item list. */
         @SuppressWarnings("unchecked")
         public ArrayListImpl(T t) {
             this.array = (T[]) new Object[]{t};
