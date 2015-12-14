@@ -6,7 +6,7 @@ import java.util.Arrays;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-class BidirectionalVector {
+public class BidirectionalVector {
 
     private final int[] array;
     private final int zero;

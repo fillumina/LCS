@@ -11,7 +11,7 @@ import com.fillumina.lcs.hirschberg.HirschbergLinearSpaceAlgorithmLcs;
 import com.fillumina.lcs.hirschberg.OptimizedHirschbergLinearSpaceLcs;
 import com.fillumina.lcs.myers.MyersLcs;
 import com.fillumina.lcs.myers.OptimizedMyersLcs;
-import com.fillumina.lcs.myers.RLinearSpaceMyersLcs;
+import com.fillumina.lcs.myers.linearspace.RLinearSpaceMyersLcs;
 import com.fillumina.lcs.myers.ReverseMyersLcs;
 import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.recursive.RecursiveLcs;

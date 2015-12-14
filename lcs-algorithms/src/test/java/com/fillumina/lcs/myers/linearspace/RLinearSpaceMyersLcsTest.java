@@ -1,5 +1,6 @@
-package com.fillumina.lcs.myers;
+package com.fillumina.lcs.myers.linearspace;
 
+import com.fillumina.lcs.myers.linearspace.RLinearSpaceMyersLcs;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import org.junit.Test;
 import com.fillumina.lcs.Lcs;
