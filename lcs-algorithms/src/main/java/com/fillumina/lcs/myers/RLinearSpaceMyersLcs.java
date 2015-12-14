@@ -3,7 +3,6 @@ package com.fillumina.lcs.myers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import com.fillumina.lcs.Lcs;
 
 /**
@@ -16,265 +15,320 @@ public class RLinearSpaceMyersLcs implements Lcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        final VList<? extends T> va = new VList<>(a);
-        final VList<? extends T> vb = new VList<>(b);
-        Snake snakes = lcs(va, vb);
-        return extractLcs(snakes, va, vb);
+        return new LcsSolver<>(a, b).calculateLcs();
     }
 
-    <T> Snake lcs(VList<? extends T> a, VList<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
+    static class LcsSolver<T> {
+        private final List<? extends T> a, b;
 
-        final int a0 = a.zero();
-        final int b0 = b.zero();
-
-        if (n == 0) {
-            return new ForwardSnake(a0, b0, a0, b0+m, a0, b0+m);
-        }
-        if (m == 0) {
-            return new ForwardSnake(a0, b0, a0+n, b0, a0+n, b0);
+        public LcsSolver(List<? extends T> a, List<? extends T> b) {
+            this.a = a;
+            this.b = b;
         }
 
-        Snake snake = findMiddleSnake(a, n, b, m);
-
-        if (snake.xStart == a0 && snake.xEnd == (a0 + n) &&
-                snake.yStart == b0 && snake.yEnd == (b0 + m)) {
-            return snake;
+        List<? extends T> calculateLcs() {
+            Snake snakes = new Section(0,0, a.size(),b.size()).lcs();
+            return extractLcs(snakes);
         }
 
-        Snake before = lcs(a.subList(0, snake.xStart - a0),
-                    b.subList(0, snake.yStart - b0));
-
-        Snake after = lcs(a.subList(snake.xEnd - a0, n),
-                    b.subList(snake.yEnd - b0, m));
-
-        return Snake.chain(before, snake, after);
-    }
-
-    <T> Snake findMiddleSnake(VList<? extends T> a, int n,
-            VList<? extends T> b, int m) {
-        final int max = ((n + m + 1) >> 1) + 1; // (int)Math.ceil((m + n)/2.0);
-        final int delta = n - m;
-        final boolean evenDelta = (delta & 1) == 0; // delta % 2 == 0
-
-        final BidirectionalVector vf = new BidirectionalVector(max);
-        final BidirectionalVector vb = new BidirectionalVector(max, delta);
-
-        vf.set(1, 0);
-        vb.set(0, n);
-        vb.set(delta-1, n);
-
-        int kk, xf, xr, start, end;
-        for (int d = 0; d <= max; d++) {
-            start = delta - (d - 1);
-            end = delta + (d - 1);
-            for (int k = -d; k <= d; k += 2) {
-                xf = findFurthestReachingDPath(d, k, a, n, b, m, vf);
-                if (!evenDelta && isIn(k, start, end) && vb.get(k) <= xf) {
-                    return findLastSnake(d, k, xf, a.zero(),b.zero(), vf, a, b);
+        /** @return the common subsequence elements. */
+        private List<? extends T> extractLcs(Snake snakes) {
+            List<T> list = new ArrayList<>();
+            List<T> tmp = new ArrayList<>();
+            int x=0;
+            boolean error=false;
+            for (Snake snake : snakes) {
+                if (snake.xStart != x) {
+                    error = true;
                 }
-            }
-
-            for (int k = -d; k <= d; k += 2) {
-                kk = k + delta;
-                xr = findFurthestReachingDPathReverse(d, kk, a, n, b, m, delta, vb);
-                if (evenDelta && isIn(kk, -d, d) && xr >= 0 && xr <= vf.get(kk)) {
-                    return findLastSnakeReverse(d, kk, xr, a.zero(),b.zero(),
-                            vb, delta, a, n, b, m);
+                tmp.clear();
+                for (int index : snake.getDiagonal()) {
+                    list.add(a.get(index));
                 }
+                x = snake.xEnd;
+            }
+            if (error) {
+                throw new AssertionError("uncomplete chain");
+            }
+            return list;
+        }
+
+        class Section extends Rectangle {
+
+            Section(int xStart, int yStart, int xEnd, int yEnd) {
+                super(xStart, yStart, xEnd, yEnd);
+            }
+
+            <T> Snake lcs() {
+                if (isImproper()) {
+                    return createNullSnake();
+                }
+
+                Snake snake = findMiddleSnake();
+                if (isMaximum(snake)) {
+                    return snake;
+                }
+
+                Snake before = getSectionBefore(snake).lcs();
+                Snake after = getSectionAfter(snake).lcs();
+
+                return Snake.chain(before, snake, after);
+            }
+
+            <T> Snake findMiddleSnake() {
+                // (int)Math.ceil((m + n)/2.0);
+                final int max = ((n + m + 1) >> 1) + 1;
+                final int delta = n - m;
+                // delta % 2 == 0
+                final boolean evenDelta = (delta & 1) == 0;
+
+                final BidirectionalVector vf = new BidirectionalVector(max);
+                final BidirectionalVector vb = new BidirectionalVector(max, delta);
+
+                vf.set(1, 0);
+                vb.set(0, n);
+                vb.set(delta-1, n);
+
+                int kk, xf, xr, start, end;
+                for (int d = 0; d <= max; d++) {
+                    start = delta - (d - 1);
+                    end = delta + (d - 1);
+                    for (int k = -d; k <= d; k += 2) {
+                        xf = findFurthestReachingDPath(d, k, vf);
+                        if (!evenDelta && isIn(k, start, end) && vb.get(k) <= xf) {
+                            return findLastSnake(d, k, vf, xf);
+                        }
+                    }
+
+                    for (int k = -d; k <= d; k += 2) {
+                        kk = k + delta;
+                        xr = findFurthestReachingDPathReverse(d, kk, delta, vb);
+                        if (evenDelta && isIn(kk, -d, d) && xr >= 0 && xr <= vf.get(kk)) {
+                            return findLastSnakeReverse(d, kk, delta, vb, xr);
+                        }
+                    }
+                }
+
+                return createNullSnake();
+            }
+
+            private int findFurthestReachingDPath(int d, int k,
+                    BidirectionalVector vf) {
+                int x, y;
+
+                int next = vf.get(k + 1);
+                int prev = vf.get(k - 1);
+                if (k == -d || (k != d && prev < next)) {
+                    x = next;
+                } else {
+                    x = prev + 1;
+                }
+                y = x - k;
+                while (x >= 0 && y >= 0 && x < n && y < m && sameItem(x, y)) {
+                    x++;
+                    y++;
+                }
+                vf.set(k, x);
+                return x;
+            }
+
+            private Snake findLastSnake(int d, int k,
+                    BidirectionalVector vf, int x) {
+                int y = x - k;
+
+                int xEnd = x;
+                int yEnd = y;
+
+                int next = vf.get(k + 1);
+                int prev = vf.get(k - 1);
+                int xStart, yStart, xMid, yMid;
+                if (k == -d) {
+                    xStart = next;
+                    yStart = xStart - k;
+                    xMid = xStart;
+                } else if (k != d && prev < next) {
+                    xStart = next;
+                    yStart = xStart - k - 1;
+                    xMid = xStart;
+                } else {
+                    xStart = prev;
+                    yStart = xStart - k + 1;
+                    xMid = xStart + 1;
+                }
+
+                yMid = xMid - k;
+
+                if (xMid == xEnd && yMid == yEnd) {
+                    xMid = xStart;
+                    yMid = yStart;
+                    while (xStart >0 && yStart >0 &&
+                            sameItem(xStart-1, yStart-1)) {
+                        xStart--;
+                        yStart--;
+                    }
+                    return createReverseSnake(xStart, yStart,
+                        xMid, yMid, xEnd, yEnd);
+                }
+
+                return createForwardSnake(xStart, yStart,
+                        xMid, yMid, xEnd, yEnd);
+            }
+
+            private <T> int findFurthestReachingDPathReverse(
+                    int d, int k, int delta, BidirectionalVector vb) {
+                int x, y;
+
+                final int next = vb.get(k + 1); // left
+                final int prev = vb.get(k - 1); // up
+                if (k == d+delta || (k != -d+delta && prev < next)) {
+                    x = prev;   // up
+                } else {
+                    x = next - 1;   // left
+                }
+                y = x - k;
+                while (x > 0 && y > 0 && x <= n && y <= m &&
+                        sameItem(x-1, y-1)) {
+                    x--;
+                    y--;
+                }
+                if (x >= 0) {
+                    vb.set(k, x);
+                }
+                return x;
+            }
+
+            private <T> Snake findLastSnakeReverse(int d, int k, int delta,
+                    BidirectionalVector vb, int xe) {
+                final int xStart = xe;
+                final int yStart = xe - k;
+                int xEnd, yEnd, xMid, yMid;
+
+                final int next = vb.get(k + 1);
+                final int prev = vb.get(k - 1);
+                if (k == d+delta) {
+                    xEnd = prev;
+                    yEnd = prev - k;
+                    xMid = xEnd;
+                } else if (k != -d+delta && prev != 0 && prev < next) {
+                    xEnd = prev;
+                    yEnd = prev - k + 1;
+                    xMid = xEnd;
+                } else {
+                    xEnd = next;
+                    yEnd = next - k - 1;
+                    xMid = xEnd - 1;
+                }
+                yMid = xMid - k;
+
+                if (xMid == xStart && yMid == yStart) {
+                    xMid = xEnd;
+                    yMid = yEnd;
+                    while (xEnd < n && yEnd < m && sameItem(xEnd, yEnd)) {
+                        xEnd++;
+                        yEnd++;
+                    }
+                    return createForwardSnake(xStart, yStart,
+                        xMid, yMid, xEnd, yEnd);
+                }
+
+                return createReverseSnake(xStart, yStart,
+                        xMid, yMid, xEnd, yEnd);
+            }
+
+            /** @return the innner rectangle getSectionBefore the given one. */
+            Section getSectionBefore(Rectangle o) {
+                return new Section(xStart, yStart, o.xStart, o.yStart);
+            }
+
+            /** @return the innner rectangle getSectionAfter the given one. */
+            Section getSectionAfter(Rectangle o) {
+                return new Section(o.xEnd, o.yEnd, xEnd, yEnd);
+            }
+
+            Snake createForwardSnake(int xStart, int yStart,
+                    int xMid, int yMid,
+                    int xEnd, int yEnd) {
+                int x0 = this.xStart, y0 = this.yStart;
+                return new ForwardSnake(x0+xStart, y0+yStart,
+                    x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
+            }
+
+            Snake createReverseSnake(int xStart, int yStart,
+                    int xMid, int yMid,
+                    int xEnd, int yEnd) {
+                int x0 = this.xStart, y0 = this.yStart;
+                return new ReverseSnake(x0+xStart, y0+yStart,
+                    x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
+
+            }
+
+            Snake createNullSnake() {
+                return new Snake(xStart, yStart, xStart, yStart, xEnd, yEnd);
+            }
+
+            boolean sameItem(int aIndex, int bIndex) {
+                T aItem = a.get(xStart + aIndex);
+                T bItem = b.get(yStart + bIndex);
+                return aItem == bItem || (aItem != null && aItem.equals(bItem));
             }
         }
-
-        return new NullSnake(a.zero(), b.zero(), a.zero()+n, b.zero()+m);
-    }
-
-    private static boolean isIn(int value, int startInterval, int endInterval) {
-        if (startInterval < endInterval) {
-            if (value < startInterval) {
-                return false;
-            }
-            if (value > endInterval) {
-                return false;
-            }
-        }
-        else {
-            if (value > startInterval) {
-                return false;
-            }
-            if (value < endInterval) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private <T> int findFurthestReachingDPath(int d, int k,
-            VList<? extends T> a, int n, VList<? extends T> b, int m,
-            BidirectionalVector vf) {
-        int x, y;
-
-        int next = vf.get(k + 1);
-        int prev = vf.get(k - 1);
-        if (k == -d || (k != d && prev < next)) {
-            x = next;
-        } else {
-            x = prev + 1;
-        }
-        y = x - k;
-        while (x >= 0 && y >= 0 && x < n && y < m &&
-                Objects.equals(a.get(x), b.get(y))) {
-            x++;
-            y++;
-        }
-        vf.set(k, x);
-        return x;
-    }
-
-    private <T> Snake findLastSnake(int d, int k, int x, int x0, int y0,
-            BidirectionalVector vf,
-            VList<? extends T> a, VList<? extends T> b) {
-        int y = x - k;
-
-        int xEnd = x;
-        int yEnd = y;
-
-        int next = vf.get(k + 1);
-        int prev = vf.get(k - 1);
-        int xStart, yStart, xMid, yMid;
-        if (k == -d) {
-            xStart = next;
-            yStart = xStart - k;
-            xMid = xStart;
-        } else if (k != d && prev < next) {
-            xStart = next;
-            yStart = xStart - k - 1;
-            xMid = xStart;
-        } else {
-            xStart = prev;
-            yStart = xStart - k + 1;
-            xMid = xStart + 1;
-        }
-
-        yMid = xMid - k;
-
-        if (xMid == xEnd && yMid == yEnd) {
-            xMid = xStart;
-            yMid = yStart;
-            while (xStart >0 && yStart >0 &&
-                    a.get(xStart-1).equals(b.get(yStart-1))) {
-                xStart--;
-                yStart--;
-            }
-            return new ReverseSnake(x0+xStart, y0+yStart,
-                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
-        }
-
-        return new ForwardSnake(x0+xStart, y0+yStart,
-                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
-    }
-
-    private <T> int findFurthestReachingDPathReverse(int d, int k,
-            VList<? extends T> a, int n, VList<? extends T> b, int m,
-            int delta, BidirectionalVector vb) {
-        int x, y;
-
-        final int next = vb.get(k + 1); // left
-        final int prev = vb.get(k - 1); // up
-        if (k == d+delta || (k != -d+delta && prev < next)) {
-            x = prev;   // up
-        } else {
-            x = next - 1;   // left
-        }
-        y = x - k;
-        while (x > 0 && y > 0 && x <= n && y <= m &&
-                Objects.equals(a.get(x-1), b.get(y-1))) {
-            x--;
-            y--;
-        }
-        if (x >= 0) {
-            vb.set(k, x);
-        }
-        return x;
-    }
-
-    private <T> Snake findLastSnakeReverse(int d, int k, int xe, int x0, int y0,
-            BidirectionalVector vb, int delta,
-            VList<? extends T> a, int n, VList<? extends T> b, int m) {
-        final int xStart = xe;
-        final int yStart = xe - k;
-        int xEnd, yEnd, xMid, yMid;
-
-        final int next = vb.get(k + 1);
-        final int prev = vb.get(k - 1);
-        if (k == d+delta) {
-            xEnd = prev;
-            yEnd = prev - k;
-            xMid = xEnd;
-        } else if (k != -d+delta && prev != 0 && prev < next) {
-            xEnd = prev;
-            yEnd = prev - k + 1;
-            xMid = xEnd;
-        } else {
-            xEnd = next;
-            yEnd = next - k - 1;
-            xMid = xEnd - 1;
-        }
-        yMid = xMid - k;
-
-        if (xMid == xStart && yMid == yStart) {
-            xMid = xEnd;
-            yMid = yEnd;
-            while (xEnd < n && yEnd < m && a.get(xEnd).equals(b.get(yEnd))) {
-                xEnd++;
-                yEnd++;
-            }
-            return new ForwardSnake(x0+xStart, y0+yStart,
-                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
-        }
-
-        return new ReverseSnake(x0+xStart, y0+yStart,
-                x0+xMid, y0+yMid, x0+xEnd, y0+yEnd);
     }
 
     /**
-     * @return the common subsequence elements.
+     * A 2D area described by the top,left - bottom,right coordinates
+     * considering the origin on the top-left.
      */
-    private <T> List<? extends T> extractLcs(Snake snakes,
-            VList<? extends T> a, VList<? extends T> b) {
-        List<T> list = new ArrayList<>();
-        List<T> tmp = new ArrayList<>();
-        int x=0;
-        boolean error=false;
-        for (Snake snake : snakes) {
-            if (snake.xStart != x) {
-                error = true;
-            }
-            tmp.clear();
-            snake.addEquals(tmp, a);
-            list.addAll(tmp);
-            x = snake.xEnd;
-        }
-        if (error) {
-            throw new AssertionError("uncomplete chain");
-        }
-        return list;
-    }
+    static class Rectangle {
+        final int xStart, yStart;
+        final int xEnd, yEnd;
+        final int n, m;
 
-    public static abstract class Snake implements Iterable<Snake> {
-        public final int xStart, yStart;
-        public final int xMid, yMid;
-        public final int xEnd, yEnd;
-        private Snake next;
+        public Rectangle(List<?> a, List<?> b) {
+            this(0, 0, a.size(), b.size());
+        }
 
-        private Snake(
-                int xStart, int yStart, int xMid, int yMid, int xEnd, int yEnd) {
+        public Rectangle(int xStart, int yStart, int xEnd, int yEnd) {
             this.xStart = xStart;
             this.yStart = yStart;
-            this.xMid = xMid;
-            this.yMid = yMid;
             this.xEnd = xEnd;
             this.yEnd = yEnd;
+            this.n = xEnd - xStart;
+            this.m = yEnd - yStart;
+        }
+
+        /** Has zero width or height. */
+        boolean isImproper() {
+            return xStart == xEnd || yStart == yEnd;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + this.xStart;
+            hash = 79 * hash + this.yStart;
+            hash = 79 * hash + this.xEnd;
+            hash = 79 * hash + this.yEnd;
+            return hash;
+        }
+
+        public boolean isMaximum(Rectangle other) {
+            return xStart == other.xStart &&
+                    yStart == other.yStart &&
+                    xEnd == other.xEnd &&
+                    yEnd == other.yEnd;
+        }
+    }
+
+    static class Snake extends Rectangle implements Iterable<Snake> {
+        public final int xMid, yMid;
+        private Snake next;
+
+        private Snake(int xStart, int yStart,
+                int xMid, int yMid,
+                int xEnd, int yEnd) {
+            super(xStart, yStart, xEnd, yEnd);
+            this.xMid = xMid;
+            this.yMid = yMid;
         }
 
         /** @return the given {@link Snake}, or this if it is null. */
@@ -296,7 +350,9 @@ public class RLinearSpaceMyersLcs implements Lcs {
             return head;
         }
 
-        abstract public <T> void addEquals(List<? super T> result, VList<T> a);
+        public Interval getDiagonal() {
+            return Interval.EMPTY;
+        }
 
         @Override
         public Iterator<Snake> iterator() {
@@ -326,18 +382,6 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
     }
 
-    private static class NullSnake extends Snake {
-
-        public NullSnake(int xStart, int yStart, int xEnd, int yEnd) {
-            super(xStart, yStart, xStart, yStart, xEnd, yEnd);
-        }
-
-        @Override
-        public <T> void addEquals(List<? super T> result, VList<T> a) {
-            // do nothing
-        }
-    }
-
     private static class ForwardSnake extends Snake {
 
         public ForwardSnake(int xStart, int yStart, int xMid,
@@ -346,10 +390,8 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
 
         @Override
-        public <T> void addEquals(List<? super T> result, VList<T> a) {
-            for (int x = xMid + 1; x <= xEnd; x++) {
-                result.add(a.get(x-1));
-            }
+        public Interval getDiagonal() {
+            return new Interval(xMid, xEnd);
         }
     }
 
@@ -361,11 +403,62 @@ public class RLinearSpaceMyersLcs implements Lcs {
         }
 
         @Override
-        public <T> void addEquals(List<? super T> result, VList<T> a) {
-            for (int x=xStart + 1; x <= xMid; x++) {
-                result.add(a.get(x-1));
-            }
+        public Interval getDiagonal() {
+            return new Interval(xStart, xMid);
         }
 
+    }
+
+    static class Interval implements Iterable<Integer> {
+        static final Interval EMPTY = new Interval(0,-1);
+        private final int start, end;
+
+        public Interval(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public boolean isEmty() {
+            return start >= end;
+        }
+
+        @Override
+        public Iterator<Integer> iterator() {
+            return new Iterator<Integer>() {
+                private int current = start;
+
+                @Override
+                public boolean hasNext() {
+                    return current < end;
+                }
+
+                @Override
+                public Integer next() {
+                    int tmp = current;
+                    current++;
+                    return tmp;
+                }
+            };
+        }
+    }
+
+    static boolean isIn(int value, int startInterval, int endInterval) {
+        if (startInterval < endInterval) {
+            if (value < startInterval) {
+                return false;
+            }
+            if (value > endInterval) {
+                return false;
+            }
+        }
+        else {
+            if (value > startInterval) {
+                return false;
+            }
+            if (value < endInterval) {
+                return false;
+            }
+        }
+        return true;
     }
 }
