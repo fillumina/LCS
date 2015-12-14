@@ -1,6 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.util.BidirectionalVector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

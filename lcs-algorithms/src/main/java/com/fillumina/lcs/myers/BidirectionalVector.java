@@ -1,4 +1,4 @@
-package com.fillumina.lcs.util;
+package com.fillumina.lcs.myers;
 
 import java.util.Arrays;
 
@@ -6,7 +6,7 @@ import java.util.Arrays;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BidirectionalVector {
+class BidirectionalVector {
 
     private final int[] array;
     private final int zero;

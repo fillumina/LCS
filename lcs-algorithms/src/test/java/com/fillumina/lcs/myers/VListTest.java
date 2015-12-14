@@ -1,4 +1,4 @@
-package com.fillumina.lcs.util;
+package com.fillumina.lcs.myers;
 
 import java.util.Arrays;
 import java.util.List;

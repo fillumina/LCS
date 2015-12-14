@@ -1,5 +1,6 @@
-package com.fillumina.lcs.util;
+package com.fillumina.lcs.myers;
 
+import com.fillumina.lcs.myers.BidirectionalVector;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 

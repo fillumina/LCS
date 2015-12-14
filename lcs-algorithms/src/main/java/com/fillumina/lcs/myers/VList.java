@@ -1,11 +1,11 @@
-package com.fillumina.lcs.util;
+package com.fillumina.lcs.myers;
 
 import java.util.List;
 
 /**
  * Sublistable vector that keeps track of its start index.
  */
-public class VList<T> {
+class VList<T> {
 
     private final List<T> list;
     private final int start;

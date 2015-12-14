@@ -1,4 +1,4 @@
-package com.fillumina.lcs.util;
+package com.fillumina.lcs.scoretable;
 
 import java.util.List;
 

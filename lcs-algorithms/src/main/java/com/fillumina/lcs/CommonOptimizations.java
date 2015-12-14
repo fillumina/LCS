@@ -3,7 +3,6 @@ package com.fillumina.lcs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import static com.fillumina.lcs.util.ListUtils.concatenate;
 import java.util.Objects;
 
 /**
@@ -111,5 +110,20 @@ public class CommonOptimizations implements Lcs {
                 return Collections.<T>emptyList();
             }
         }
+    }
+
+    /** The given lists are not modified. */
+    static <T> List<? extends T> concatenate(
+            List<? extends T> a, List<? extends T> b) {
+        if (a.isEmpty()) {
+            return b;
+        }
+        if (b.isEmpty()) {
+            return a;
+        }
+        List<T> l = new ArrayList<>(a.size() + b.size());
+        l.addAll(a);
+        l.addAll(b);
+        return Collections.unmodifiableList(l);
     }
 }

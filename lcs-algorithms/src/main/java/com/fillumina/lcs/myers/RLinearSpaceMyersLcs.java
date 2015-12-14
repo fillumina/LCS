@@ -1,8 +1,5 @@
 package com.fillumina.lcs.myers;
 
-import com.fillumina.lcs.util.BidirectionalVector;
-import com.fillumina.lcs.util.VList;
-import com.fillumina.lcs.util.ListUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,11 +43,10 @@ public class RLinearSpaceMyersLcs implements Lcs {
             return snake;
         }
 
-        Snake before =
-            lcs(a.subList(0, snake.xStart - a0),
+        Snake before = lcs(a.subList(0, snake.xStart - a0),
                     b.subList(0, snake.yStart - b0));
-        Snake after =
-            lcs(a.subList(snake.xEnd - a0, n),
+
+        Snake after = lcs(a.subList(snake.xEnd - a0, n),
                     b.subList(snake.yEnd - b0, m));
 
         return Snake.chain(before, snake, after);
@@ -58,9 +54,9 @@ public class RLinearSpaceMyersLcs implements Lcs {
 
     <T> Snake findMiddleSnake(VList<? extends T> a, int n,
             VList<? extends T> b, int m) {
-        final int max = ((n + m + 1) >> 1) + 1; //(int)Math.ceil((m + n)/2.0);
+        final int max = ((n + m + 1) >> 1) + 1; // (int)Math.ceil((m + n)/2.0);
         final int delta = n - m;
-        final boolean evenDelta = (delta & 1) == 0;
+        final boolean evenDelta = (delta & 1) == 0; // delta % 2 == 0
 
         final BidirectionalVector vf = new BidirectionalVector(max);
         final BidirectionalVector vb = new BidirectionalVector(max, delta);
@@ -260,8 +256,7 @@ public class RLinearSpaceMyersLcs implements Lcs {
             x = snake.xEnd;
         }
         if (error) {
-            throw new AssertionError("uncomplete chain:\n" +
-                    ListUtils.toLines(snakes));
+            throw new AssertionError("uncomplete chain");
         }
         return list;
     }
