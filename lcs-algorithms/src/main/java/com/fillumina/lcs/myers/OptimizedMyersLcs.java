@@ -75,28 +75,16 @@ public class OptimizedMyersLcs implements Lcs {
             int[] vNext = vv[d>>1];
             maxk = d + 2 + k -(d&1);
 
-            if (k == -d) {
-                xStart = vNext[maxk + 1];
-                xMid = xStart;
+            next = vNext[maxk + 1];
+            prev = vNext[maxk - 1];
+            if (k == -d || (k != d && prev < next)) {
+                xStart = next;
+                xMid = next;
                 k++;
-
-            } else if (k == d) {
-                xStart = vNext[maxk - 1];
-                xMid = xStart + 1;
-                k--;
-
             } else {
-                next = vNext[maxk + 1];
-                prev = vNext[maxk - 1];
-                if (prev < next) {
-                    xStart = next;
-                    xMid = next;
-                    k++;
-                } else {
-                    xStart = prev;
-                    xMid = prev + 1;
-                    k--;
-                }
+                xStart = prev;
+                xMid = prev + 1;
+                k--;
             }
 
             if (x != xMid) {
