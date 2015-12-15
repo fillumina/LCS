@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 // TODO do a performance test with all the myers implementation (including mine)
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 600;
-    private static final int LCS = 40;
+    private static final int TOTAL = 6000;
+    private static final int LCS = 4000;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
