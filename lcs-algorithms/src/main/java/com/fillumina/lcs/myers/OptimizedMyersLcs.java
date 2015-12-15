@@ -28,8 +28,9 @@ public class OptimizedMyersLcs implements Lcs {
         int m = b.length;
         int max = n + m + 1;
 
-        int[][] vv = new int[max][];
+        int[][] vv = new int[max + 1][];
         int[] v = new int[(max << 1) + 3];
+        int[] tmp;
 
         int size, maxk, next, prev, x=-1, y, d, k=-1;
         FILL_THE_TABLE:
@@ -51,14 +52,18 @@ public class OptimizedMyersLcs implements Lcs {
                 v[maxk] = x;
                 if (x >= n && y >= m) {
                     size = (d<<1) + 3;
-                    vv[d] = new int[size];
-                    System.arraycopy(v, max-d-1, vv[d], 0, size);
+                    tmp = new int[size + 2];
+                    System.arraycopy(v, max-d-1, tmp, 1, size);
+                    vv[d] = tmp;
+                    vv[d + (d & 1)] = tmp;
+
                     break FILL_THE_TABLE;
                 }
             }
             size = (d<<1) + 3;
-            vv[d] = new int[size];
-            System.arraycopy(v, max-d-1, vv[d], 0, size);
+            tmp = new int[size + 2];
+            System.arraycopy(v, max-d-1, tmp, 1, size);
+            vv[d] = tmp;
         }
 
         int xStart, xMid, index = (n + m - d) >> 1;
@@ -66,10 +71,14 @@ public class OptimizedMyersLcs implements Lcs {
         T[] result = (T[]) new Object[index];
 
         for (; d >= 0 && x > 0; d--) {
-            maxk = d + 1 + k;
-            int[] vNext = vv[d];
+            int[] vNext = vv[d - (d&1)];
+            maxk = d + 2 + k -(d&1);
 
+            try {
             next = vNext[maxk + 1];
+            } catch (Exception e) {
+                throw new AssertionError(e);
+            }
             prev = vNext[maxk - 1];
             if (k == -d || (k != d && prev < next)) {
                 xStart = next;
