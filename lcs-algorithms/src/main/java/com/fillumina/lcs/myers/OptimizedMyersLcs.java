@@ -75,20 +75,28 @@ public class OptimizedMyersLcs implements Lcs {
             int[] vNext = vv[d>>1];
             maxk = d + 2 + k -(d&1);
 
-            try {
-            next = vNext[maxk + 1];
-            } catch (Exception e) {
-                throw new AssertionError(e);
-            }
-            prev = vNext[maxk - 1];
-            if (k == -d || (k != d && prev < next)) {
-                xStart = next;
-                xMid = next;
+            if (k == -d) {
+                xStart = vNext[maxk + 1];
+                xMid = xStart;
                 k++;
-            } else {
-                xStart = prev;
-                xMid = prev + 1;
+
+            } else if (k == d) {
+                xStart = vNext[maxk - 1];
+                xMid = xStart + 1;
                 k--;
+
+            } else {
+                next = vNext[maxk + 1];
+                prev = vNext[maxk - 1];
+                if (prev < next) {
+                    xStart = next;
+                    xMid = next;
+                    k++;
+                } else {
+                    xStart = prev;
+                    xMid = prev + 1;
+                    k--;
+                }
             }
 
             if (x != xMid) {
@@ -100,7 +108,6 @@ public class OptimizedMyersLcs implements Lcs {
 
             x = xStart;
         }
-        // the snakes are collected backwards
         return Arrays.asList(result);
     }
 }
