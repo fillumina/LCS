@@ -7,8 +7,7 @@ import com.fillumina.lcs.Lcs;
 
 /**
  * An optimization of the Myers algorithm that only copies the part of the
- * vector which was actually used thus avoiding to access main memory to
- * copy array elements which are not actually used by the algorithm.
+ * vector which was actually used.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -28,7 +27,7 @@ public class OptimizedMyersLcs implements Lcs {
         int m = b.length;
         int max = n + m + 1;
 
-        int[][] vv = new int[max + 1][];
+        int[][] vv = new int[1 + (max >> 1)][];
         int[] v = new int[(max << 1) + 3];
         int[] tmp;
 
@@ -51,19 +50,21 @@ public class OptimizedMyersLcs implements Lcs {
                 }
                 v[maxk] = x;
                 if (x >= n && y >= m) {
-                    size = (d<<1) + 3;
+                    int dd = d + (d & 1);
+                    size = (dd<<1) + 3;
                     tmp = new int[size + 2];
-                    System.arraycopy(v, max-d-1, tmp, 1, size);
-                    vv[d] = tmp;
-                    vv[d + (d & 1)] = tmp;
+                    System.arraycopy(v, max-dd-1, tmp, 1, size);
+                    vv[dd>>1] = tmp;
 
                     break FILL_THE_TABLE;
                 }
             }
-            size = (d<<1) + 3;
-            tmp = new int[size + 2];
-            System.arraycopy(v, max-d-1, tmp, 1, size);
-            vv[d] = tmp;
+            if ((d & 1) == 0) {
+                size = (d<<1) + 3;
+                tmp = new int[size + 2];
+                System.arraycopy(v, max-d-1, tmp, 1, size);
+                vv[d>>1] = tmp;
+            }
         }
 
         int xStart, xMid, index = (n + m - d) >> 1;
@@ -71,7 +72,7 @@ public class OptimizedMyersLcs implements Lcs {
         T[] result = (T[]) new Object[index];
 
         for (; d >= 0 && x > 0; d--) {
-            int[] vNext = vv[d - (d&1)];
+            int[] vNext = vv[d>>1];
             maxk = d + 2 + k -(d&1);
 
             try {
