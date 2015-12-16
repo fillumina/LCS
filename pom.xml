@@ -24,8 +24,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.5.201505241946</version>
                 <configuration>
-                    <!-- those are copied from Xerces -->
                     <excludes>
+                        <exclude>com/fillumina/lcs/testutil/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

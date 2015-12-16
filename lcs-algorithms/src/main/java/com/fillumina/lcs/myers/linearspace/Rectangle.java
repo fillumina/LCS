@@ -1,7 +1,5 @@
 package com.fillumina.lcs.myers.linearspace;
 
-import java.util.List;
-
 /**
  * A 2D area described by the top,left - bottom,right coordinates
  * considering the origin on the top-left.
@@ -13,10 +11,6 @@ class Rectangle {
     private final int yEnd;
     protected final int n;
     protected final int m;
-
-    public Rectangle(List<?> a, List<?> b) {
-        this(0, 0, a.size(), b.size());
-    }
 
     public Rectangle(int xStart, int yStart, int xEnd, int yEnd) {
         this.xStart = xStart;

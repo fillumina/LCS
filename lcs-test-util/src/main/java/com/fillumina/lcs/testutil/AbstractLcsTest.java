@@ -8,6 +8,7 @@ import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * A suite of tests for LCS sequences.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -103,7 +104,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("PINE");
     }
 
-    @Test//(timeout = 1_000L)
+    @Test(timeout = 1_000L)
     public void shouldWorkHORSEBACK() {
         lcs("HORSEBACK", "SNOWFLAKE")
                 .assertResult("OAK", "SAK");
@@ -127,7 +128,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("");
     }
 
-    @Test//(timeout = 1_000L)
+    @Test(timeout = 1_000L)
     public void shouldReturnTheOnlyMatchAtBeginning() {
         lcs("ABCDEF", "A")
                 .assertResult("A");
@@ -151,19 +152,19 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                 .assertResult("");
     }
 
-    @Test//(timeout = 1_000L)
+    @Test(timeout = 1_000L)
     public void shouldReturnTheOnlyMatchAtBeginningReversed() {
         lcs("A", "ABCDEF")
                 .assertResult("A");
     }
 
-    @Test//(timeout = 1_000L)
+    @Test(timeout = 1_000L)
     public void shouldReturnTheOnlyMatchAtEndReversed() {
         lcs("F", "ABCDEF")
                 .assertResult("F");
     }
 
-    @Test//(timeout = 1_000L)
+    @Test(timeout = 1_000L)
     public void shouldReturnTheOnlyMatchAtEndReversedOdd() {
         lcs("E", "ABCDE")
                 .assertResult("E");

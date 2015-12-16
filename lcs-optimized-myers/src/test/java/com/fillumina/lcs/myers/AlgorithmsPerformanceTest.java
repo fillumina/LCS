@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.myers;
 
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -6,7 +6,9 @@ import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.fillumina.lcs.myers.OptimizedMyersLcs;
+import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.LcsSizeEvaluator;
+import com.fillumina.lcs.LinearSpaceMyersLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
 
@@ -17,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 // TODO do a performance test with all the myers implementation (including mine)
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 6000;
-    private static final int LCS = 4000;
+    private static final int TOTAL = 600;
+    private static final int LCS = 400;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -57,17 +59,39 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     public void init(ProgressionConfigurator config) {
         config.setBaseIterations(100);
         config.setTimeout(360, TimeUnit.SECONDS);
-        config.setMaxStandardDeviation(2);
+        config.setMaxStandardDeviation(7);
     }
 
     @Override
     public void addTests(TestContainer tests) {
-        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs()));
-        tests.addTest("LinearSpaceMyers",
-                new LcsRunnable(new LinearSpaceMyersLcsArrayAdaptor()));
+        tests.addTest("ForwardMyersLcs",
+                new LcsRunnable(new AbstractMyersLcsAdaptor()));
+        tests.addTest("HyperOptimizedLinearSpaceMyersLcs",
+                new LcsRunnable(new HyperOptimizedLinearSpaceMyersLcsAdaptor()));
+        tests.addTest("ParallelLinearSpaceMyersLcs",
+                new LcsRunnable(new AbstractParallelLinearSpaceMyersLcsAdaptor()));
+        tests.addTest("LinearSpaceLcs",
+                new LcsRunnable(new LinearSpaceMyersLcsListAdaptor()));
     }
 
     @Override
     public void addAssertions(PerformanceAssertion assertion) {
+    }
+
+    private static class LinearSpaceMyersLcsListAdaptor
+            implements LcsSizeEvaluator {
+        private LinearSpaceMyersLcs<?> linearSpaceMyersLcs;
+
+        @Override
+        public int getLcsSize() {
+            return linearSpaceMyersLcs.getLcsLength();
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+            linearSpaceMyersLcs = LinearSpaceMyersLcs.lcs(a, b);
+            return (List<? extends T>) linearSpaceMyersLcs.extractLcsList();
+        }
     }
 }

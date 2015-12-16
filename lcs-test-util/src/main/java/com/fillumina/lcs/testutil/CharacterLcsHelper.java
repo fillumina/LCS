@@ -8,7 +8,7 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CharacterLcsTestHelper {
+public class CharacterLcsHelper {
 
     public static String executeLcs(Lcs lcs, String a, String b) {
         @SuppressWarnings("unchecked")
@@ -25,7 +25,7 @@ public class CharacterLcsTestHelper {
         return list;
     }
 
-    public static  String toString(List<? extends Character> list) {
+    public static String toString(List<? extends Character> list) {
         if (list == null || list.isEmpty()) {
             return "";
         }

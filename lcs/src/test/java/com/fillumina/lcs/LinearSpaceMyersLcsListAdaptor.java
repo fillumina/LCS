@@ -12,7 +12,7 @@ public class LinearSpaceMyersLcsListAdaptor implements LcsSizeEvaluator {
     private LinearSpaceMyersLcs<?> linearSpaceMyersLcs;
 
     @Override
-    public int getLcs() {
+    public int getLcsSize() {
         return linearSpaceMyersLcs.getLcsLength();
     }
 

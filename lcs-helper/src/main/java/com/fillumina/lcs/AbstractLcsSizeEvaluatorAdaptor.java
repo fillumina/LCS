@@ -15,7 +15,7 @@ public abstract class AbstractLcsSizeEvaluatorAdaptor
             final List<? extends T> a,
             final List<? extends T> b) {
         Iterable<Integer> sequence = lcsItems(a, b);
-        List<T> lcs = new ArrayList<>(getLcs());
+        List<T> lcs = new ArrayList<>(getLcsSize());
         for (int index : sequence) {
             lcs.add(a.get(index));
         }

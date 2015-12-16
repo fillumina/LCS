@@ -19,7 +19,7 @@ public class HyperOptimizedLinearSpaceMyersLcsAdaptor
     }
 
     @Override
-    public int getLcs() {
+    public int getLcsSize() {
         return lcsItem.getSequenceSize();
     }
 

@@ -19,7 +19,7 @@ public class AbstractParallelLinearSpaceMyersLcsAdaptor
     }
 
     @Override
-    public int getLcs() {
+    public int getLcsSize() {
         return lcsItem.getLcs();
     }
 

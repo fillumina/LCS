@@ -6,5 +6,5 @@ package com.fillumina.lcs;
  */
 public interface LcsSizeEvaluator extends Lcs {
 
-    int getLcs();
+    int getLcsSize();
 }

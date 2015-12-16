@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  * Implementation of the Linear Space Myers LCS algorithm. For maximum
  * flexibility its input is provided by extending the class.
  * It returns an ordered sequence of {@link LcsItem}s.
- *
+ * <p>
  * This implementation uses several optimizations but it is too complex
  * to be faster than the bare one which was then chosen. It stays here
  * as a remark that with java over complex optimizations could easily

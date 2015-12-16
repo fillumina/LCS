@@ -16,19 +16,19 @@ public class AbstractMyersLcsAdaptor extends AbstractLcsSizeEvaluatorAdaptor {
 
     @Override
     protected <T> Iterable<Integer> lcsItems(T[] a, T[] b) {
-        lcsItem = new LinearSpaceMyersLcsImpl<>(a, b).calculateLcs();
+        lcsItem = new MyersLcsImpl<>(a, b).calculateLcs();
         return lcsItem.lcsIndexesOfTheFirstSequence();
     }
 
     @Override
-    public int getLcs() {
+    public int getLcsSize() {
         return lcsItem.getSequenceSize();
     }
 
-    private static class LinearSpaceMyersLcsImpl<T> extends AbstractMyersLcs {
+    private static class MyersLcsImpl<T> extends AbstractMyersLcs {
         private final T[] a, b;
 
-        public LinearSpaceMyersLcsImpl(T[] a, T[] b) {
+        public MyersLcsImpl(T[] a, T[] b) {
             this.a = a;
             this.b = b;
         }

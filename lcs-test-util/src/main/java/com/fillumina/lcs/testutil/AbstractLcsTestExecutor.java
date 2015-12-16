@@ -8,14 +8,57 @@ import java.util.List;
 import java.util.Map;
 import com.fillumina.lcs.Lcs;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
+ * An helper for testing LCS algorithms.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLcsTestExecutor
-        extends CharacterLcsTestHelper {
+        extends CharacterLcsHelper {
     private final Map<String, Integer> countingMap = new HashMap<>();
+    /**
+     * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
+     * the body of the created
+     * {@link Lcs#lcs(java.util.List, java.util.List)}.
+     */
+    public abstract Lcs getLcsAlgorithm();
+
+    @SuppressWarnings("unchecked")
+    public Result lcs(final String xs, final String ys) {
+        return new Result(
+                executeLcs(getLcsAlgorithm(), xs, ys),
+                new CountingResult(countingMap));
+    }
+
+    /**
+     * Call this method to count how many times a method has been called
+     * with specific parameters.
+     * @param <T>
+     * @param xs
+     * @param ys
+     */
+    protected <T> void count(List<? extends T> xs, List<? extends T> ys) {
+        count(xs.toString() + ys.toString());
+    }
+
+    private void count(String s) {
+        Integer num = countingMap.get(s);
+        if (num == null) {
+            num = 0;
+        }
+        countingMap.put(s, num + 1);
+    }
+
+    private String getName() {
+        final Class<? extends Lcs> clazz = getLcsAlgorithm().getClass();
+        final String simpleName = clazz.getSimpleName();
+        if (simpleName.isEmpty()) {
+            return clazz.getSuperclass().getSimpleName();
+        }
+        return simpleName;
+    }
 
     public class Result {
         private final String result;
@@ -102,39 +145,5 @@ public abstract class AbstractLcsTestExecutor
         }
     }
 
-    /**
-     * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
-     * the body of the created
-     * {@link Lcs#lcs(java.util.List, java.util.List)}.
-     */
-    public abstract Lcs getLcsAlgorithm();
-
-    @SuppressWarnings("unchecked")
-    public Result lcs(final String xs, final String ys) {
-        return new Result(
-                executeLcs(getLcsAlgorithm(), xs, ys),
-                new CountingResult(countingMap));
-    }
-
-    protected <T> void count(List<? extends T> xs, List<? extends T> ys) {
-        count(xs.toString() + ys.toString());
-    }
-
-    private void count(String s) {
-        Integer num = countingMap.get(s);
-        if (num == null) {
-            num = 0;
-        }
-        countingMap.put(s, num + 1);
-    }
-
-    private String getName() {
-        final Class<? extends Lcs> clazz = getLcsAlgorithm().getClass();
-        final String simpleName = clazz.getSimpleName();
-        if (simpleName.isEmpty()) {
-            return clazz.getSuperclass().getSimpleName();
-        }
-        return simpleName;
-    }
 
 }

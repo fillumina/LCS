@@ -5,8 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Optimized implementation of the forward Myers algorithm. It is especially
- * fast for small sequences and when there are few matches. It is crafted
+ * Optimized implementation of the forward Myers algorithm.  It is crafted
  * to be easily embedded into the {@link AbstractLinearSpaceMyersLcs}
  * as it has been done in {@link HyperOptimizedLinearSpaceMyersLcs} which
  * unfortunately resulted in a slower algorithm.
