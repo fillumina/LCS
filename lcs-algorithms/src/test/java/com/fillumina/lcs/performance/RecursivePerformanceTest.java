@@ -6,11 +6,11 @@ import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.recursive.RecursiveLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -42,9 +42,9 @@ public class RecursivePerformanceTest extends AutoProgressionPerformanceTemplate
     }
 
     private class LcsRunnable implements Runnable {
-        private final Lcs lcsAlgorithm;
+        private final ListLcs lcsAlgorithm;
 
-        public LcsRunnable(Lcs lcsAlgorithm) {
+        public LcsRunnable(ListLcs lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 

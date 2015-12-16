@@ -2,9 +2,9 @@ package com.fillumina.lcs.recursive;
 
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
 import java.util.Arrays;
 import java.util.Collections;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * The simplest LCS algorithm. It is based on recursion so it's quite
@@ -14,7 +14,7 @@ import java.util.Collections;
  * @see MomoizedRecursiveLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class RecursiveLcs implements Lcs {
+public class RecursiveLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

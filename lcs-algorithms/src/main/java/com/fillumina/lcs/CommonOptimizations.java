@@ -21,11 +21,11 @@ import java.util.Objects;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CommonOptimizations implements Lcs {
+public class CommonOptimizations implements ListLcs {
 
-    private final Lcs delegate;
+    private final ListLcs delegate;
 
-    public CommonOptimizations(Lcs delegate) {
+    public CommonOptimizations(ListLcs delegate) {
         this.delegate = delegate;
     }
 

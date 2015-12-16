@@ -1,37 +1,24 @@
-package com.fillumina.lcs.myers;
-
-import java.util.List;
-import java.util.Arrays;
-import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+package com.fillumina.lcs;
 
 /**
- * An optimization of the Myers algorithm that only copies the part of the
- * vector which was actually used. It's blazing fast but uses a creeping lot
- * or memory especially if there are few matches. Finding 4 matches in a
- * two 600 elements sequences can use as much as
+ * An implementation of the forward Myers algorithm. It's pretty fast
+ * but uses an O(n^2) space.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedMyersLcs implements ListLcs {
+public class MyersLcs extends LcsHeadTailReducer implements Lcs {
+    public static final MyersLcs INSTANCE = new MyersLcs();
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        @SuppressWarnings("unchecked")
-        final T[] aa = a.toArray((T[])new Object[a.size()]);
-        @SuppressWarnings("unchecked")
-        final T[] bb = b.toArray((T[])new Object[b.size()]);
-        return lcsMyers(aa, bb);
-    }
-
-    private <T> List<? extends T> lcsMyers(T[] a, T[] b) {
-        int n = a.length;
-        int m = b.length;
+    protected LcsItem lcs(final LcsInput lcsInput,
+            final LcsSequencer seqGen,
+            final int a0, final int n,
+            final int b0, final int m) {
         int max = n + m + 1;
 
         int[][] vv = new int[1 + (max >> 1)][];
         int[] v = new int[(max << 1) + 3];
-        int[] tmp;
+        int[] tmpV;
 
         int size, maxk, next, prev, x=-1, y, d, k=-1;
         FILL_THE_TABLE:
@@ -46,7 +33,7 @@ public class OptimizedMyersLcs implements ListLcs {
                     x = prev + 1;
                 }
                 y = x - k;
-                while (x < n && y < m && Objects.equals(a[x], b[y])) {
+                while (x < n && y < m && lcsInput.equals(a0 + x, b0 + y)) {
                     x++;
                     y++;
                 }
@@ -54,24 +41,23 @@ public class OptimizedMyersLcs implements ListLcs {
                 if (x >= n && y >= m) {
                     int dd = d + (d & 1);
                     size = (dd<<1) + 3;
-                    tmp = new int[size + 2];
-                    System.arraycopy(v, max-dd-1, tmp, 1, size);
-                    vv[dd>>1] = tmp;
+                    tmpV = new int[size + 2];
+                    System.arraycopy(v, max-dd-1, tmpV, 1, size);
+                    vv[dd>>1] = tmpV;
 
                     break FILL_THE_TABLE;
                 }
             }
             if ((d & 1) == 0) {
                 size = (d<<1) + 3;
-                tmp = new int[size + 2];
-                System.arraycopy(v, max-d-1, tmp, 1, size);
-                vv[d>>1] = tmp;
+                tmpV = new int[size + 2];
+                System.arraycopy(v, max-d-1, tmpV, 1, size);
+                vv[d>>1] = tmpV;
             }
         }
 
-        int xStart, xMid, index = (n + m - d) >> 1;
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[index];
+        int xStart, xMid;
+        LcsItemImpl head=null;
 
         for (; d >= 0 && x > 0; d--) {
             int[] vNext = vv[d>>1];
@@ -90,14 +76,17 @@ public class OptimizedMyersLcs implements ListLcs {
             }
 
             if (x != xMid) {
-                for (int s=x-1; s>=xMid; s--) {
-                    index--;
-                    result[index] = a[s];
+                LcsItemImpl tmp = new LcsItemImpl(
+                        a0 + xMid, b0 + xMid - k, x - xMid);
+                if (head == null) {
+                    head = tmp;
+                } else {
+                    head = tmp.chain(head);
                 }
             }
 
             x = xStart;
         }
-        return Arrays.asList(result);
+        return head;
     }
 }

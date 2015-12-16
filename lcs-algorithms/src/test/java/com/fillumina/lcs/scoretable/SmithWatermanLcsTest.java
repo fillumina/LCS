@@ -1,7 +1,7 @@
 package com.fillumina.lcs.scoretable;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.fillumina.lcs.Lcs;
 public class SmithWatermanLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new SmithWatermanLcs();
     }
 }

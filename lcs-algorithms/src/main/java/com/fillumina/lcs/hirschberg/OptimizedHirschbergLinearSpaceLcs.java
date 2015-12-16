@@ -2,9 +2,9 @@ package com.fillumina.lcs.hirschberg;
 
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
 import java.util.AbstractList;
 import java.util.Collections;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
@@ -12,7 +12,7 @@ import java.util.Collections;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedHirschbergLinearSpaceLcs implements Lcs {
+public class OptimizedHirschbergLinearSpaceLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

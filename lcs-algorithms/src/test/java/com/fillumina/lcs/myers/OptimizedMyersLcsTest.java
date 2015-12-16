@@ -1,12 +1,12 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class OptimizedMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new OptimizedMyersLcs();
     }
 

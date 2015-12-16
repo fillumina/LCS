@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * This algorithm uses the LCS score table in a graphical way. It's useful
@@ -15,7 +15,7 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BottomUpLcs implements Lcs {
+public class BottomUpLcs implements ListLcs {
     private static final Cell DEFAULT_INVALID_CELL = new Cell(0, Move.INVALID);
 
     @Override

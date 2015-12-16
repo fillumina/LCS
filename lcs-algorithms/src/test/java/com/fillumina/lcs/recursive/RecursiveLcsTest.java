@@ -3,11 +3,11 @@ package com.fillumina.lcs.recursive;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.recursive.RecursiveLcs.Stack;
 import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class RecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new RecursiveLcs() {
 
             @Override

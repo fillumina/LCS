@@ -1,9 +1,9 @@
 package com.fillumina.lcs.scoretable;
 
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -12,7 +12,7 @@ import org.junit.Test;
 public class WagnerFischerLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new WagnerFischerLcs();
     }
 

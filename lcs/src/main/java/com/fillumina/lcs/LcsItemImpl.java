@@ -1,6 +1,6 @@
 package com.fillumina.lcs;
 
-import java.util.AbstractCollection;
+import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * Because of that the first element of the chain (the head) is always the last
  * added one and so it contains an updated LCS length.
  */
-class LcsItemImpl extends AbstractCollection<LcsItem>
+class LcsItemImpl extends AbstractList<LcsItem>
         implements LcsItem {
     private static final long serialVersionUID = 1L;
     static final LcsItemImpl NULL = new LcsItemImpl(-1, -1, 0);
@@ -72,6 +72,16 @@ class LcsItemImpl extends AbstractCollection<LcsItem>
     @Override
     public int getSteps() {
         return steps;
+    }
+
+    /** This method is really inefficient this being a linked list. */
+    @Override
+    public LcsItem get(int index) {
+        LcsItemImpl current = this;
+        for (int i=0; i<index; i++) {
+            current = current.next;
+        }
+        return current;
     }
 
     abstract class IndexIterator implements Iterator<Integer> {
@@ -181,5 +191,29 @@ class LcsItemImpl extends AbstractCollection<LcsItem>
         }
         return className +
                 "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
+    }
+
+    public static LcsItem chain(LcsItemImpl before,
+            LcsItemImpl middle, LcsItemImpl after) {
+        if (middle == null) {
+            if (after == null) {
+                return before;
+            }
+            if (before == null) {
+                return after;
+            }
+            return ((LcsItemImpl)before).chain((LcsItemImpl)after);
+        }
+        if (after == null) {
+            if (before == null) {
+                return middle;
+            }
+            return ((LcsItemImpl)before).chain((LcsItemImpl)middle);
+        }
+        if (before == null) {
+            return ((LcsItemImpl)middle).chain((LcsItemImpl)after);
+        }
+        return ((LcsItemImpl)before).chain(
+                ((LcsItemImpl)middle).chain((LcsItemImpl)after));
     }
 }

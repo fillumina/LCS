@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * Because the linear space optimization of the basic Myers algorithm uses
@@ -24,7 +24,7 @@ import com.fillumina.lcs.Lcs;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ReverseMyersLcs implements Lcs {
+public class ReverseMyersLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

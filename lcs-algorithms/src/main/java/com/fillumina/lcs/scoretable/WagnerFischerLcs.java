@@ -1,9 +1,9 @@
 package com.fillumina.lcs.scoretable;
 
 import java.util.List;
-import com.fillumina.lcs.Lcs;
 import java.util.Arrays;
 import java.util.Objects;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * This algorithm is an adaptation from the original used to calculate the
@@ -24,7 +24,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class WagnerFischerLcs implements Lcs {
+public class WagnerFischerLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

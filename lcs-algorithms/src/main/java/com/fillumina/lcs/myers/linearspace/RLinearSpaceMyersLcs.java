@@ -1,7 +1,7 @@
 package com.fillumina.lcs.myers.linearspace;
 
 import java.util.List;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * Myers algorithm that uses forward and backward snakes. It is not designed
@@ -9,7 +9,7 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class RLinearSpaceMyersLcs implements Lcs {
+public class RLinearSpaceMyersLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

@@ -6,7 +6,6 @@ import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.hirschberg.HirschbergLinearSpaceAlgorithmLcs;
 import com.fillumina.lcs.hirschberg.OptimizedHirschbergLinearSpaceLcs;
 import com.fillumina.lcs.myers.MyersLcs;
@@ -20,6 +19,7 @@ import com.fillumina.lcs.scoretable.BottomUpLcs;
 import com.fillumina.lcs.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import static org.junit.Assert.assertEquals;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -51,9 +51,9 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     }
 
     private class LcsRunnable implements Runnable {
-        private final Lcs lcsAlgorithm;
+        private final ListLcs lcsAlgorithm;
 
-        public LcsRunnable(Lcs lcsAlgorithm) {
+        public LcsRunnable(ListLcs lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 

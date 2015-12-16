@@ -1,8 +1,8 @@
 package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.myers.ReverseMyersLcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -11,7 +11,7 @@ import com.fillumina.lcs.myers.ReverseMyersLcs;
 public class ReverseMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new ReverseMyersLcs();
     }
 

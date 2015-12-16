@@ -2,7 +2,7 @@ package com.fillumina.lcs.docx4j;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import org.junit.Test;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -15,7 +15,7 @@ public class IbmLcsTest extends AbstractLcsTest {
     }
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new IbmLcs();
     }
 

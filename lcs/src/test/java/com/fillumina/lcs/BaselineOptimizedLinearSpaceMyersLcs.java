@@ -8,13 +8,11 @@ import java.util.Objects;
 
 /**
  * This is an old implementation of {@link LinearSpaceMyersLcs} used as
- * a reference. It is slightly faster because it accesses directly to the
- * arrays instead of having to pass through an inherited method.
+ * a reference.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-//TODO add a performance test with this baseline to see how much has been lost
-public class BaselineOptimizedLinearSpaceMyersLcs implements Lcs {
+public class BaselineOptimizedLinearSpaceMyersLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(final List<? extends T> a,
@@ -46,7 +44,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs implements Lcs {
         LcsItem matchDown = null;
         LcsItem matchUp = null, lcsMatch = null;
         int d;
-        for (d=0; d<min && Objects.equals(a[d],b[d]); d++);
+        for (d=0; d<min && Objects.equals(a[d],b[d]); d++) {}
         if (d != 0) {
             matchDown = new LcsItem(0, 0, d);
             if (d == min) {
@@ -54,7 +52,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs implements Lcs {
             }
         }
         int u, x0=n-1, y0=m-1;
-        for (u=0; u<min && Objects.equals(a[x0-u],b[y0-u]); u++);
+        for (u=0; u<min && Objects.equals(a[x0-u],b[y0-u]); u++) {}
         if (u != 0) {
             matchUp = new LcsItem(n-u, m-u, u);
         }

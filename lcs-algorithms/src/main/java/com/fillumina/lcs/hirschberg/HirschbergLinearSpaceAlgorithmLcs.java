@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  * Computes the LCS using linear space O(n).
@@ -20,7 +20,7 @@ import com.fillumina.lcs.Lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class HirschbergLinearSpaceAlgorithmLcs implements Lcs {
+public class HirschbergLinearSpaceAlgorithmLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

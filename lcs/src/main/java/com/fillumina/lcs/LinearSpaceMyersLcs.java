@@ -1,84 +1,167 @@
 package com.fillumina.lcs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-
 /**
- * Myers Linear LCS Algorithm for collections and arrays. This implementation
- * provides the LCS for collections and arrays.
+ * Implementation of the Linear Space Myers LCS algorithm. This is the base
+ * class containing the algorithm. It only provides the indexes of the
+ * LCS matches.
  *
  * @see AbstractLinearSpaceMyersLcSequence
+ * @see LinearSpaceMyersLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs<T> extends AbstractLinearSpaceMyersLcSequence {
-    private final T[] a, b;
+public class LinearSpaceMyersLcs extends LcsHeadTailReducer implements Lcs {
+//    public static final LinearSpaceMyersLcs INSTANCE =
+//            new LinearSpaceMyersLcs();
 
-    /**
-     * Performs the LCS calculation and return an object that can be
-     * queried for the results.
-     * @param <T> type of the lists
-     * @param a   first sequence
-     * @param b   second sequence
-     * @return    result object that can be queried for various data
-     */
-    public static <T> LinearSpaceMyersLcs<T> lcs(
-            final Collection<? extends T> a,
-            final Collection<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
-        @SuppressWarnings("unchecked")
-        final T[] oa = (T[]) a.toArray(new Object[n]);
-        @SuppressWarnings("unchecked")
-        final T[] ob = (T[]) b.toArray(new Object[m]);
-        final LinearSpaceMyersLcs<T> linearSpaceMyersLcs =
-                new LinearSpaceMyersLcs<>(oa, ob);
-        linearSpaceMyersLcs.calculateLcs();
-        return linearSpaceMyersLcs;
-    }
+    private int[][] vv;
 
-    /**
-     * Performs the LCS calculation and return an object that can be
-     * queried for the results.
-     * @param <T> type of the lists
-     * @param oa  first sequence
-     * @param ob  second sequence
-     * @return    result object that can be queried for various data
-     */
-    public static <T> LinearSpaceMyersLcs<T> lcs(final T[] oa, final T[] ob) {
-        final LinearSpaceMyersLcs<T> linearSpaceMyersLcs =
-                new LinearSpaceMyersLcs<>(oa, ob);
-        linearSpaceMyersLcs.calculateLcs();
-        return linearSpaceMyersLcs;
-    }
-
-    private LinearSpaceMyersLcs(T[] a, T[] b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<T> extractLcsList() {
-        final List<T> lcs = new ArrayList<>(getLcsLength());
-        for (int index : lcsIndexesOfTheFirstSequence()) {
-            lcs.add(a[index]);
+    /** Recursive linear space Myers algorithm. */
+    @Override
+    protected LcsItem lcs(final LcsInput lcsInput,
+            final LcsSequencer seqGen,
+            final int a0, final int n,
+            final int b0, final int m) {
+        if (n == 1) {
+            for (int i = b0; i < b0 + m; i++) {
+                if (lcsInput.equals(a0, i)) {
+                    return seqGen.match(a0, i, 1);
+                }
+            }
+            return null;
         }
-        return lcs;
-    }
+        if (m == 1) {
+            for (int i = a0; i < a0 + n; i++) {
+                if (lcsInput.equals(i, b0)) {
+                    return seqGen.match(i, b0, 1);
+                }
+            }
+            return null;
+        }
 
-    @Override
-    public boolean equals(int x, int y) {
-        return Objects.equals(a[x], b[y]);
-    }
+        if (this.vv == null) {
+            this.vv = new int[2][n+m+4];
+        }
+        // make vv a local variable which is faster to access
+        final int[][] vv = this.vv;
 
-    @Override
-    public int getFirstSequenceLength() {
-        return a == null ? 0 : a.length;
-    }
+        LcsItem match = null;
+        int xStart = -1;
+        int yStart = -1;
+        int xEnd = -1;
+        int yEnd = -1;
+        {
+            // the find_middle_snake() function is embedded into the main
+            // function so to avoid a method call and to have easy access
+            // to all the required parameters. It uses a different scope
+            // to have less garbage on the stack when recursing.
 
-    @Override
-    public int getSecondSequenceLength() {
-        return b == null ? 0 : b.length;
+            final int delta = n - m;
+            final boolean evenDelta = (delta & 1) == 0;
+            final int[] vf = vv[0];
+            final int[] vb = vv[1];
+            final int halfv = vf.length >> 1;
+
+            vf[halfv + 1] = 0;
+            vf[halfv + delta] = 0;
+            vb[halfv - 1] = n;
+            vb[halfv - delta] = n;
+
+            boolean isPrev;
+            int k;
+            int prev;
+            int next;
+            int vIndex;
+            int xMid;
+            int kStart = delta - 1;
+            int kEnd = delta + 1;
+
+            final int max = (n + m + 1) >> 1;
+
+            FIND_MIDDLE_SNAKE:
+            for (int d = 0; d <= max; d++) {
+                // forward Myers algorithm
+                if (d != 0) {
+                    kStart = delta - (d - 1);
+                    kEnd = delta + (d - 1);
+                }
+                for (k = -d; k <= d; k += 2) {
+                    vIndex = halfv + k;
+                    next = vf[vIndex + 1];
+                    prev = vf[vIndex - 1];
+                    isPrev = k == -d || (k != d && prev < next);
+                    if (isPrev) {
+                        xEnd = next; // down
+                    } else {
+                        xEnd = prev + 1; // right
+                    }
+                    yEnd = xEnd - k;
+                    xMid = xEnd;
+                    while (xEnd < n && yEnd < m &&
+                            lcsInput.equals(a0 + xEnd, b0 + yEnd)) {
+                        xEnd++;
+                        yEnd++;
+                    }
+                    vf[vIndex] = xEnd;
+                    if (!evenDelta && kStart <= k && k <= kEnd && xEnd >= 0 &&
+                            vb[vIndex - delta] <= xEnd) {
+                        xStart = isPrev ? next : prev;
+                        yStart = xStart - (k + (isPrev ? 1 : -1));
+                        if (xEnd > xMid) {
+                            match = seqGen.match(a0 + xMid, b0 + (xMid - k),
+                                    xEnd - xMid);
+                        }
+                        break FIND_MIDDLE_SNAKE;
+                    }
+                }
+
+                // reverse Myers algorithm
+                kStart = delta - d;
+                kEnd = delta + d;
+                for (k = kStart; k <= kEnd; k += 2) {
+                    vIndex = halfv + k - delta;
+
+                    next = vb[vIndex + 1];
+                    prev = vb[vIndex - 1];
+                    isPrev = k == kEnd || (k != kStart && prev < next);
+                    if (isPrev) {
+                        xStart = prev; // up
+                    } else {
+                        xStart = next - 1; // left
+                    }
+                    yStart = xStart - k;
+                    xMid = xStart;
+                    while (xStart > 0 && yStart > 0 &&
+                            lcsInput.equals(a0 + xStart - 1, b0 + yStart - 1)) {
+                        xStart--;
+                        yStart--;
+                    }
+                    vb[vIndex] = xStart;
+                    if (evenDelta && -d <= k && k <= d && xStart >= 0 &&
+                            xStart <= vf[vIndex + delta]) {
+                        xEnd = isPrev ? prev : next;
+                        yEnd = xEnd - (k + (isPrev ? -1 : 1));
+                        if (xMid > xStart) {
+                            match = seqGen.match(a0 + xStart, b0 + yStart,
+                                    xMid - xStart);
+                        }
+                        break FIND_MIDDLE_SNAKE;
+                    }
+                }
+            }
+        }
+        final boolean fromStart = xStart <= 0 || yStart <= 0;
+        final boolean toEnd = xEnd >= n || n - xEnd == 0 || m - yEnd == 0;
+        if (fromStart && toEnd) {
+            return match;
+        }
+
+        //TODO check if calling lcsHeadTail() improves anything
+        LcsItem before = fromStart ? null :
+                lcsHeadTail(lcsInput, seqGen, a0, xStart, b0, yStart);
+
+        LcsItem after = toEnd ? null :
+                lcsHeadTail(lcsInput, seqGen, a0+xEnd, n-xEnd, b0+yEnd, m-yEnd);
+
+        return seqGen.chain(before, match, after);
     }
 }

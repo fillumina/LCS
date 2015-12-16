@@ -2,7 +2,7 @@ package com.fillumina.lcs.hirschberg;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -12,7 +12,7 @@ public class HirschbergLinearSpaceAlgorithmLcsTest
         extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new HirschbergLinearSpaceAlgorithmLcs() {
 
             @Override

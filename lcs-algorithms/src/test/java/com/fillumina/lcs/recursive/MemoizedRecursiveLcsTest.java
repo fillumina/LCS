@@ -3,7 +3,7 @@ package com.fillumina.lcs.recursive;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Ignore;
-import com.fillumina.lcs.Lcs;
+import com.fillumina.lcs.ListLcs;
 
 /**
  *
@@ -12,7 +12,7 @@ import com.fillumina.lcs.Lcs;
 public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
-    public Lcs getLcsAlgorithm() {
+    public ListLcs getLcsAlgorithm() {
         return new MemoizedRecursiveLcs() {
 
             @Override
