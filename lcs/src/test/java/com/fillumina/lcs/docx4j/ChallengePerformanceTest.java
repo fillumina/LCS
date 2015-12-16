@@ -1,13 +1,10 @@
 package com.fillumina.lcs.docx4j;
 
+import com.fillumina.lcs.BaselineOptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.CollectionLcsInput;
-import com.fillumina.lcs.Lcs;
 import com.fillumina.lcs.LcsInput;
 import com.fillumina.lcs.LcsLengthSequence;
-import com.fillumina.lcs.LcsSequencer;
-import com.fillumina.lcs.LcsSizeEvaluatorAdaptor;
 import com.fillumina.lcs.LinearSpaceMyersLcs;
-import com.fillumina.lcs.ListLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -15,7 +12,6 @@ import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -28,7 +24,7 @@ public class ChallengePerformanceTest
         extends AutoProgressionPerformanceTemplate {
 
     private static final int TOTAL = 600;
-    private static final int LCS = 50;
+    private static final int LCS = 4;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
@@ -69,13 +65,20 @@ public class ChallengePerformanceTest
         });
 
         tests.addTest("mine", new Runnable() {
-
             @Override
             public void run() {
                 LcsInput input = new CollectionLcsInput<>(a, b);
                 LcsLengthSequence seq = new LcsLengthSequence();
                 new LinearSpaceMyersLcs().calculateLcs(input, seq);
                 assertEquals(LCS, seq.getLcsLength());
+            }
+        });
+
+        tests.addTest("baseline", new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(LCS, new BaselineOptimizedLinearSpaceMyersLcs()
+                                .lcs(a, b).size());
             }
         });
     }

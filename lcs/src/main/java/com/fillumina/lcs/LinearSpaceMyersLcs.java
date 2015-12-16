@@ -155,7 +155,6 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer implements Lcs {
             return match;
         }
 
-        //TODO check if calling lcsHeadTail() improves anything
         LcsItem before = fromStart ? null :
                 lcsHeadTail(lcsInput, seqGen, a0, xStart, b0, yStart);
 
