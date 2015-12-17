@@ -193,7 +193,7 @@ class LcsItemImpl extends AbstractList<LcsItem>
                 "{xStart=" + x + ", yStart=" + y + ", steps=" + steps + '}';
     }
 
-    public static LcsItem chain(LcsItemImpl before,
+    public static LcsItemImpl chain(LcsItemImpl before,
             LcsItemImpl middle, LcsItemImpl after) {
         if (middle == null) {
             if (after == null) {
@@ -202,18 +202,17 @@ class LcsItemImpl extends AbstractList<LcsItem>
             if (before == null) {
                 return after;
             }
-            return ((LcsItemImpl)before).chain((LcsItemImpl)after);
+            return before.chain(after);
         }
         if (after == null) {
             if (before == null) {
                 return middle;
             }
-            return ((LcsItemImpl)before).chain((LcsItemImpl)middle);
+            return before.chain(middle);
         }
         if (before == null) {
-            return ((LcsItemImpl)middle).chain((LcsItemImpl)after);
+            return middle.chain(after);
         }
-        return ((LcsItemImpl)before).chain(
-                ((LcsItemImpl)middle).chain((LcsItemImpl)after));
+        return before.chain(middle.chain(after));
     }
 }

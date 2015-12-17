@@ -7,24 +7,21 @@ import java.util.List;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class LcsSizeEvaluatorAdaptor implements LcsSizeEvaluator {
-    private final Lcs lcs;
+    private final Lcs<?> lcs;
     private int size;
 
-    public LcsSizeEvaluatorAdaptor(final Lcs lcs) {
+    public LcsSizeEvaluatorAdaptor(final Lcs<?> lcs) {
         this.lcs = lcs;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public <T> List<? extends T> lcs(
             List<? extends T> xs,
             List<? extends T> ys) {
-        DefaultLcsInput<? extends T> lcsInput =
-                new DefaultLcsInput<>(xs, ys);
-        LcsSequencer lcsSequencer = LcsItemSequencer.INSTANCE;
-        List<LcsItem> result = lcs.calculateLcs(lcsInput, lcsSequencer);
-        this.size = result.size();
-        return lcsInput.extractLcsList(result);
+        final List<? extends T> list = ((Lcs<T>)lcs).lcSequence(xs, ys);
+        this.size = list.size();
+        return list;
     }
 
     @Override

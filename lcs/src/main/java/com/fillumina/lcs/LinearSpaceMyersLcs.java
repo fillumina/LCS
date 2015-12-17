@@ -9,29 +9,34 @@ package com.fillumina.lcs;
  * @see LinearSpaceMyersLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
-    public static final LinearSpaceMyersLcs INSTANCE =
-            new LinearSpaceMyersLcs();
+public class LinearSpaceMyersLcs<T> extends LcsHeadTailReducer<T, int[][]> {
+    public static final LinearSpaceMyersLcs<?> INSTANCE =
+            new LinearSpaceMyersLcs<>();
+
+    @SuppressWarnings("unchecked")
+    public static <T> LinearSpaceMyersLcs<T> instance() {
+        return (LinearSpaceMyersLcs<T>) INSTANCE;
+    }
 
     /** Recursive linear space Myers algorithm. */
     @Override
-    protected LcsItem lcs(int[][] vv,
-            final LcsInput lcsInput,
-            final LcsSequencer seqGen,
-            final int a0, final int n,
-            final int b0, final int m) {
+    LcsItemImpl lcs(int[][] vv,
+            final T[] a, final int a0, final int n,
+            final T[] b, final int b0, final int m) {
         if (n == 1) {
             for (int i = b0; i < b0 + m; i++) {
-                if (lcsInput.equals(a0, i)) {
-                    return seqGen.match(a0, i, 1);
+                final T t = a[a0];
+                if (same(t, b[i])) {
+                    return (LcsItemImpl) match(a0, i, 1);
                 }
             }
             return null;
         }
         if (m == 1) {
             for (int i = a0; i < a0 + n; i++) {
-                if (lcsInput.equals(i, b0)) {
-                    return seqGen.match(i, b0, 1);
+                final T t = b[b0];
+                if (same(a[i], t)) {
+                    return (LcsItemImpl) match(i, b0, 1);
                 }
             }
             return null;
@@ -41,7 +46,7 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
             vv = new int[2][n+m+4];
         }
 
-        LcsItem match = null;
+        LcsItemImpl match = null;
         int xStart = -1;
         int yStart = -1;
         int xEnd = -1;
@@ -94,7 +99,7 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
                     yEnd = xEnd - k;
                     xMid = xEnd;
                     while (xEnd < n && yEnd < m &&
-                            lcsInput.equals(a0 + xEnd, b0 + yEnd)) {
+                            same(a[a0 + xEnd], b[b0 + yEnd])) {
                         xEnd++;
                         yEnd++;
                     }
@@ -104,7 +109,7 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
                         xStart = isPrev ? next : prev;
                         yStart = xStart - (k + (isPrev ? 1 : -1));
                         if (xEnd > xMid) {
-                            match = seqGen.match(a0 + xMid, b0 + (xMid - k),
+                            match = (LcsItemImpl) match(a0 + xMid, b0 + (xMid - k),
                                     xEnd - xMid);
                         }
                         break FIND_MIDDLE_SNAKE;
@@ -128,7 +133,7 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
                     yStart = xStart - k;
                     xMid = xStart;
                     while (xStart > 0 && yStart > 0 &&
-                            lcsInput.equals(a0 + xStart - 1, b0 + yStart - 1)) {
+                            same(a[a0+xStart-1], b[b0+yStart-1])) {
                         xStart--;
                         yStart--;
                     }
@@ -138,7 +143,7 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
                         xEnd = isPrev ? prev : next;
                         yEnd = xEnd - (k + (isPrev ? -1 : 1));
                         if (xMid > xStart) {
-                            match = seqGen.match(a0 + xStart, b0 + yStart,
+                            match = (LcsItemImpl) match(a0 + xStart, b0 + yStart,
                                     xMid - xStart);
                         }
                         break FIND_MIDDLE_SNAKE;
@@ -152,12 +157,12 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
             return match;
         }
 
-        LcsItem before = fromStart ? null :
-                lcsHeadTail(vv, lcsInput, seqGen, a0, xStart, b0, yStart);
+        LcsItemImpl before = (LcsItemImpl) (fromStart ? null :
+                lcsHeadTail(vv, a, a0, xStart, b, b0, yStart));
 
-        LcsItem after = toEnd ? null :
-                lcsHeadTail(vv, lcsInput, seqGen, a0+xEnd, n-xEnd, b0+yEnd, m-yEnd);
+        LcsItemImpl after = (LcsItemImpl) (toEnd ? null :
+                lcsHeadTail(vv, a, a0+xEnd, n-xEnd, b, b0+yEnd, m-yEnd));
 
-        return seqGen.chain(before, match, after);
+        return LcsItemImpl.chain(before, match, after);
     }
 }

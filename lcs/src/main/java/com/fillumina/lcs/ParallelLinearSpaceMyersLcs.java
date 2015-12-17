@@ -6,29 +6,25 @@ import java.util.concurrent.RecursiveTask;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
-        implements Lcs {
-    public static final ParallelLinearSpaceMyersLcs INSTANCE =
-            new ParallelLinearSpaceMyersLcs();
+public class ParallelLinearSpaceMyersLcs<T> extends LcsHeadTailReducer<T, Void> {
+    public static final ParallelLinearSpaceMyersLcs<?> INSTANCE =
+            new ParallelLinearSpaceMyersLcs<>();
 
     @Override
-    protected LcsItem lcs(Void obj,
-            final LcsInput lcsInput,
-            final LcsSequencer seqGen,
-            final int a0, final int n, final int b0, final int m) {
-        return new Container(lcsInput, seqGen, n + m + 1).lcs(a0, n, b0, m);
+    LcsItemImpl lcs(Void obj,
+            final T[] a, final int a0, final int n,
+            final T[] b, final int b0, final int m) {
+        return new Container<>(a, b, n + m + 1).lcs(a0, n, b0, m);
     }
 
-    private static class Container {
+    private class Container<T> {
         private final ThreadLocal<int[][]> cache;
-        private final LcsInput lcsInput;
-        private final LcsSequencer seqGen;
+        private final T[] a, b;
 
-        public Container(final LcsInput lcsInput, final LcsSequencer seqGen,
-                final int max) {
-            this.lcsInput = lcsInput;
-            this.seqGen = seqGen;
-            cache = new ThreadLocal<int[][]>() {
+        public Container(final T[] a, final T[] b, final int max) {
+            this.a = a;
+            this.b = b;
+            this.cache = new ThreadLocal<int[][]>() {
                 @Override
                 protected int[][] initialValue() {
                     return new int[2][max << 1];
@@ -36,11 +32,11 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
             };
         }
 
-        LcsItem lcs(int a0, int n, int b0, int m) {
+        LcsItemImpl lcs(int a0, int n, int b0, int m) {
             return new RecursiveLcs(a0, n, b0, m).compute();
         }
 
-        private class RecursiveLcs extends RecursiveTask<LcsItem> {
+        private class RecursiveLcs extends RecursiveTask<LcsItemImpl> {
             private static final long serialVersionUID = 1L;
             private final int a0, n, b0, m;
 
@@ -53,7 +49,7 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
             }
 
             @Override
-            protected LcsItem compute() {
+            protected LcsItemImpl compute() {
                 // accessing local variables is faster
                 final int a0 = this.a0;
                 final int n = this.n;
@@ -65,27 +61,29 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                 }
                 if (n == 1) {
                     if (m == 1) {
-                        if (lcsInput.equals(a0, b0)) {
-                            return new LcsItemImpl(a0, b0, 1);
+                        if (same(a[a0], b[b0])) {
+                            return (LcsItemImpl) match(a0, b0, 1);
                         }
                         return null;
                     }
+                    final T t = a[a0];
                     for (int i = b0; i < b0 + m; i++) {
-                        if (lcsInput.equals(a0, i)) {
-                            return new LcsItemImpl(a0, i, 1);
+                        if (same(t, b[i])) {
+                            return (LcsItemImpl) match(a0, i, 1);
                         }
                     }
                     return null;
                 }
                 if (m == 1) {
+                    final T t = b[b0];
                     for (int i = a0; i < a0 + n; i++) {
-                        if (lcsInput.equals(i, b0)) {
-                            return new LcsItemImpl(i, b0, 1);
+                        if (same(a[i], b[b0])) {
+                            return (LcsItemImpl) match(i, b0, 1);
                         }
                     }
                     return null;
                 }
-                LcsItem match = null;
+                LcsItemImpl match = null;
                 int xStart = -1;
                 int yStart = -1;
                 int xEnd = -1;
@@ -135,7 +133,7 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                             yEnd = xEnd - k;
                             xMid = xEnd;
                             while (xEnd < n && yEnd < m &&
-                                    lcsInput.equals(a0 + xEnd, b0 + yEnd)) {
+                                    same(a[a0 + xEnd], b[b0 + yEnd])) {
                                 xEnd++;
                                 yEnd++;
                             }
@@ -145,7 +143,7 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                                 if (xEnd > xMid) {
                                     xStart = isPrev ? next : prev + 1;
                                     yStart = xStart - (k + (isPrev ? 1 : -1));
-                                    match = new LcsItemImpl(a0 + xMid,
+                                    match = (LcsItemImpl) match(a0 + xMid,
                                             b0 + (xMid - k),
                                             xEnd - xMid);
                                 } else {
@@ -170,8 +168,8 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                             yStart = xStart - k;
                             xMid = xStart;
                             while (xStart > 0 && yStart > 0 &&
-                                    lcsInput.equals(a0 + xStart - 1,
-                                    b0 + yStart - 1)) {
+                                    same(a[a0 + xStart - 1],
+                                    b[b0 + yStart - 1])) {
                                 xStart--;
                                 yStart--;
                             }
@@ -181,7 +179,7 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                                 if (xMid > xStart) {
                                     xEnd = isPrev ? prev : next - 1;
                                     yEnd = xEnd - (k + (isPrev ? -1 : 1));
-                                    match = new LcsItemImpl(a0 + xStart,
+                                    match = (LcsItemImpl) match(a0 + xStart,
                                             b0 + yStart,
                                             xMid - xStart);
                                 } else {
@@ -199,8 +197,8 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                     return match;
                 }
 
-                LcsItem before = null;
-                LcsItem after = null;
+                LcsItemImpl before = null;
+                LcsItemImpl after = null;
                 RecursiveLcs beforeLcs = null;
 
                 if (!fromStart)  {
@@ -222,7 +220,7 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
                     before = beforeLcs.join();
                 }
 
-                return seqGen.chain(before, match, after);
+                return LcsItemImpl.chain(before, match, after);
             }
         }
     }

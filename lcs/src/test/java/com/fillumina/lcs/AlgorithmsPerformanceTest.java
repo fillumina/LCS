@@ -62,17 +62,16 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     public void addTests(TestContainer tests) {
         tests.addTest("Baseline",
                 new LcsRunnable(new BaselineLinearSpaceMyersLcs()));
-//        tests.addTest("MyersLcs",
-//                new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
+        tests.addTest("MyersLcs",
+                new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",
                 new LcsRunnable(new LcsSizeEvaluatorAdaptor(LinearSpaceMyersLcs.INSTANCE)));
-//        tests.addTest("ParallelLinearSpaceMyersLcs",
-//                new LcsRunnable(new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
-        tests.addTest("tentative",
-                new LcsRunnable(new TentativeLinearSpaceMyersLcs()));
+        tests.addTest("ParallelLinearSpaceMyersLcs",
+                new LcsRunnable(new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
     }
 
     @Override
     public void addAssertions(PerformanceAssertion assertion) {
     }
+
 }

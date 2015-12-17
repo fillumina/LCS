@@ -1,20 +1,20 @@
 package com.fillumina.lcs;
 
+import java.util.Objects;
+
 /**
  * An implementation of the forward Myers algorithm. It's pretty fast
  * but uses an O(n^2) space.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs extends LcsHeadTailReducer<Void> implements Lcs {
-    public static final MyersLcs INSTANCE = new MyersLcs();
+public class MyersLcs<T> extends LcsHeadTailReducer<T, Void> {
+    public static final MyersLcs<?> INSTANCE = new MyersLcs<>();
 
     @Override
-    protected LcsItem lcs(Void obj,
-            final LcsInput lcsInput,
-            final LcsSequencer seqGen,
-            final int a0, final int n,
-            final int b0, final int m) {
+    LcsItemImpl lcs(Void obj,
+            final T[] a, final int a0, final int n,
+            final T[] b, final int b0, final int m) {
         int max = n + m + 1;
 
         int[][] vv = new int[1 + (max >> 1)][];
@@ -34,7 +34,7 @@ public class MyersLcs extends LcsHeadTailReducer<Void> implements Lcs {
                     x = prev + 1;
                 }
                 y = x - k;
-                while (x < n && y < m && lcsInput.equals(a0 + x, b0 + y)) {
+                while (x < n && y < m && same(a[a0 + x], b[b0 + y])) {
                     x++;
                     y++;
                 }
@@ -77,7 +77,7 @@ public class MyersLcs extends LcsHeadTailReducer<Void> implements Lcs {
             }
 
             if (x != xMid) {
-                LcsItemImpl tmp = new LcsItemImpl(
+                LcsItemImpl tmp = (LcsItemImpl) match(
                         a0 + xMid, b0 + xMid - k, x - xMid);
                 if (head == null) {
                     head = tmp;
