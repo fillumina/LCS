@@ -6,11 +6,12 @@ package com.fillumina.lcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs extends LcsHeadTailReducer implements Lcs {
+public class MyersLcs extends LcsHeadTailReducer<Void> implements Lcs {
     public static final MyersLcs INSTANCE = new MyersLcs();
 
     @Override
-    protected LcsItem lcs(final LcsInput lcsInput,
+    protected LcsItem lcs(Void obj,
+            final LcsInput lcsInput,
             final LcsSequencer seqGen,
             final int a0, final int n,
             final int b0, final int m) {

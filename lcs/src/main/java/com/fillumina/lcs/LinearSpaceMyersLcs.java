@@ -9,15 +9,14 @@ package com.fillumina.lcs;
  * @see LinearSpaceMyersLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LinearSpaceMyersLcs extends LcsHeadTailReducer implements Lcs {
-//    public static final LinearSpaceMyersLcs INSTANCE =
-//            new LinearSpaceMyersLcs();
-
-    private int[][] vv;
+public class LinearSpaceMyersLcs extends LcsHeadTailReducer<int[][]> {
+    public static final LinearSpaceMyersLcs INSTANCE =
+            new LinearSpaceMyersLcs();
 
     /** Recursive linear space Myers algorithm. */
     @Override
-    protected LcsItem lcs(final LcsInput lcsInput,
+    protected LcsItem lcs(int[][] vv,
+            final LcsInput lcsInput,
             final LcsSequencer seqGen,
             final int a0, final int n,
             final int b0, final int m) {
@@ -38,11 +37,9 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer implements Lcs {
             return null;
         }
 
-        if (this.vv == null) {
-            this.vv = new int[2][n+m+4];
+        if (vv == null) {
+            vv = new int[2][n+m+4];
         }
-        // make vv a local variable which is faster to access
-        final int[][] vv = this.vv;
 
         LcsItem match = null;
         int xStart = -1;
@@ -156,10 +153,10 @@ public class LinearSpaceMyersLcs extends LcsHeadTailReducer implements Lcs {
         }
 
         LcsItem before = fromStart ? null :
-                lcsHeadTail(lcsInput, seqGen, a0, xStart, b0, yStart);
+                lcsHeadTail(vv, lcsInput, seqGen, a0, xStart, b0, yStart);
 
         LcsItem after = toEnd ? null :
-                lcsHeadTail(lcsInput, seqGen, a0+xEnd, n-xEnd, b0+yEnd, m-yEnd);
+                lcsHeadTail(vv, lcsInput, seqGen, a0+xEnd, n-xEnd, b0+yEnd, m-yEnd);
 
         return seqGen.chain(before, match, after);
     }

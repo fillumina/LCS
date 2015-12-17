@@ -1,7 +1,7 @@
 package com.fillumina.lcs.docx4j;
 
-import com.fillumina.lcs.BaselineOptimizedLinearSpaceMyersLcs;
-import com.fillumina.lcs.CollectionLcsInput;
+import com.fillumina.lcs.BaselineLinearSpaceMyersLcs;
+import com.fillumina.lcs.DefaultLcsInput;
 import com.fillumina.lcs.LcsInput;
 import com.fillumina.lcs.LcsLengthSequence;
 import com.fillumina.lcs.LinearSpaceMyersLcs;
@@ -12,6 +12,7 @@ import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -67,9 +68,9 @@ public class ChallengePerformanceTest
         tests.addTest("mine", new Runnable() {
             @Override
             public void run() {
-                LcsInput input = new CollectionLcsInput<>(a, b);
+                LcsInput input = new DefaultLcsInput<>(a, b);
                 LcsLengthSequence seq = new LcsLengthSequence();
-                new LinearSpaceMyersLcs().calculateLcs(input, seq);
+                LinearSpaceMyersLcs.INSTANCE.calculateLcs(input, seq);
                 assertEquals(LCS, seq.getLcsLength());
             }
         });
@@ -77,8 +78,8 @@ public class ChallengePerformanceTest
         tests.addTest("baseline", new Runnable() {
             @Override
             public void run() {
-                assertEquals(LCS, new BaselineOptimizedLinearSpaceMyersLcs()
-                                .lcs(a, b).size());
+                assertEquals(LCS,  new BaselineLinearSpaceMyersLcs()
+                        .lcs(a, b).size());
             }
         });
     }

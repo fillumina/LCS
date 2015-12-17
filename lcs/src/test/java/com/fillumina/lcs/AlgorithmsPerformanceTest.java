@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -61,7 +62,7 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     @Override
     public void addTests(TestContainer tests) {
         tests.addTest("Baseline",
-                new LcsRunnable(new BaselineOptimizedLinearSpaceMyersLcs()));
+                new LcsRunnable(new BaselineLinearSpaceMyersLcs()));
         tests.addTest("MyersLcs",
                 new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",

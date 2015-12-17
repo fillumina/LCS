@@ -6,23 +6,23 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-// TODO could it become a wrapper?
-public abstract class LcsHeadTailReducer implements Lcs {
+public abstract class LcsHeadTailReducer<T> implements Lcs {
 
-    protected abstract LcsItem lcs(LcsInput lcsInput,
+    protected abstract LcsItem lcs(final T status,
+            final LcsInput lcsInput,
             final LcsSequencer seqGen,
             int a0, int n, int b0, int m);
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<LcsItem> calculateLcs(final LcsInput lcsInput,
+    public final List<LcsItem> calculateLcs(final LcsInput lcsInput,
             final LcsSequencer seqGen) {
         final int n = lcsInput.getFirstSequenceLength();
         final int m = lcsInput.getSecondSequenceLength();
         if (n == 0 || m == 0) {
             return LcsItemImpl.NULL;
         }
-        LcsItem result = lcsHeadTail(lcsInput, seqGen, 0, n, 0, m);
+        LcsItem result = lcsHeadTail(null, lcsInput, seqGen, 0, n, 0, m);
         if (result == null) {
             return LcsItemImpl.NULL;
         }
@@ -33,7 +33,8 @@ public abstract class LcsHeadTailReducer implements Lcs {
      * Optimizes the calculation by filtering out equal elements on the head
      * and tail of the sequences.
      */
-    protected final LcsItem lcsHeadTail(final LcsInput lcsInput,
+    protected final LcsItem lcsHeadTail(final T status,
+            final LcsInput lcsInput,
             final LcsSequencer seqGen,
             final int a0, final int n,
             final int b0, final int m) {
@@ -58,7 +59,7 @@ public abstract class LcsHeadTailReducer implements Lcs {
         }
         LcsItem lcsMatch = null;
         if (u + d < min) {
-            lcsMatch = lcs(lcsInput, seqGen, a0+d, n-d-u, b0+d, m-d-u);
+            lcsMatch = lcs(status, lcsInput, seqGen, a0+d, n-d-u, b0+d, m-d-u);
         }
         return seqGen.chain(matchDown, lcsMatch, matchUp);
     }

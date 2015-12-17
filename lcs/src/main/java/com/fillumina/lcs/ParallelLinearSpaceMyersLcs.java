@@ -6,13 +6,14 @@ import java.util.concurrent.RecursiveTask;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer
+public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer<Void>
         implements Lcs {
     public static final ParallelLinearSpaceMyersLcs INSTANCE =
             new ParallelLinearSpaceMyersLcs();
 
     @Override
-    protected LcsItem lcs(final LcsInput lcsInput,
+    protected LcsItem lcs(Void obj,
+            final LcsInput lcsInput,
             final LcsSequencer seqGen,
             final int a0, final int n, final int b0, final int m) {
         return new Container(lcsInput, seqGen, n + m + 1).lcs(a0, n, b0, m);
@@ -225,151 +226,5 @@ public class ParallelLinearSpaceMyersLcs extends LcsHeadTailReducer
             }
         }
     }
-
-//    public static class LcsItem implements Iterable<LcsItem>, Serializable {
-//        private static final long serialVersionUID = 1L;
-//
-//        public static final LcsItem NULL = new LcsItem(-1, -1, 0);
-//
-//        private final int x;
-//        private final int y;
-//        private final int steps;
-//        private LcsItem next;
-//        private LcsItem last;
-//
-//        LcsItem(int x, int y, int steps) {
-//            this.x = x;
-//            this.y = y;
-//            this.steps = steps;
-//        }
-//
-//        /**
-//         * This is NOT a general chain algorithm, it works because the way
-//         * matches are generated in the LCS algorithms.
-//         */
-//        LcsItem chain(final LcsItem other) {
-//            LcsItem current = this;
-//            if (last != null) {
-//                current = last;
-//            }
-//            current.next = other;
-//            accumulateLcs(other.getLcs());
-//            if (other.last != null) {
-//                current = other.last;
-//            } else {
-//                current = other;
-//            }
-//            last = current;
-//            return this;
-//        }
-//
-//        protected void accumulateLcs(int otherLcs) {
-//            // do nothing
-//        }
-//
-//        public int getLcs() {
-//            int lcs = 0;
-//            for (LcsItem m : this) {
-//                lcs += m.getSteps();
-//            }
-//            return lcs;
-//        }
-//
-//        public int getX() {
-//            return x;
-//        }
-//
-//        public int getY() {
-//            return y;
-//        }
-//
-//        public int getSteps() {
-//            return steps;
-//        }
-//
-//        public Iterable<Integer> lcsIndexes() {
-//            return new Iterable<Integer>() {
-//                @Override
-//                public Iterator<Integer> iterator() {
-//                    return new Iterator<Integer>() {
-//                        private Iterator<LcsItem> i = LcsItem.this.iterator();
-//                        private LcsItem current;
-//                        private int step = 0;
-//
-//                        @Override
-//                        public boolean hasNext() {
-//                            while (current == null || current.steps == 0 ||
-//                                    (step + 1) == current.steps) {
-//                                if (i.hasNext()) {
-//                                    current = (LcsItem) i.next();
-//                                    step = -1;
-//                                } else {
-//                                    return false;
-//                                }
-//                            }
-//                            step++;
-//                            return true;
-//                        }
-//
-//                        @Override
-//                        public Integer next() {
-//                            return current.x + step;
-//                        }
-//                    };
-//                }
-//            };
-//        }
-//
-//        @Override
-//        public Iterator<LcsItem> iterator() {
-//            return new Iterator<LcsItem>() {
-//                private LcsItem current = LcsItem.this;
-//
-//                @Override
-//                public boolean hasNext() {
-//                    return current != null && current != NULL;
-//                }
-//
-//                @Override
-//                public LcsItem next() {
-//                    LcsItem tmp = current;
-//                    current = current.next;
-//                    return tmp;
-//                }
-//            };
-//        }
-//
-//        @Override
-//        public String toString() {
-//            if (this == NULL) {
-//                return "Match{NULL}";
-//            }
-//            return getClass().getSimpleName() +
-//                    "{xStart=" + x + ", yStart=" + y +
-//                    ", steps=" + steps + '}';
-//        }
-//
-//        public static LcsItem chain(LcsItem before, LcsItem middle, LcsItem after) {
-//            if (middle == null) {
-//                if (after == null) {
-//                    return before;
-//                }
-//                if (before == null) {
-//                    return after;
-//                }
-//                return before.chain(after);
-//            }
-//            if (after == null) {
-//                if (before == null) {
-//                    return middle;
-//                }
-//                return before.chain(middle);
-//            }
-//            if (before == null) {
-//                return middle.chain(after);
-//            }
-//            return before.chain(middle.chain(after));
-//        }
-//    }
 
 }

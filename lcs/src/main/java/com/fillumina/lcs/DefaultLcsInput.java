@@ -12,7 +12,7 @@ import java.util.Objects;
  * @see SequenceCreatorLcsInput
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CollectionLcsInput<T> implements LcsInput {
+public class DefaultLcsInput<T> implements LcsInput {
     private final T[] a, b;
 
     /**
@@ -24,13 +24,14 @@ public class CollectionLcsInput<T> implements LcsInput {
      * @return    result object that can be queried for various data
      */
     @SuppressWarnings("unchecked")
-    public CollectionLcsInput(
+    public DefaultLcsInput(
             final Collection<? extends T> a,
             final Collection<? extends T> b) {
-        this((T[]) a.toArray(), (T[]) b.toArray());
+        this((T[]) a.toArray(new Object[a.size()]),
+                (T[]) b.toArray(new Object[b.size()]));
     }
 
-    public CollectionLcsInput(T[] a, T[] b) {
+    public DefaultLcsInput(T[] a, T[] b) {
         this.a = a;
         this.b = b;
     }

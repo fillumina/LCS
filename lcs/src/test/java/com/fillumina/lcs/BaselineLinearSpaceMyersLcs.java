@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class BaselineOptimizedLinearSpaceMyersLcs implements ListLcs {
+public class BaselineLinearSpaceMyersLcs implements ListLcs {
 
     @Override
     public <T> List<? extends T> lcs(final List<? extends T> a,
@@ -59,7 +59,7 @@ public class BaselineOptimizedLinearSpaceMyersLcs implements ListLcs {
 
         if (u + d != min) {
             lcsMatch = lcsRec(a, d, n-d-u, b, d, m-d-u,
-                    new int[2][2 * (n + m + 1)]);
+                    new int[2][(n + m + 1) << 1]);
         }
 
         return chain(matchDown, lcsMatch, matchUp);

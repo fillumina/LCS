@@ -19,8 +19,8 @@ public class LcsSizeEvaluatorAdaptor implements LcsSizeEvaluator {
     public <T> List<? extends T> lcs(
             List<? extends T> xs,
             List<? extends T> ys) {
-        CollectionLcsInput<? extends T> lcsInput =
-                new CollectionLcsInput<>(xs, ys);
+        DefaultLcsInput<? extends T> lcsInput =
+                new DefaultLcsInput<>(xs, ys);
         LcsSequencer lcsSequencer = LcsItemSequencer.INSTANCE;
         List<LcsItem> result = lcs.calculateLcs(lcsInput, lcsSequencer);
         this.size = result.size();
