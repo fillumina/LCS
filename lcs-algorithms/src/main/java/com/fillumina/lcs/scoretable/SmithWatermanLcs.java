@@ -3,7 +3,7 @@ package com.fillumina.lcs.scoretable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * Similar to the  Wagner-Fisher approach, it uses a score table that doesn't
@@ -15,7 +15,7 @@ import com.fillumina.lcs.ListLcs;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class SmithWatermanLcs implements ListLcs {
+public class SmithWatermanLcs implements LcsList {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

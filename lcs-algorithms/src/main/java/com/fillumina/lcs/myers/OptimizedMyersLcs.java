@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * An optimization of the Myers algorithm that only copies the part of the
@@ -13,7 +13,7 @@ import com.fillumina.lcs.ListLcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedMyersLcs implements ListLcs {
+public class OptimizedMyersLcs implements LcsList {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

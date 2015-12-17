@@ -4,7 +4,7 @@ import com.fillumina.lcs.LcsSizeEvaluator;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * A suite of test that tests the returned LCS length.
@@ -16,7 +16,7 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
     public abstract LcsSizeEvaluator getLcsSequenceGenerator();
 
     @Override
-    public ListLcs getLcsAlgorithm() {
+    public LcsList getLcsAlgorithm() {
         return getLcsSequenceGenerator();
     }
 

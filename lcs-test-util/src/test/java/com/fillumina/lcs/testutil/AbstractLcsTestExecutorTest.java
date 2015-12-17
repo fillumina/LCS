@@ -3,7 +3,7 @@ package com.fillumina.lcs.testutil;
 import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -90,8 +90,8 @@ public class AbstractLcsTestExecutorTest {
         }
 
         @Override
-        public ListLcs getLcsAlgorithm() {
-            return new ListLcs() {
+        public LcsList getLcsAlgorithm() {
+            return new LcsList() {
 
                 @Override
                 @SuppressWarnings("unchecked")

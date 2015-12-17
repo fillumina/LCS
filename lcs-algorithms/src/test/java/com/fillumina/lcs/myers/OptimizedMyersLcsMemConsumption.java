@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * Algorithm used for memory accounting.
@@ -12,7 +12,7 @@ import com.fillumina.lcs.ListLcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedMyersLcsMemConsumption implements ListLcs {
+public class OptimizedMyersLcsMemConsumption implements LcsList {
     private int memCounter;
 
     @Override

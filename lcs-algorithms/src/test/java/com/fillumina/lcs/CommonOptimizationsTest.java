@@ -10,7 +10,7 @@ import com.fillumina.lcs.scoretable.BottomUpLcs;
 public class CommonOptimizationsTest extends AbstractLcsTest {
 
     @Override
-    public ListLcs getLcsAlgorithm() {
+    public LcsList getLcsAlgorithm() {
         return new CommonOptimizations(new BottomUpLcs());
     }
 }

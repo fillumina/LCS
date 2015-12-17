@@ -6,7 +6,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -15,7 +15,7 @@ import com.fillumina.lcs.ListLcs;
 public class OptimizedMyersLcsTest extends AbstractLcsTest {
 
     @Override
-    public ListLcs getLcsAlgorithm() {
+    public LcsList getLcsAlgorithm() {
         return new OptimizedMyersLcs();
     }
 

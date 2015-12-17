@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 import java.util.Objects;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * A suite of tests for LCS sequences.
@@ -15,7 +15,7 @@ import com.fillumina.lcs.ListLcs;
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     public void randomLcs(int len, int lcs, int iterations) {
-        final ListLcs algorithm = getLcsAlgorithm();
+        final LcsList algorithm = getLcsAlgorithm();
         for (int i=0; i<iterations; i++) {
             RandomSequenceGenerator generator =
                     new RandomSequenceGenerator(len,lcs);

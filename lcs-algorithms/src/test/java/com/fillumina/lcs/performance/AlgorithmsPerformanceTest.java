@@ -19,7 +19,7 @@ import com.fillumina.lcs.scoretable.BottomUpLcs;
 import com.fillumina.lcs.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -51,9 +51,9 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     }
 
     private class LcsRunnable implements Runnable {
-        private final ListLcs lcsAlgorithm;
+        private final LcsList lcsAlgorithm;
 
-        public LcsRunnable(ListLcs lcsAlgorithm) {
+        public LcsRunnable(LcsList lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 

@@ -2,7 +2,7 @@ package com.fillumina.lcs.testutil;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.fillumina.lcs.ListLcs;
  */
 public class CharacterLcsHelper {
 
-    public static String executeLcs(ListLcs lcs, String a, String b) {
+    public static String executeLcs(LcsList lcs, String a, String b) {
         @SuppressWarnings("unchecked")
         List<? extends Character> resultList = lcs.lcs(toList(a), toList(b));
         return toString(resultList);

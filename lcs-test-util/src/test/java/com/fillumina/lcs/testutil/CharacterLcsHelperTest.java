@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -58,7 +58,7 @@ public class CharacterLcsHelperTest {
                 CharacterLcsHelper.executeLcs(new ConcatLcs(), "ALFA", "BETA"));
     }
 
-    static class ConcatLcs implements ListLcs {
+    static class ConcatLcs implements LcsList {
 
         @Override
         public <T> List<? extends T> lcs(

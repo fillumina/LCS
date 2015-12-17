@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public interface ListLcs {
+public interface LcsList {
 
     <T> List<? extends T> lcs(List<? extends T> xs, List<? extends T> ys);
 }

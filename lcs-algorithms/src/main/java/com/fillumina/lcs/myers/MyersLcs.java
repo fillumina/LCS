@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * Myers devises a faster way to perform the LCS by recursing the score table
@@ -32,7 +32,7 @@ import com.fillumina.lcs.ListLcs;
  * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class MyersLcs implements ListLcs {
+public class MyersLcs implements LcsList {
 
     @Override
     public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {

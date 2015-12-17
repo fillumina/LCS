@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -39,9 +38,9 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     }
 
     private class LcsRunnable implements Runnable {
-        private final ListLcs lcsAlgorithm;
+        private final LcsList lcsAlgorithm;
 
-        public LcsRunnable(ListLcs lcsAlgorithm) {
+        public LcsRunnable(LcsList lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 
@@ -63,12 +62,14 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     public void addTests(TestContainer tests) {
         tests.addTest("Baseline",
                 new LcsRunnable(new BaselineLinearSpaceMyersLcs()));
-        tests.addTest("MyersLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
+//        tests.addTest("MyersLcs",
+//                new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(new LinearSpaceMyersLcs())));
-        tests.addTest("ParallelLinearSpaceMyersLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsSizeEvaluatorAdaptor(LinearSpaceMyersLcs.INSTANCE)));
+//        tests.addTest("ParallelLinearSpaceMyersLcs",
+//                new LcsRunnable(new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
+        tests.addTest("tentative",
+                new LcsRunnable(new TentativeLinearSpaceMyersLcs()));
     }
 
     @Override

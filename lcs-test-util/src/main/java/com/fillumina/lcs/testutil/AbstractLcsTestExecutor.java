@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * An helper for testing LCS algorithms.
@@ -21,9 +21,9 @@ public abstract class AbstractLcsTestExecutor
     /**
      * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
      * the body of the created
-     * {@link ListLcs#lcs(java.util.List, java.util.List)}.
+     * {@link LcsList#lcs(java.util.List, java.util.List)}.
      */
-    public abstract ListLcs getLcsAlgorithm();
+    public abstract LcsList getLcsAlgorithm();
 
     @SuppressWarnings("unchecked")
     public Result lcs(final String xs, final String ys) {
@@ -52,7 +52,7 @@ public abstract class AbstractLcsTestExecutor
     }
 
     private String getName() {
-        final Class<? extends ListLcs> clazz = getLcsAlgorithm().getClass();
+        final Class<? extends LcsList> clazz = getLcsAlgorithm().getClass();
         final String simpleName = clazz.getSimpleName();
         if (simpleName.isEmpty()) {
             return clazz.getSuperclass().getSimpleName();

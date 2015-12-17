@@ -40,21 +40,21 @@ public abstract class LcsHeadTailReducer<T> implements Lcs {
             final int b0, final int m) {
         final int min = n < m ? n : m;
         LcsItem matchDown = null;
-        int d = 0;
-        if (lcsInput.equals(a0, b0)) {
-            for (d = 1; d < min && lcsInput.equals(a0 + d, b0 + d); d++) {}
+        int d;
+        for (d = 0; d < min && lcsInput.equals(a0 + d, b0 + d); d++) {}
+        if (d > 0) {
             matchDown = seqGen.match(a0, b0, d);
             if (d == min) {
                 return matchDown;
             }
         }
         LcsItem matchUp = null;
-        int u = 0;
-        if (lcsInput.equals(a0 + n - 1, b0 + m - 1)) {
-            final int x0 = a0 + n - 1;
-            final int y0 = b0 + m - 1;
-            final int maxu = min - d;
-            for (u = 1; u < maxu && lcsInput.equals(x0 - u, y0 - u); u++) {}
+        final int x0 = a0 + n - 1;
+        final int y0 = b0 + m - 1;
+        final int maxu = min - d;
+        int u;
+        for (u = 0; u < maxu && lcsInput.equals(x0 - u, y0 - u); u++) {}
+        if (u > 0) {
             matchUp = seqGen.match(a0 + n - u, b0 + m - u, u);
         }
         LcsItem lcsMatch = null;

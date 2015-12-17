@@ -10,7 +10,7 @@ import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.recursive.RecursiveLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  *
@@ -42,9 +42,9 @@ public class RecursivePerformanceTest extends AutoProgressionPerformanceTemplate
     }
 
     private class LcsRunnable implements Runnable {
-        private final ListLcs lcsAlgorithm;
+        private final LcsList lcsAlgorithm;
 
-        public LcsRunnable(ListLcs lcsAlgorithm) {
+        public LcsRunnable(LcsList lcsAlgorithm) {
             this.lcsAlgorithm = lcsAlgorithm;
         }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.ListLcs;
+import com.fillumina.lcs.LcsList;
 
 /**
  * This is an adapter to make the DOCX4J LCS algorithm be testable along
@@ -16,7 +16,7 @@ import com.fillumina.lcs.ListLcs;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class IbmLcs implements ListLcs {
+public class IbmLcs implements LcsList {
     private static final LCSSettings SETTINGS = new LCSSettings() {
         @Override public final boolean isUseGreedyMethod() { return false; }
         @Override public final double getPowLimit() { return 1.5; }
