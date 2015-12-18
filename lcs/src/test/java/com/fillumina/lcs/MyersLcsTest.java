@@ -9,7 +9,7 @@ import com.fillumina.lcs.testutil.AbstractLcsLengthTest;
 public class MyersLcsTest extends AbstractLcsLengthTest {
 
     public static void main(String[] args) {
-        new MyersLcsTest().randomLcs(60000, 50, 1);
+        new MyersLcsTest().randomLcs(600, 5, 100);
     }
 
     @Override
