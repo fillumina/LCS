@@ -32,7 +32,6 @@ public class WagnerFischerLcs implements LcsList {
         int m = b.size();
 
         int[][] d = computeDistanceMatrix(a, n, b, m);
-//        System.out.println(ArrayPrinter.toString(a, b, d));
         return backtrack(n, m, d, a);
     }
 

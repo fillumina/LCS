@@ -22,6 +22,13 @@ public class SmithWatermanLcs implements LcsList {
         int n = a.size();
         int m = b.size();
 
+        int[][] d = computeDistanceMatrix(a, n, b, m);
+        return backtrack(n, m, d, a);
+    }
+
+    private <T> int[][] computeDistanceMatrix(
+            List<? extends T> a, int n, List<? extends T> b, int m) {
+
         int[][] d = new int[n + 1][m + 1];
 
         // row 0 and column 0 are initialized to 0 already by java
@@ -35,7 +42,11 @@ public class SmithWatermanLcs implements LcsList {
                 }
             }
         }
+        return d;
+    }
 
+    private <T> List<? extends T> backtrack(int n, int m, int[][] d,
+            List<? extends T> a) {
         int index = d[n][m]; // the lcs length
 
         // read the substring out from the matrix

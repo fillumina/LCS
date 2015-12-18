@@ -29,7 +29,7 @@ import com.fillumina.lcs.helper.LcsList;
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 
     private static final int TOTAL = 10;
-    private static final int LCS = 4;
+    private static final int LCS = 7;
     private static final long SEED = System.nanoTime();
 
     private final List<Integer> lcsList;
