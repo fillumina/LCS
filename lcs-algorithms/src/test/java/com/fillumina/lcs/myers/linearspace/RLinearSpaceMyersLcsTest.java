@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers.linearspace;
 import com.fillumina.lcs.myers.linearspace.RLinearSpaceMyersLcs;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import org.junit.Test;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

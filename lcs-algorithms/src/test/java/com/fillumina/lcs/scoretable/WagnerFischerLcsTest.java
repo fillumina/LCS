@@ -3,7 +3,7 @@ package com.fillumina.lcs.scoretable;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

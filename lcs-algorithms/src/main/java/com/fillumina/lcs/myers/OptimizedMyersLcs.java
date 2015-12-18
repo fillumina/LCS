@@ -3,7 +3,7 @@ package com.fillumina.lcs.myers;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * An optimization of the Myers algorithm that only copies the part of the

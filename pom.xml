@@ -18,6 +18,7 @@
     </properties>
     <build>
         <plugins>
+            <!--
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -25,6 +26,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/fillumina/lcs/testutil/*</exclude>
+                        <exclude>com/fillumina/lcs/helper/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -47,16 +49,12 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <rules><!-- implmentation is needed only for Maven 2 -->
+                            <rules>
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>BUNDLE</element>
-                                    <limits><!-- implmentation is needed only for Maven 2 -->
+                                    <limits>
                                         <limit implementation="org.jacoco.report.check.Limit">
-                                            <!--<counter>COMPLEXITY</counter>-->
-                                            <!--<counter>INSTRUCTION</counter>-->
-                                            <!--<counter>CLASS</counter>-->
                                             <counter>LINE</counter>
-                                            <!--<value>MISSEDCOUNT</value>-->
                                             <value>COVEREDRATIO</value>
                                             <minimum>0.60</minimum>
                                         </limit>
@@ -67,6 +65,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 </project>

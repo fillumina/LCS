@@ -10,7 +10,7 @@ import com.fillumina.lcs.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.recursive.RecursiveLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

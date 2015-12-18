@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * Myers devises a faster way to perform the LCS by recursing the score table
@@ -52,12 +52,14 @@ public class MyersLcs implements LcsList {
         int next, prev, x, y;
         for (int d = 0; d < max; d++) {
             for (int k = -d; k <= d; k += 2) {
-                next = v.get(k + 1);
-                prev = v.get(k - 1);
-                if (k == -d || (k != d && prev < next)) {
-                    x = next;       // down
+                if (k == -d) {
+                    x = v.get(k + 1);
+                } else if (k == d) {
+                    x = v.get(k - 1) + 1;
                 } else {
-                    x = prev + 1;   // right
+                    next = v.get(k + 1);
+                    prev = v.get(k - 1);
+                    x = (prev < next) ? next : prev + 1;
                 }
                 y = x - k;
                 while (x < n && y < m && Objects.equals(a.get(x), b.get(y))) {

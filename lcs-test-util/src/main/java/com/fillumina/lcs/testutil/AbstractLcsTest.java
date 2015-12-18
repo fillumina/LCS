@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 import java.util.Objects;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * A suite of tests for LCS sequences.

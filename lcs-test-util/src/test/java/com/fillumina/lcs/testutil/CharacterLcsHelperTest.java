@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
@@ -51,24 +51,4 @@ public class CharacterLcsHelperTest {
         assertEquals("Z", CharacterLcsHelper.toString(
                 Collections.<Character>singletonList('Z')));
     }
-
-    @Test
-    public void shouldExecuteTheLcsAlgorithm() {
-        assertEquals("ALFABETA",
-                CharacterLcsHelper.executeLcs(new ConcatLcs(), "ALFA", "BETA"));
-    }
-
-    static class ConcatLcs implements LcsList {
-
-        @Override
-        public <T> List<? extends T> lcs(
-                List<? extends T> xs,
-                List<? extends T> ys) {
-            List<T> list = new ArrayList<>(xs.size() + ys.size() + 1);
-            list.addAll(xs);
-            list.addAll(ys);
-            return list;
-        }
-    }
-
 }

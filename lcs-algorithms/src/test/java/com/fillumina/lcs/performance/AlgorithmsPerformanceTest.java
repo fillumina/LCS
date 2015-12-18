@@ -19,7 +19,7 @@ import com.fillumina.lcs.scoretable.BottomUpLcs;
 import com.fillumina.lcs.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.scoretable.WagnerFischerLcs;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
@@ -28,7 +28,7 @@ import com.fillumina.lcs.LcsList;
 // TODO do a performance test with all the myers implementation (including mine)
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 60;
+    private static final int TOTAL = 10;
     private static final int LCS = 4;
     private static final long SEED = System.nanoTime();
 

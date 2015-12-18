@@ -2,7 +2,7 @@ package com.fillumina.lcs.hirschberg;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

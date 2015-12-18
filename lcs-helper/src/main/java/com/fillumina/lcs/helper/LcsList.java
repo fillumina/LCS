@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.helper;
 
 import java.util.List;
 

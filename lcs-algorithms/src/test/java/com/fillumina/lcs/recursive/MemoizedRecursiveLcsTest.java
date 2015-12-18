@@ -3,7 +3,7 @@ package com.fillumina.lcs.recursive;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Ignore;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

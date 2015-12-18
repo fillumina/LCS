@@ -7,7 +7,7 @@ import com.fillumina.lcs.recursive.RecursiveLcs.Stack;
 import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

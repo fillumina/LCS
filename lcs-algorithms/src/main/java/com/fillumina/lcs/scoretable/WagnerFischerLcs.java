@@ -3,7 +3,7 @@ package com.fillumina.lcs.scoretable;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * This algorithm is an adaptation from the original used to calculate the

@@ -1,5 +1,6 @@
 package com.fillumina.lcs.testutil;
 
+import com.fillumina.lcs.helper.LcsLength;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,8 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * An helper for testing LCS algorithms.
@@ -32,6 +32,13 @@ public abstract class AbstractLcsTestExecutor
                 new CountingResult(countingMap));
     }
 
+    static String executeLcs(LcsList lcs, String a, String b) {
+        @SuppressWarnings("unchecked")
+        List<? extends Character> resultList =
+                lcs.lcs(CharacterLcsHelper.toList(a), CharacterLcsHelper.toList(b));
+        return toString(resultList);
+    }
+
     /**
      * Call this method to count how many times a method has been called
      * with specific parameters.
@@ -52,7 +59,7 @@ public abstract class AbstractLcsTestExecutor
     }
 
     private String getName() {
-        final Class<? extends LcsList> clazz = getLcsAlgorithm().getClass();
+        final Class<?> clazz = getLcsAlgorithm().getClass();
         final String simpleName = clazz.getSimpleName();
         if (simpleName.isEmpty()) {
             return clazz.getSuperclass().getSimpleName();
@@ -144,6 +151,4 @@ public abstract class AbstractLcsTestExecutor
             return buf.toString();
         }
     }
-
-
 }

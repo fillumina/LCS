@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Arrays;
 import java.util.Collections;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * The simplest LCS algorithm. It is based on recursion so it's quite

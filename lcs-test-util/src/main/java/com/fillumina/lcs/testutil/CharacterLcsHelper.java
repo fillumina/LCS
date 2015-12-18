@@ -2,7 +2,7 @@ package com.fillumina.lcs.testutil;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
@@ -10,10 +10,13 @@ import com.fillumina.lcs.LcsList;
  */
 public class CharacterLcsHelper {
 
-    public static String executeLcs(LcsList lcs, String a, String b) {
-        @SuppressWarnings("unchecked")
-        List<? extends Character> resultList = lcs.lcs(toList(a), toList(b));
-        return toString(resultList);
+    public static  Character[] toArray(String s) {
+        char[] array = s.toCharArray();
+        Character[] ca = new Character[array.length];
+        for (int i=0; i<array.length; i++) {
+            ca[i] = array[i];
+        }
+        return ca;
     }
 
     public static  List<Character> toList(String s) {

@@ -1,4 +1,4 @@
-package com.fillumina.lcs;
+package com.fillumina.lcs.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,16 +8,13 @@ import java.util.List;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLcsSizeEvaluatorAdaptor
-        implements LcsSizeEvaluator {
+        implements LcsLength, LcsList {
 
-    @Override
-    public <T> List<T> lcs(
-            final List<? extends T> a,
-            final List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         Iterable<Integer> sequence = lcsItems(a, b);
-        List<T> lcs = new ArrayList<>(getLcsSize());
+        List<T> lcs = new ArrayList<>();
         for (int index : sequence) {
-            lcs.add(a.get(index));
+            lcs.add(a[index]);
         }
         return lcs;
     }

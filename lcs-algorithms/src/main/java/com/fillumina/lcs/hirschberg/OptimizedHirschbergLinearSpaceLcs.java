@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.AbstractList;
 import java.util.Collections;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the

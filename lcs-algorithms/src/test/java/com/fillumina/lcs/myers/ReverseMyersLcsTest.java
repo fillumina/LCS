@@ -2,7 +2,7 @@ package com.fillumina.lcs.myers;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.myers.ReverseMyersLcs;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

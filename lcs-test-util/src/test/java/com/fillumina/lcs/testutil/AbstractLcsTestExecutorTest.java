@@ -1,9 +1,12 @@
 package com.fillumina.lcs.testutil;
 
+import com.fillumina.lcs.helper.LcsLength;
 import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
 import java.util.List;
 import org.junit.Test;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
+import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -111,4 +114,25 @@ public class AbstractLcsTestExecutorTest {
             };
         }
     }
+
+    @Test
+    public void shouldExecuteTheLcsAlgorithm() {
+        assertEquals("ALFABETA",
+                AbstractLcsTestExecutor.executeLcs(new ConcatLcs(), "ALFA", "BETA"));
+    }
+
+    static class ConcatLcs implements LcsList {
+
+        @Override
+        public <T> List<? extends T> lcs(
+                List<? extends T> xs,
+                List<? extends T> ys) {
+            List<T> list = new ArrayList<>(xs.size() + ys.size() + 1);
+            list.addAll(xs);
+            list.addAll(ys);
+            return list;
+        }
+    }
+
+
 }
