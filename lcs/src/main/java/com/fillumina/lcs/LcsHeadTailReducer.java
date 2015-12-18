@@ -52,8 +52,7 @@ public abstract class LcsHeadTailReducer<T, S> implements Lcs<T> {
     @Override
     public final List<? extends T> lcSequence(final Collection<? extends T> a,
             final Collection<? extends T> b) {
-        return lcSequence((T[]) a.toArray(new Object[a.size()]),
-                (T[]) b.toArray(new Object[b.size()]));
+        return lcSequence((T[]) a.toArray(), (T[]) b.toArray());
     }
 
     @Override
@@ -74,8 +73,7 @@ public abstract class LcsHeadTailReducer<T, S> implements Lcs<T> {
     @Override
     public final List<LcsItem> lcIndexes(final Collection<? extends T> a,
             final Collection<? extends T> b) {
-        return lcIndexes((T[]) a.toArray(new Object[a.size()]),
-                (T[]) b.toArray(new Object[b.size()]));
+        return lcIndexes((T[]) a.toArray(),(T[]) b.toArray());
     }
 
     @Override

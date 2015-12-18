@@ -26,8 +26,8 @@ public class BaselineLinearSpaceMyersLcs implements LcsList {
         final int n = a.size();
         final int m = b.size();
         @SuppressWarnings("unchecked")
-        final LcsItem match = lcsTails((T[])a.toArray(new Object[n]), n,
-                (T[])b.toArray(new Object[m]), m);
+        final LcsItem match = lcsTails((T[])a.toArray(), n,
+                (T[])b.toArray(), m);
         return match == null ? LcsItem.NULL : match;
     }
 

@@ -17,8 +17,8 @@ class IbmLcsLength extends LCS {
     public IbmLcsLength(
             List<?> a,
             List<?> b) {
-        this.a = a.toArray(new Object[a.size()]);
-        this.b = b.toArray(new Object[b.size()]);
+        this.a = a.toArray();
+        this.b = b.toArray();
         longestCommonSubsequence(LCS_SETTINGS);
     }
 
