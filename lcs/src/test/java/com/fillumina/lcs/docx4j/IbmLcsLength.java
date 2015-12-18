@@ -8,7 +8,6 @@ import java.util.Objects;
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 class IbmLcsLength extends LCS {
-
     private static final LCSSettings LCS_SETTINGS = new LCSSettings();
     private final Object[] a;
     private final Object[] b;

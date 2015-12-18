@@ -1,5 +1,7 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.helper.LcsLength;
 import com.fillumina.lcs.testutil.AbstractLcsLengthTest;
 
 /**
@@ -13,7 +15,8 @@ public class MyersLcsTest extends AbstractLcsLengthTest {
     }
 
     @Override
-    public LcsSizeEvaluator getLcsSequenceGenerator() {
-        return new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE);
+    @SuppressWarnings("unchecked")
+    public <T extends LcsList & LcsLength> T getLcsSequenceGenerator() {
+        return (T) new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE);
     }
 }

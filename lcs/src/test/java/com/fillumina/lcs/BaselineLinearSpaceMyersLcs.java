@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;

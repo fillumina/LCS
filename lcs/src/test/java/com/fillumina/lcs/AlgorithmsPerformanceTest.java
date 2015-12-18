@@ -1,5 +1,6 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;

@@ -2,7 +2,7 @@ package com.fillumina.lcs.docx4j;
 
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import org.junit.Test;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  *

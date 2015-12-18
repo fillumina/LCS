@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.LcsList;
+import com.fillumina.lcs.helper.LcsList;
 
 /**
  * This is an adapter to make the DOCX4J LCS algorithm be testable along

@@ -1,16 +1,17 @@
 package com.fillumina.lcs;
 
+import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.helper.LcsLength;
 import java.util.List;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LcsSizeEvaluatorAdaptor implements LcsSizeEvaluator {
-    private final Lcs<?> lcs;
-    private int size;
+public class LcsSizeEvaluatorAdaptor implements LcsList, LcsLength {
+    private final Lcs lcs;
 
-    public LcsSizeEvaluatorAdaptor(final Lcs<?> lcs) {
+    public LcsSizeEvaluatorAdaptor(final Lcs lcs) {
         this.lcs = lcs;
     }
 
@@ -19,14 +20,16 @@ public class LcsSizeEvaluatorAdaptor implements LcsSizeEvaluator {
     public <T> List<? extends T> lcs(
             List<? extends T> xs,
             List<? extends T> ys) {
-        final List<? extends T> list = ((Lcs<T>)lcs).lcSequence(xs, ys);
-        this.size = list.size();
-        return list;
+        final DefaultLcsInput<T> lcsInput = new DefaultLcsInput<>(xs, ys);
+        List<LcsItem> list = lcs.calculateLcs(lcsInput);
+        return lcsInput.extractLcsList(list);
     }
 
     @Override
-    public int getLcsSize() {
-        return size;
+    public <T> int lcsLength(
+            List<? extends T> xs,
+            List<? extends T> ys) {
+        final DefaultLcsInput<T> lcsInput = new DefaultLcsInput<>(xs, ys);
+        return lcs.calculateLcsLength(lcsInput);
     }
-
 }
