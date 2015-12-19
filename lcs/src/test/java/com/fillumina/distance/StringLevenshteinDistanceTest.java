@@ -1,6 +1,6 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
-import com.fillumina.distance.levenshtein.CharLevenshteinDistance;
+import com.fillumina.distance.CharLevenshteinDistance;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

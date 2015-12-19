@@ -1,18 +1,18 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class OptimizedStringHjelmqvistDistance
+public class StringLevenshteinDistance
         extends AbstractWagnerFischerLevenshteinDistance {
     private final String a, b;
 
     public static int distance(final String a, final String b) {
-        return new OptimizedStringHjelmqvistDistance(a, b).distance();
+        return new StringLevenshteinDistance(a, b).distance();
     }
 
-    private OptimizedStringHjelmqvistDistance(String a, String b) {
+    private StringLevenshteinDistance(String a, String b) {
         this.a = a;
         this.b = b;
     }

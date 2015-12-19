@@ -1,5 +1,7 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
+import com.fillumina.distance.StringLevenshteinDistance;
+import com.fillumina.distance.OptimizedStringHjelmqvistDistance;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;

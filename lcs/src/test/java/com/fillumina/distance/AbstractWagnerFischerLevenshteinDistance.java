@@ -1,4 +1,4 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
 /**
  * This algorithm, devised in 1975, uses a score table to calculate the

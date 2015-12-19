@@ -1,6 +1,6 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
-import com.fillumina.distance.levenshtein.AbstractWagnerFischerLevenshteinDistance;
+import com.fillumina.distance.AbstractWagnerFischerLevenshteinDistance;
 import com.fillumina.distance.*;
 
 /**

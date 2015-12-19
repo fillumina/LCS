@@ -1,7 +1,8 @@
 package com.fillumina.distance;
 
 /**
- * A Levenshtein algorithm using only 2 rows of the distance matrix.
+ * A Levenshtein algorithm using only 2 rows of the distance matrix. It's
+ * very fast and efficient.
  *
  * @see <a href='http://www.codeproject.com/Articles/13525/Fast-memory-efficient-Levenshtein-algorithm'>
  *  Fast memory efficien Levenshtein algorithm
@@ -53,6 +54,11 @@ public abstract class AbstractHjelmqvistLevenshteinDistance {
             }
 
             // copy v1 (current row) to v0 (previous row) for next iteration
+
+            // it would seem better to simply swap the arrays or use
+            // System.arraycopy(), but this method, althought slow in
+            // theory, allows a better use of cache and it's way faster
+            // than the others. (see tests)
             for (int j = 0; j < v0.length; j++) {
                 v0[j] = v1[j];
             }

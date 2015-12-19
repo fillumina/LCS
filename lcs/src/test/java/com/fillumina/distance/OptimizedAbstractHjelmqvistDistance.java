@@ -1,4 +1,4 @@
-package com.fillumina.distance.levenshtein;
+package com.fillumina.distance;
 
 /**
  *
