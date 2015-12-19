@@ -10,6 +10,7 @@
         <module>lcs-test-util</module>
         <module>lcs-algorithms</module>
         <module>lcs</module>
+        <module>levenshtein-distance</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

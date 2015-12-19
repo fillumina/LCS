@@ -48,7 +48,7 @@ public class RandomSequenceGenerator {
         List<Integer> bList = new ArrayList<>(total);
         createSequences(aList, bList, total);
 
-        this.lcsList = createLcsList(new ArrayList<Integer>(lcs), lcs);
+        this.lcsList = createLcsList(new ArrayList<>(lcs), lcs);
 
         Random rnd = new Random(seed);
         this.a = setLcsSequenceRandomlyIntoList(aList, lcsList, rnd);

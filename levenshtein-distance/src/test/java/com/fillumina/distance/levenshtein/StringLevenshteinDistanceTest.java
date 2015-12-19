@@ -1,5 +1,6 @@
-package com.fillumina.distance;
+package com.fillumina.distance.levenshtein;
 
+import com.fillumina.distance.levenshtein.CharLevenshteinDistance;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -17,5 +18,15 @@ public class StringLevenshteinDistanceTest {
     @Test
     public void testFarDistance() {
         assertEquals(5, CharLevenshteinDistance.distance("monday", "saturday"));
+    }
+
+    @Test
+    public void testSameString() {
+        assertEquals(0, CharLevenshteinDistance.distance("sunday", "sunday"));
+    }
+
+    @Test
+    public void testAlmostSameString() {
+        assertEquals(1, CharLevenshteinDistance.distance("sunday", "sunday2"));
     }
 }

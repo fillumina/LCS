@@ -1,24 +1,18 @@
-package com.fillumina.distance;
-
-import com.fillumina.lcs.AbstractMyersLcs;
+package com.fillumina.distance.levenshtein;
 
 /**
- * This is <b>not</b> the Lovenshtein distance but it correlates with it
- * and it's pretty fast to calculate especially if the two sequences share
- * many elements.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-//TODO add some tests
-public class MyersDistance extends AbstractMyersLcs {
+public class OptimizedStringHjelmqvistDistance
+        extends AbstractWagnerFischerLevenshteinDistance {
     private final String a, b;
 
     public static int distance(final String a, final String b) {
-        final int lcs = new MyersDistance(a, b).calculateLcsLength();
-        return (a.length() + b.length() - (lcs << 1));
+        return new OptimizedStringHjelmqvistDistance(a, b).distance();
     }
 
-    private MyersDistance(String a, String b) {
+    private OptimizedStringHjelmqvistDistance(String a, String b) {
         this.a = a;
         this.b = b;
     }

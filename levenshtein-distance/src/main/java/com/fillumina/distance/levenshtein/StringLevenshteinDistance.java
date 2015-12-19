@@ -1,10 +1,11 @@
-package com.fillumina.distance;
+package com.fillumina.distance.levenshtein;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class StringLevenshteinDistance extends WagnerFischerLevenshteinDistance {
+public class StringLevenshteinDistance
+        extends AbstractWagnerFischerLevenshteinDistance {
     private final String a, b;
 
     public static int distance(final String a, final String b) {

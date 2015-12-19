@@ -1,4 +1,4 @@
-package com.fillumina.distance;
+package com.fillumina.distance.levenshtein;
 
 /**
  * This algorithm, devised in 1975, uses a score table to calculate the
@@ -20,7 +20,7 @@ package com.fillumina.distance;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class WagnerFischerLevenshteinDistance {
+public abstract class AbstractWagnerFischerLevenshteinDistance {
 
     protected abstract int getFirstSequenceLength();
 
@@ -55,7 +55,7 @@ public abstract class WagnerFischerLevenshteinDistance {
                     d[i][j] = 1 + min(
                             d[ii][j],      // deletion
                             d[i][jj],      // insertion
-                            d[ii][jj]);   // substitution
+                            d[ii][jj]);    // substitution
                 }
             }
         }

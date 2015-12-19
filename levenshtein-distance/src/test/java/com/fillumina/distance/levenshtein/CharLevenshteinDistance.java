@@ -1,12 +1,13 @@
-package com.fillumina.distance;
+package com.fillumina.distance.levenshtein;
 
+import com.fillumina.distance.levenshtein.AbstractWagnerFischerLevenshteinDistance;
 import com.fillumina.distance.*;
 
 /**
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class CharLevenshteinDistance extends WagnerFischerLevenshteinDistance {
+public class CharLevenshteinDistance extends AbstractWagnerFischerLevenshteinDistance {
     private final char[] a, b;
 
     public static int distance(final String a, final String b) {
