@@ -8,10 +8,10 @@ import java.util.List;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class LcsSizeEvaluatorAdaptor implements LcsList, LcsLength {
+public class LcsAdaptor implements LcsList, LcsLength {
     private final Lcs lcs;
 
-    public LcsSizeEvaluatorAdaptor(final Lcs lcs) {
+    public LcsAdaptor(final Lcs lcs) {
         this.lcs = lcs;
     }
 

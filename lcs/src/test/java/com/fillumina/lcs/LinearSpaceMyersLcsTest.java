@@ -13,6 +13,6 @@ public class LinearSpaceMyersLcsTest extends AbstractLcsLengthTest  {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends LcsList & LcsLength> T getLcsSequenceGenerator() {
-        return (T) new LcsSizeEvaluatorAdaptor(LinearSpaceMyersLcs.INSTANCE);
+        return (T) new LcsAdaptor(LinearSpaceMyersLcs.INSTANCE);
     }
 }

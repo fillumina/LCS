@@ -18,6 +18,6 @@ public class ParallelLinearSpaceMyersLcsTest
     @Override
     @SuppressWarnings("unchecked")
     public <T extends LcsList & LcsLength> T getLcsSequenceGenerator() {
-        return (T) new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE);
+        return (T) new LcsAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE);
     }
 }

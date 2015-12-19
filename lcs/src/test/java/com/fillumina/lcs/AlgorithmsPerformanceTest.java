@@ -64,11 +64,11 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
         tests.addTest("Baseline",
                 new LcsRunnable(new BaselineLinearSpaceMyersLcs()));
         tests.addTest("MyersLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(LinearSpaceMyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsAdaptor(LinearSpaceMyersLcs.INSTANCE)));
         tests.addTest("ParallelLinearSpaceMyersLcs",
-                new LcsRunnable(new LcsSizeEvaluatorAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsAdaptor(ParallelLinearSpaceMyersLcs.INSTANCE)));
     }
 
     @Override

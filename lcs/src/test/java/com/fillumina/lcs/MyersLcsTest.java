@@ -17,6 +17,6 @@ public class MyersLcsTest extends AbstractLcsLengthTest {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends LcsList & LcsLength> T getLcsSequenceGenerator() {
-        return (T) new LcsSizeEvaluatorAdaptor(MyersLcs.INSTANCE);
+        return (T) new LcsAdaptor(MyersLcs.INSTANCE);
     }
 }
