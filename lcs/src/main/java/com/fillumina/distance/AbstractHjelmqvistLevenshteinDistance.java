@@ -4,8 +4,11 @@ package com.fillumina.distance;
  * A Levenshtein algorithm using only 2 rows of the distance matrix. It's
  * very fast and efficient.
  *
+ * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
+ *  Levenshtein distance
+ * </a>
  * @see <a href='http://www.codeproject.com/Articles/13525/Fast-memory-efficient-Levenshtein-algorithm'>
- *  Fast memory efficien Levenshtein algorithm
+ *  Fast memory efficient Levenshtein algorithm (Sten Hjelmqvist)
  * </a>
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
@@ -68,17 +71,13 @@ public abstract class AbstractHjelmqvistLevenshteinDistance {
     }
 
     static int min(int a, int b, int c) {
-        if (a < b) {
-            if (c < a) {
-                return c;
-            }
-            return a;
-        } else {
-            if (c < b) {
-                return c;
-            }
-            return b;
+        int mi = a;
+        if (b < mi) {
+            mi = b;
         }
+        if (c < mi) {
+            mi = c;
+        }
+        return mi;
     }
-
 }

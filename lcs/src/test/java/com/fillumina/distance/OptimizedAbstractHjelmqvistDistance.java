@@ -55,17 +55,14 @@ public abstract class OptimizedAbstractHjelmqvistDistance {
     }
 
     static int min(int a, int b, int c) {
-        if (a < b) {
-            if (c < a) {
-                return c;
-            }
-            return a;
-        } else {
-            if (c < b) {
-                return c;
-            }
-            return b;
+        int mi = a;
+        if (b < mi) {
+            mi = b;
         }
+        if (c < mi) {
+            mi = c;
+        }
+        return mi;
     }
 
 }
