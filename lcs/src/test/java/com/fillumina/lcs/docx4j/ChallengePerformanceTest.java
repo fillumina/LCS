@@ -1,6 +1,7 @@
 package com.fillumina.lcs.docx4j;
 
 import com.fillumina.lcs.BaselineLinearSpaceMyersLcs;
+import com.fillumina.lcs.LinearSpaceMyersLcs;
 import com.fillumina.lcs.OptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
@@ -64,8 +65,8 @@ public class ChallengePerformanceTest
         tests.addTest("mine", new Runnable() {
             @Override
             public void run() {
-                assertEquals(LCS, new OptimizedLinearSpaceMyersLcs(a, b)
-                        .calculateLcsLength());
+                assertEquals(LCS, LinearSpaceMyersLcs.INSTANCE
+                        .calculateLcsLength(a, b));
             }
         });
 

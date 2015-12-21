@@ -20,16 +20,13 @@ public class LcsAdaptor implements LcsList, LcsLength {
     public <T> List<? extends T> lcs(
             List<? extends T> xs,
             List<? extends T> ys) {
-        final DefaultLcsInput<T> lcsInput = new DefaultLcsInput<>(xs, ys);
-        List<LcsItem> list = lcs.calculateLcs(lcsInput);
-        return lcsInput.extractLcsList(list);
+        return lcs.calculateLcs(xs, ys);
     }
 
     @Override
     public <T> int lcsLength(
             List<? extends T> xs,
             List<? extends T> ys) {
-        final DefaultLcsInput<T> lcsInput = new DefaultLcsInput<>(xs, ys);
-        return lcs.calculateLcsLength(lcsInput);
+        return lcs.calculateLcsLength(xs, ys);
     }
 }

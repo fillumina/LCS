@@ -1,5 +1,7 @@
 package com.fillumina.lcs;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,36 +13,72 @@ public class ParallelLinearSpaceMyersLcs implements Lcs {
             new ParallelLinearSpaceMyersLcs();
 
     @Override
-    public List<LcsItem> calculateLcs(LcsInput lcsInput) {
-        return new Inner(false, lcsInput).calculateLcs();
+    public <T> List<? extends T> calculateLcs(final List<? extends T> a,
+            final List<? extends T> b) {
+        final Inner<T> inner = new Inner<>(false, a, b);
+        List<LcsItem> lcs = inner.calculateLcs();
+        return inner.extractLcsList(lcs);
     }
 
     @Override
-    public int calculateLcsLength(LcsInput lcsInput) {
-        return new Inner(true, lcsInput).calculateLcsLength();
+    public <T> List<LcsItem> calculateLcsIndexes(final List<? extends T> a,
+            final List<? extends T> b) {
+        return new Inner<>(false, a, b).calculateLcs();
     }
 
-    private static class Inner extends AbstractParallelLinearSpaceMyersLcs {
-        private final LcsInput lcsInput;
+    @Override
+    public <T> int calculateLcsLength(final List<? extends T> a,
+            final List<? extends T> b) {
+        return new Inner<>(true, a, b).calculateLcsLength();
+    }
 
-        public Inner(boolean sizeOnly, LcsInput lcsInput) {
+    private static class Inner<T> extends AbstractParallelLinearSpaceMyersLcs {
+        private final T[] a, b;
+
+        /**
+         * Performs the LCS calculation and return an object that can be
+         * queried for the results.
+         * @param <T> type of the lists
+         * @param a   first sequence
+         * @param b   second sequence
+         * @return    result object that can be queried for various data
+         */
+        @SuppressWarnings("unchecked")
+        public Inner(boolean sizeOnly,
+                final List<? extends T> a,
+                final List<? extends T> b) {
             super(sizeOnly);
-            this.lcsInput = lcsInput;
+            this.a = (T[]) a.toArray();
+            this.b = (T[]) b.toArray();
+        }
+
+        @SuppressWarnings("unchecked")
+        public List<T> extractLcsList(List<LcsItem> lcsItem) {
+            if (lcsItem == null) {
+                return Collections.<T>emptyList();
+            }
+            final List<T> lcs = new ArrayList<>(lcsItem.size());
+            for (int index : lcsItem.get(0).lcsIndexesOfTheFirstSequence()) {
+                lcs.add(a[index]);
+            }
+            return lcs;
         }
 
         @Override
-        protected int getFirstSequenceLength() {
-            return lcsInput.getFirstSequenceLength();
+        public final boolean sameAtIndex(final int i, final int j) {
+            final T x = a[i];
+            final T y = b[j];
+            return (x == y) || (x != null && x.equals(y));
         }
 
         @Override
-        protected int getSecondSequenceLength() {
-            return lcsInput.getSecondSequenceLength();
+        public int getFirstSequenceLength() {
+            return a == null ? 0 : a.length;
         }
 
         @Override
-        protected boolean sameAtIndex(int x, int y) {
-            return lcsInput.equals(x, y);
+        public int getSecondSequenceLength() {
+            return b == null ? 0 : b.length;
         }
     }
 }

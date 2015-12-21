@@ -2,7 +2,7 @@ package com.fillumina.distance;
 
 /**
  * A Levenshtein algorithm using only 2 rows of the distance matrix. It's
- * very fast and efficient.
+ * very fast and memory efficient.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
  *  Levenshtein distance
