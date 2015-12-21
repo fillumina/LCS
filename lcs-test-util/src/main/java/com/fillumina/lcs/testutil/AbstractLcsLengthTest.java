@@ -122,8 +122,8 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
 
     @Test(timeout = 2000L)
     public void shouldPassLengthTestSize() {
-        final int lcs = 500;
         final int tot = 600;
+        final int lcs = 500;
         RandomSequenceGenerator seqGen = new RandomSequenceGenerator(tot, lcs);
         final LcsLength algorithm = getLcsSequenceGenerator();
         assertEquals(lcs, algorithm.lcsLength(seqGen.getA(), seqGen.getB()));

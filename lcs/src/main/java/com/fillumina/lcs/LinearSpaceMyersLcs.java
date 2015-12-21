@@ -1,6 +1,7 @@
 package com.fillumina.lcs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,22 +14,22 @@ public class LinearSpaceMyersLcs implements Lcs {
             new LinearSpaceMyersLcs();
 
     @Override
-    public <T> List<? extends T> calculateLcs(final List<? extends T> a,
-            final List<? extends T> b) {
+    public <T> List<? extends T> calculateLcs(final Collection<? extends T> a,
+            final Collection<? extends T> b) {
         final Inner<T> inner = new Inner<>(false, a, b);
         List<LcsItem> lcs = inner.calculateLcs();
         return inner.extractLcsList(lcs);
     }
 
     @Override
-    public <T> List<LcsItem> calculateLcsIndexes(final List<? extends T> a,
-            final List<? extends T> b) {
+    public <T> List<LcsItem> calculateLcsIndexes(final Collection<? extends T> a,
+            final Collection<? extends T> b) {
         return new Inner<>(false, a, b).calculateLcs();
     }
 
     @Override
-    public <T> int calculateLcsLength(final List<? extends T> a,
-            final List<? extends T> b) {
+    public <T> int calculateLcsLength(final Collection<? extends T> a,
+            final Collection<? extends T> b) {
         return new Inner<>(true, a, b).calculateLcsLength();
     }
 
@@ -45,8 +46,8 @@ public class LinearSpaceMyersLcs implements Lcs {
          */
         @SuppressWarnings("unchecked")
         public Inner(boolean sizeOnly,
-                final List<? extends T> a,
-                final List<? extends T> b) {
+                final Collection<? extends T> a,
+                final Collection<? extends T> b) {
             super(sizeOnly);
             this.a = (T[]) a.toArray();
             this.b = (T[]) b.toArray();
