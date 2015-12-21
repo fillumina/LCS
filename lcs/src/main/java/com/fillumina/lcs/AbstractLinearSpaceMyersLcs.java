@@ -1,12 +1,9 @@
 package com.fillumina.lcs;
 
 /**
- * Implementation of the Linear Space Myers LCS algorithm. This is the base
- * class containing the algorithm. It only provides the indexes of the
- * LCS matches.
+ * Implementation of the Linear Space Myers LCS algorithm. It is fast
+ * and memory efficient (O(n)).
  *
- * @see AbstractLinearSpaceMyersLcSequence
- * @see AbstractLinearSpaceMyersLcs
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class AbstractLinearSpaceMyersLcs
@@ -17,6 +14,10 @@ public abstract class AbstractLinearSpaceMyersLcs
         super();
     }
 
+    /**
+     * @param sizeOnly {@code true} if only interested in the size of the LCS
+     *                (the lists returned will be empty).
+     */
     public AbstractLinearSpaceMyersLcs(boolean sizeOnly) {
         super(sizeOnly);
     }

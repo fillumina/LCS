@@ -3,10 +3,11 @@ package com.fillumina.lcs;
 import java.util.List;
 
 /**
+ * Abstract template that implements the head-tail equal elements optimization.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public abstract class AbstractLcsHeadTailReducer {
+abstract class AbstractLcsHeadTailReducer {
     private int counter = -1;
 
     public AbstractLcsHeadTailReducer() {
@@ -19,10 +20,15 @@ public abstract class AbstractLcsHeadTailReducer {
         }
     }
 
+    /** @return the length of the first sequence. */
     protected abstract int getFirstSequenceLength();
 
+    /** @return the length of the second sequence. */
     protected abstract int getSecondSequenceLength();
 
+    /** @return {@code true} when the elements at the specified indexes
+     *          matches.
+     */
     protected abstract boolean sameAtIndex(int x, int y);
 
     /** Template method called by {@link #lcsHeadTail(int, int, int, int)}. */

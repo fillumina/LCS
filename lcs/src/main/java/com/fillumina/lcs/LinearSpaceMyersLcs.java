@@ -6,7 +6,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Implementation of the Linear Space Myers LCS algorithm. It is fast
+ * and memory efficient (O(n)).
  *
+ * @see AbstractLinearSpaceMyersLcs
+ * @see <a href='www.xmailserver.org/diff2.pdf'>
+ *  An O(ND) Difference Algorithm and Its Variations (PDF)
+ * </a>
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public class LinearSpaceMyersLcs implements Lcs {
@@ -33,6 +39,23 @@ public class LinearSpaceMyersLcs implements Lcs {
         return new Inner<>(true, a, b).calculateLcsLength();
     }
 
+    @Override
+    public <T> List<? extends T> calculateLcs(Object[] a, Object[] b) {
+        final Inner<T> inner = new Inner<>(false, a, b);
+        List<LcsItem> lcs = inner.calculateLcs();
+        return inner.extractLcsList(lcs);
+    }
+
+    @Override
+    public List<LcsItem> calculateLcsIndexes(Object[] a, Object[] b) {
+        return new Inner<>(false, a, b).calculateLcs();
+    }
+
+    @Override
+    public int calculateLcsLength(Object[] a, Object[] b) {
+        return new Inner<>(true, a, b).calculateLcsLength();
+    }
+
     private static class Inner<T> extends AbstractLinearSpaceMyersLcs {
         private final T[] a, b;
 
@@ -48,9 +71,14 @@ public class LinearSpaceMyersLcs implements Lcs {
         public Inner(boolean sizeOnly,
                 final Collection<? extends T> a,
                 final Collection<? extends T> b) {
+            this(sizeOnly, a.toArray(), b.toArray());
+        }
+
+        @SuppressWarnings("unchecked")
+        public Inner(boolean sizeOnly, final Object[] a, final Object[] b) {
             super(sizeOnly);
-            this.a = (T[]) a.toArray();
-            this.b = (T[]) b.toArray();
+            this.a = (T[]) a;
+            this.b = (T[]) b;
         }
 
         @SuppressWarnings("unchecked")

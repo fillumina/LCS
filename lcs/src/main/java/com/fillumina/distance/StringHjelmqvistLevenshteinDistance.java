@@ -1,8 +1,8 @@
 package com.fillumina.distance;
 
-import com.fillumina.distance.AbstractHjelmqvistLevenshteinDistance;
-
 /**
+ * An implementation of the {@link AbstractHjelmqvistLevenshteinDistance}
+ * to return distance between strings. It's very fast and memory efficient.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

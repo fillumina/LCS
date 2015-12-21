@@ -15,10 +15,15 @@ package com.fillumina.distance;
  */
 public abstract class AbstractHjelmqvistLevenshteinDistance {
 
+    /** @return the length of the first sequence. */
     protected abstract int getFirstSequenceLength();
 
+    /** @return the length of the second sequence. */
     protected abstract int getSecondSequenceLength();
 
+    /** @return {@code true} when the elements at the specified indexes
+     *          matches.
+     */
     protected abstract boolean sameAtIndex(int x, int y);
 
     public <T> int distance() {

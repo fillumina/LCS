@@ -1,8 +1,10 @@
 package com.fillumina.lcs;
 
 /**
- * An implementation of the forward Myers algorithm. It's pretty fast
- * but uses an O(n^2) space.
+ * An implementation of the Myers algorithm. It's faster than the
+ * linear space alternative but its space usage is an O(n^2).
+ * Note that the used space increases dramatically
+ * when there are few matching elements (it's allocated dynamically).
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

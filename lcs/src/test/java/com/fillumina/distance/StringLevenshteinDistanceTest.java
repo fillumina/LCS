@@ -1,6 +1,5 @@
 package com.fillumina.distance;
 
-import com.fillumina.distance.CharLevenshteinDistance;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
