@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 

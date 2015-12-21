@@ -11,8 +11,9 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /**
+ * Tests the performances of various Levenshtein distance algorithms.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class DistancePerformanceTest extends AutoProgressionPerformanceTemplate {
 

@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 class IbmLcsLength extends LCS {
     private static final LCSSettings LCS_SETTINGS = new LCSSettings();

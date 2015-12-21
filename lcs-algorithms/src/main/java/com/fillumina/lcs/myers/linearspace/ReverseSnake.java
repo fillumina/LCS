@@ -2,7 +2,7 @@ package com.fillumina.lcs.myers.linearspace;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 class ReverseSnake extends Snake {
 

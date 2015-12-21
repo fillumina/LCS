@@ -20,7 +20,7 @@ import java.util.Objects;
  * @see <a href="https://neil.fraser.name/writing/diff/">
  *  Neil Fraser: Diff Strategies
  * </a>
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class CommonOptimizations implements LcsList {
 

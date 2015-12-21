@@ -11,7 +11,7 @@ import java.util.Objects;
  * This is an old implementation of {@link LinearSpaceMyersLcs} used as
  * a reference.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class BaselineLinearSpaceMyersLcs implements LcsList {
 

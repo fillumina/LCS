@@ -3,7 +3,7 @@ package com.fillumina.distance;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class CharLevenshteinDistance extends AbstractWagnerFischerLevenshteinDistance {
     private final char[] a, b;

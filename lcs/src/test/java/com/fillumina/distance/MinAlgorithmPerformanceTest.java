@@ -8,8 +8,9 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * Tests the performances of two different min algorithms.
+ * 
+ * @author Francesco Illuminati 
  */
 public class MinAlgorithmPerformanceTest extends AutoProgressionPerformanceTemplate {
 

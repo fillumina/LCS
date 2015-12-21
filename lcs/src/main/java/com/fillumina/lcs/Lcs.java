@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * General interface for LCS algorithm implementations.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public interface Lcs {
 

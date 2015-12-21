@@ -12,7 +12,7 @@ import java.util.Map;
  * This class is NOT thread safe!
  *
  * @see RecursiveLcs
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class MemoizedRecursiveLcs extends RecursiveLcs {
     private final Map<Long, Stack<?>> resultsMap = new HashMap<>();

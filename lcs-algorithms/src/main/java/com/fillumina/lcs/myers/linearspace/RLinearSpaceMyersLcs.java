@@ -7,7 +7,7 @@ import com.fillumina.lcs.helper.LcsList;
  * Myers algorithm that uses forward and backward snakes. It is not designed
  * to be performant but to be easy to understand.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class RLinearSpaceMyersLcs implements LcsList {
 

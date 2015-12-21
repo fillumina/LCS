@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface useful to test various LCS algorithms.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public interface LcsList {
 

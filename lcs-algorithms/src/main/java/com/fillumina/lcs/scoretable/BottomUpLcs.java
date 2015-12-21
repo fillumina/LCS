@@ -13,7 +13,7 @@ import com.fillumina.lcs.helper.LcsList;
  * @see SmithWatermanLcs
  * @see WagnerFisherLcs
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class BottomUpLcs implements LcsList {
     private static final Cell DEFAULT_INVALID_CELL = new Cell(0, Move.INVALID);

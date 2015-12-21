@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class LcsAdaptor implements LcsList, LcsLength {
     private final Lcs lcs;

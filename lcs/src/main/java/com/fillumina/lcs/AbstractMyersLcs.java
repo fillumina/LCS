@@ -6,7 +6,7 @@ package com.fillumina.lcs;
  * Note that the used space increases dramatically
  * when there are few matching elements (it's allocated dynamically).
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractMyersLcs extends AbstractLcsHeadTailReducer {
 

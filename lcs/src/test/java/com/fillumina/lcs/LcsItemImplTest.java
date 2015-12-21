@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class LcsItemImplTest {
     private final LcsItemImpl a = new LcsItemImpl(0, 0, 1);

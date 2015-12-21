@@ -13,7 +13,7 @@ import com.fillumina.lcs.helper.LcsList;
  * @see <a href='https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm'>
  *  Wikipedia: Smith-Waterman Algorithm
  * </a>
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class SmithWatermanLcs implements LcsList {
 

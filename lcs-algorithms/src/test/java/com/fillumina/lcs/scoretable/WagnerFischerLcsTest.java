@@ -7,7 +7,7 @@ import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class WagnerFischerLcsTest extends AbstractLcsTest {
 

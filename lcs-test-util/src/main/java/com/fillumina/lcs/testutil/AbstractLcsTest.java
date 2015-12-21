@@ -10,7 +10,7 @@ import com.fillumina.lcs.helper.LcsList;
 /**
  * A suite of tests for LCS sequences.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 

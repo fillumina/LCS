@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * Performance test to check the penalty of using lists against arrays.
  * Reading an arrays is around 15% faster than reading a list.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class ArrayVsListPerformanceTest
         extends AutoProgressionPerformanceTemplate {

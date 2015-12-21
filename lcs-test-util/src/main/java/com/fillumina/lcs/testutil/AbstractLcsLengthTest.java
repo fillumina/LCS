@@ -9,7 +9,7 @@ import com.fillumina.lcs.helper.LcsLength;
 /**
  * A suite of test that tests the returned LCS length.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
 

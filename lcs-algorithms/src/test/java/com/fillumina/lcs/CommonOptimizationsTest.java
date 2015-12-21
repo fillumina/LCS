@@ -6,7 +6,7 @@ import com.fillumina.lcs.scoretable.BottomUpLcs;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class CommonOptimizationsTest extends AbstractLcsTest {
 

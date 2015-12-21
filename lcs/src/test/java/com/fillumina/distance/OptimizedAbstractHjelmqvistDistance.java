@@ -1,8 +1,9 @@
 package com.fillumina.distance;
 
 /**
- *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * Using {@link System.arraycopy()} instead of manual copying. Proved slower!
+ * 
+ * @author Francesco Illuminati 
  */
 public abstract class OptimizedAbstractHjelmqvistDistance {
 

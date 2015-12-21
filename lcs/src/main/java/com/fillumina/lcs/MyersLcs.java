@@ -15,7 +15,7 @@ import java.util.List;
  * @see <a href='www.xmailserver.org/diff2.pdf'>
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class MyersLcs implements Lcs {
     public static final MyersLcs INSTANCE =

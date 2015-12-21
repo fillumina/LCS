@@ -1,12 +1,11 @@
 package com.fillumina.distance;
 
-import com.fillumina.distance.OptimizedStringHjelmqvistDistance;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class OptimizedStringHjelmqvistDistanceTest {
 

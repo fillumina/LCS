@@ -13,7 +13,7 @@ import java.util.TreeSet;
  * sequence is easily recognizable because it is composed of negative
  * numbers.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class RandomSequenceGenerator {
 

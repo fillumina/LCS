@@ -22,7 +22,7 @@ import com.fillumina.lcs.helper.LcsList;
  * </a>
  * @see WagnerFisherLevenshteinDistance
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class WagnerFischerLcs implements LcsList {
 

@@ -11,7 +11,7 @@ package com.fillumina.distance;
  *  Fast memory efficient Levenshtein algorithm (Sten Hjelmqvist)
  * </a>
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractHjelmqvistLevenshteinDistance {
 

@@ -18,7 +18,7 @@ import com.fillumina.lcs.helper.LcsList;
  * programming</a>. This algorithm is slower than those that
  * use the full score table.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
 

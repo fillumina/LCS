@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Abstract template that implements the head-tail equal elements optimization.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 abstract class AbstractLcsHeadTailReducer {
     private int counter = -1;

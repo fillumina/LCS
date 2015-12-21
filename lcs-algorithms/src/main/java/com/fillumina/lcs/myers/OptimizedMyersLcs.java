@@ -11,7 +11,7 @@ import com.fillumina.lcs.helper.LcsList;
  * or memory especially if there are few matches. Finding 4 matches in a
  * two 600 elements sequences can use as much as
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class OptimizedMyersLcs implements LcsList {
 

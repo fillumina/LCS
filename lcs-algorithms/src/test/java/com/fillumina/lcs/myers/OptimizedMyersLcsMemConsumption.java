@@ -10,7 +10,7 @@ import com.fillumina.lcs.helper.LcsList;
  * An optimization of the Myers algorithm that only copies the part of the
  * vector which was actually used.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class OptimizedMyersLcsMemConsumption implements LcsList {
     private int memCounter;

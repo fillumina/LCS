@@ -13,7 +13,7 @@ import java.util.List;
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 class LinearSpaceMyersLcsSolver<T> {
 

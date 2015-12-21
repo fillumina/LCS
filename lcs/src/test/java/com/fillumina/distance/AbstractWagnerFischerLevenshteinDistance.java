@@ -18,7 +18,7 @@ package com.fillumina.distance;
  *  Wikipedia
  * </a>
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractWagnerFischerLevenshteinDistance {
 

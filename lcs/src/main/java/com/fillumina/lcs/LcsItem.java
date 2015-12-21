@@ -7,7 +7,7 @@ import java.io.Serializable;
  * to the maximum sequence of consecutive matches: there could be another
  * successive item with an element consecutive to the given one.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public interface LcsItem extends Serializable {
 

@@ -30,7 +30,7 @@ import com.fillumina.lcs.helper.LcsList;
  * @see <a href="https://neil.fraser.name/software/diff_match_patch/myers.pdf">
  * An O(ND) Difference Algorithm and Its Variations, Myers 1986
  * </a>
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class MyersLcs implements LcsList {
 

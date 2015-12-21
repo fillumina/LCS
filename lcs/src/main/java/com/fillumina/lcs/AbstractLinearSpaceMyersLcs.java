@@ -4,7 +4,7 @@ package com.fillumina.lcs;
  * Implementation of the Linear Space Myers LCS algorithm. It is fast
  * and memory efficient (O(n)).
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractLinearSpaceMyersLcs
         extends AbstractLcsHeadTailReducer {

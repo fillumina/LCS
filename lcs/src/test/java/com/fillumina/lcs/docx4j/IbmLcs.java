@@ -14,7 +14,7 @@ import com.fillumina.lcs.helper.LcsList;
  * between successive matches (d) and a way to avoid calculating indexes
  * outside the virtual table.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class IbmLcs implements LcsList {
     private static final LCSSettings SETTINGS = new LCSSettings() {

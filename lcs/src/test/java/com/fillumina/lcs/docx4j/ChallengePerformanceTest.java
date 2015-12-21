@@ -2,7 +2,6 @@ package com.fillumina.lcs.docx4j;
 
 import com.fillumina.lcs.BaselineLinearSpaceMyersLcs;
 import com.fillumina.lcs.LinearSpaceMyersLcs;
-import com.fillumina.lcs.OptimizedLinearSpaceMyersLcs;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -16,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  * A performance test that compares the LCS implementation of this project
  * with the one present in IBM DOCX4J.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class ChallengePerformanceTest
         extends AutoProgressionPerformanceTemplate {

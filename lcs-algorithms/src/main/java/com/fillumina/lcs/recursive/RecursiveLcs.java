@@ -12,7 +12,7 @@ import com.fillumina.lcs.helper.LcsList;
  * clear implementation.
  *
  * @see MomoizedRecursiveLcs
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class RecursiveLcs implements LcsList {
 

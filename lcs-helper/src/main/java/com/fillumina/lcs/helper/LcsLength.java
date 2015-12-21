@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public interface LcsLength extends LcsList {
 

@@ -13,7 +13,7 @@ import com.fillumina.lcs.helper.LcsList;
 /**
  * An helper for testing LCS algorithms.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public abstract class AbstractLcsTestExecutor
         extends CharacterLcsHelper {

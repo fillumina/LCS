@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 class Snake extends Rectangle implements Iterable<Snake> {
     protected final int xMid;

@@ -6,7 +6,7 @@ import com.fillumina.lcs.testutil.AbstractLcsLengthTest;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class LinearSpaceMyersLcsTest extends AbstractLcsLengthTest  {
 

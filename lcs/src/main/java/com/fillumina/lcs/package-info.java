@@ -19,6 +19,6 @@
  *  Longest common subsequence problem (wikipedia)
  * </a>
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 package com.fillumina.lcs;

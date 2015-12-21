@@ -10,7 +10,7 @@ import com.fillumina.lcs.helper.LcsList;
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
  * reverse vector without the need to reverse the list.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
 

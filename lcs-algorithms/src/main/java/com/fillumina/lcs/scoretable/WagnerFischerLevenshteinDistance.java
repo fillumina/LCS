@@ -21,7 +21,7 @@ import java.util.Objects;
  *  Wikipedia
  * </a>
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati 
  */
 public class WagnerFischerLevenshteinDistance {
 
