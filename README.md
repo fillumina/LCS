@@ -38,30 +38,30 @@ algorithm is working right.
 3. `lcs-algorithm` contains the implementation of many different
 LCS algorithms. There is also a performance test to compare them
 under different conditions.
-4. `lcs` contains a performance-wise implementations that can be imported
+4. `lcs` contains performance-wise implementations that can be imported
 and used separately from the other modules of the project.
 
 
 ## Algorithms
 
-The algorithm included are (along with some variants and optimizations):
+The algorithms included are (along with some variants and optimizations):
 
 * [Recursive]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/recursive/RecursiveLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/recursive/RecursiveLcs.java)
 * [Memoized Recursive]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/recursive/MemoizedRecursiveLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/recursive/MemoizedRecursiveLcs.java)
 * [Bottom-up]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/BottomUpLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/BottomUpLcs.java)
 * [Smith-Waterman]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
 * [Wagner-Fisher]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFisherLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFisherLcs.java)
 * [Linear space Hirschberg]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/hirshberg/HirshbergLinearSpaceAlgorithmLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/hirshberg/HirshbergLinearSpaceAlgorithmLcs.java)
 * [Myers]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/myers/MyersLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/MyersLcs.java)
 * [Linear Space Myers]
-(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersSolverLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersSolverLcs.java)
 
 There is also a very fast implementation of the Levenshtein distance algorithm.
 The module containing the optimized algorithms will be soon released on
