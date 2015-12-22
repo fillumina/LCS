@@ -9,6 +9,7 @@ optimizations.__
 - __author:__ Francesco Illuminati (fillumina@gmail.com)
 - __license:__ [apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+
 ## Goals
 
 This project accomplishes two different goals:
@@ -66,3 +67,21 @@ The algorithms included are (along with some variants and optimizations):
 There is also a very fast implementation of the Levenshtein distance algorithm.
 The module containing the optimized algorithms will be soon released on
 maven central.
+
+
+## Bibliography
+
+* [Wikipedia: Longest Common Subsequence problem]
+(https://en.wikipedia.org/wiki/Longest_common_subsequence_problem)
+* [Neil Fraser: Diff Strategies]
+(https://neil.fraser.name/writing/diff/)
+* [Wikipedia: Smith-Waterman Algorithm]
+(https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm)
+* [Wikipedia: Wagner Fischer Algorithm]
+(https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm)
+* [Dynamic Programming]
+(https://en.wikipedia.org/wiki/Dynamic_programming)
+* [An O(ND) Difference Algorithm and Its Variations, Myers 1986 (PDF)]
+(https://neil.fraser.name/software/diff_match_patch/myers.pdf)
+* [Wikipedia: Levenshtein Distance]
+(https://en.wikipedia.org/wiki/Levenshtein_distance)
