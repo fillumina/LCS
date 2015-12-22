@@ -9,6 +9,7 @@ optimizations.__
 - __author:__ Francesco Illuminati (fillumina@gmail.com)
 - __license:__ [apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+## Goals
 
 This project accomplishes two different goals:
 
@@ -21,10 +22,13 @@ two given sequences. The result of the calculation can be any of these:
 
 1. the length of the LCS
 2. a set of matching indexes from the two sequences
-3. the sequence itself
+3. the LCS sequence itself
 
 Notice that the LCS is not unique, there could be many different sub-sequences
 of the same (maximum) size.
+
+
+## Modules
 
 The project is divided in 4 (maven) modules:
 
@@ -37,24 +41,27 @@ under different conditions.
 4. `lcs` contains a performance-wise implementations that can be imported
 and used separately from the other modules of the project.
 
+
+## Algorithms
+
 The algorithm included are (along with some variants and optimizations):
 
 * [Recursive]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/recursive/RecursiveLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/recursive/RecursiveLcs.java)
 * [Memoized Recursive]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/recursive/MemoizedRecursiveLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/recursive/MemoizedRecursiveLcs.java)
 * [Bottom-up]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/scoretable/BottomUpLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/BottomUpLcs.java)
 * [Smith-Waterman]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
 * [Wagner-Fisher]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/scoretable/WagnerFisherLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFisherLcs.java)
 * [Linear space Hirschberg]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/hirshberg/HirshbergLinearSpaceAlgorithmLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/hirshberg/HirshbergLinearSpaceAlgorithmLcs.java)
 * [Myers]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/myers/MyersLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/myers/MyersLcs.java)
 * [Linear Space Myers]
-(lcs-algorithm/src/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersSolverLcs.java).
+(lcs-algorithm/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersSolverLcs.java)
 
 There is also a very fast implementation of the Levenshtein distance algorithm.
 The module containing the optimized algorithms will be soon released on
