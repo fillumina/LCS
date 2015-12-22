@@ -55,13 +55,13 @@ The algorithms included are (along with some variants and optimizations):
 * [Smith-Waterman]
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
 * [Wagner-Fisher]
-(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFisherLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFischerLcs.java)
 * [Linear space Hirschberg]
-(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/hirshberg/HirshbergLinearSpaceAlgorithmLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/hirschberg/HirschbergLinearSpaceAlgorithmLcs.java)
 * [Myers]
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/MyersLcs.java)
 * [Linear Space Myers]
-(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersSolverLcs.java)
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersLcsSolver.java)
 
 There is also a very fast implementation of the Levenshtein distance algorithm.
 The module containing the optimized algorithms will be soon released on
