@@ -1,10 +1,10 @@
 package com.fillumina.lcs.algorithm.myers;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  * Myers devises a faster way to perform the LCS by recursing the score table
@@ -12,10 +12,12 @@ import com.fillumina.lcs.helper.LcsList;
  * for matches along a specific distance and then just increases the allowed
  * distance until a match is found. The algorithm always work closer to the
  * optimal solution which is the diagonal (all elements are equal) and so the
- * first solution that completes can be safely taken.
+ * first solution that completes can be safely taken because the solution on
+ * a superior diagonal implies element farther apart and with less elements.
  * The other algorithms starts by searching
  * a match from the farthest distance possible (because they always start from
  * the beginning of a row in the score table).
+ * <p>
  * This implementation tries to be
  * as close as possible to the one described by the author on his paper.
  *
@@ -30,7 +32,7 @@ import com.fillumina.lcs.helper.LcsList;
  * @see <a href="https://neil.fraser.name/software/diff_match_patch/myers.pdf">
  * An O(ND) Difference Algorithm and Its Variations, Myers 1986
  * </a>
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class MyersLcs implements LcsList {
 

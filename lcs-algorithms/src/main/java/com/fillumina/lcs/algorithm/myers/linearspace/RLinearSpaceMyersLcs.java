@@ -1,13 +1,15 @@
 package com.fillumina.lcs.algorithm.myers.linearspace;
 
-import java.util.List;
 import com.fillumina.lcs.helper.LcsList;
+import java.util.List;
 
 /**
- * Myers algorithm that uses forward and backward snakes. It is not designed
- * to be performant but to be easy to understand.
+ * The {@link LinearSpaceMyersLcsSolver} uses an internal state and so it
+ * cannot be used stateless as suggested by the {@link LcsList} interface. This
+ * adaptor instantiates a new {@link LinearSpaceMyersLcsSolver} at each
+ * call of {@link #lcs(List,List)} complying with the interface.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class RLinearSpaceMyersLcs implements LcsList {
 

@@ -1,16 +1,16 @@
 package com.fillumina.lcs.algorithm.hirschberg;
 
-import java.util.List;
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
- * Computes the LCS using linear space O(n).
- * The algorithms that use the LCS score table only work with 2
+ * Computes the LCS using linear space.
+ * The algorithms that use the LCS score table only works with 2
  * rows at a time (current row j and j-1) so it is possible to avoid
- * creating the entire table by just using these rows. By calculating
+ * creating the entire table by just using these two. By calculating
  * the forward and backward vector and watching where they meet the
  * LCS can be calculated by successively dividing the virtual score table at
  * the meeting point. The dividing technique is called
@@ -18,7 +18,7 @@ import com.fillumina.lcs.helper.LcsList;
  * programming</a>. This algorithm is slower than those that
  * use the full score table.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
 

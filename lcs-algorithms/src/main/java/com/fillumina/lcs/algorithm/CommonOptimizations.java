@@ -14,7 +14,7 @@ import java.util.Objects;
  * <li>check if the input sequences are empty O(1);
  * <li>check if they are equals O(n);
  * <li>check if they are just one row/column O(n);
- * <li>check for equal heads and/or tails;
+ * <li>check for equal heads and tails;
  * </ul>
  *
  * @see <a href="https://neil.fraser.name/writing/diff/">

@@ -7,8 +7,8 @@ import java.util.Objects;
 
 /**
  * An optimization of the Myers algorithm that only copies the part of the
- * vector which was actually used. It's fast but uses a lot
- * of memory especially if there are few matches.
+ * vector which was actually used. Comparing to other algorithms Myers' is fast
+ * but uses a lot of memory especially if there are few matches.
  *
  * @author Francesco Illuminati
  */
@@ -33,16 +33,17 @@ public class OptimizedMyersLcs implements LcsList {
         int[] tmp;
 
         int size, maxk, next, prev, x=-1, y, d, k=-1;
-        FILL_THE_TABLE:
         for (d = 0; d < max; d++) {
             for (k = -d; k <= d; k += 2) {
                 maxk = max + k;
-                next = v[maxk + 1]; // down
-                prev = v[maxk - 1]; // right
-                if (k == -d || (k != d && prev < next)) {
-                    x = next;
+                if (k == -d) {
+                    x = v[maxk + 1];
+                } else if (k == d) {
+                    x = v[maxk - 1] + 1;
                 } else {
-                    x = prev + 1;
+                    next = v[maxk + 1]; // down
+                    prev = v[maxk - 1]; // right
+                    x = (prev < next) ? next : prev + 1;
                 }
                 y = x - k;
                 while (x < n && y < m && Objects.equals(a[x], b[y])) {
@@ -57,7 +58,7 @@ public class OptimizedMyersLcs implements LcsList {
                     System.arraycopy(v, max-dd-1, tmp, 1, size);
                     vv[dd>>1] = tmp;
 
-                    break FILL_THE_TABLE;
+                    return backwardReadLcs(n, m, d, k, vv, x, a);
                 }
             }
             if ((d & 1) == 0) {
@@ -67,11 +68,17 @@ public class OptimizedMyersLcs implements LcsList {
                 vv[d>>1] = tmp;
             }
         }
+        throw new AssertionError();
+    }
 
+    protected <T> List<? extends T> backwardReadLcs(int n, int m, int d, int k,
+            int[][] vv, int x, T[] a) {
+        int maxk;
+        int next;
+        int prev;
         int xStart, xMid, index = (n + m - d) >> 1;
         @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[index];
-
+                T[] result = (T[]) new Object[index];
         for (; d >= 0 && x > 0; d--) {
             int[] vNext = vv[d>>1];
             maxk = d + 2 + k -(d&1);

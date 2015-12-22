@@ -1,20 +1,19 @@
 package com.fillumina.lcs.algorithm.recursive;
 
-import com.fillumina.lcs.algorithm.recursive.MemoizedRecursiveLcs;
+import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.List;
 import org.junit.Ignore;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
 
     @Override
     public LcsList getLcsAlgorithm() {
-        return new MemoizedRecursiveLcs() {
+        return new MemoizedRecursiveLcs.Inner() {
 
             @Override
             <T> Stack<T> recursiveLcs(List<? extends T> a, int n,

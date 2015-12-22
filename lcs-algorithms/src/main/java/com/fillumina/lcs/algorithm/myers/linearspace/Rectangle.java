@@ -41,11 +41,26 @@ class Rectangle {
         return yEnd;
     }
 
-    public boolean isMaximum(Rectangle other) {
+    /** The given rectangle is coincident with this. */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        Rectangle other = (Rectangle) obj;
         return xStart == other.xStart &&
                 yStart == other.yStart &&
                 xEnd == other.xEnd &&
                 yEnd == other.yEnd;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + this.xStart;
+        hash = 59 * hash + this.yStart;
+        hash = 59 * hash + this.xEnd;
+        hash = 59 * hash + this.yEnd;
+        return hash;
+    }
 }

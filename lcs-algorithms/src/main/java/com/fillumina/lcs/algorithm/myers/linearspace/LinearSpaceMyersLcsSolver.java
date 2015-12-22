@@ -55,7 +55,7 @@ class LinearSpaceMyersLcsSolver<T> {
             }
 
             Snake snake = findMiddleSnake();
-            if (isMaximum(snake)) {
+            if (equals(snake)) {
                 return snake;
             }
 

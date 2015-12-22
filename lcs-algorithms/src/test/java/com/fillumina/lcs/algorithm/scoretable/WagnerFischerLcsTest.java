@@ -1,14 +1,13 @@
 package com.fillumina.lcs.algorithm.scoretable;
 
-import com.fillumina.lcs.algorithm.scoretable.WagnerFischerLcs;
+import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class WagnerFischerLcsTest extends AbstractLcsTest {
 

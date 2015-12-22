@@ -1,14 +1,13 @@
 package com.fillumina.lcs.algorithm.scoretable;
 
-import com.fillumina.lcs.algorithm.scoretable.WagnerFischerLevenshteinDistance;
 import com.fillumina.lcs.testutil.ConversionHelper;
 import java.util.List;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class WagnerFischerLevenshteinDistanceTest {
 

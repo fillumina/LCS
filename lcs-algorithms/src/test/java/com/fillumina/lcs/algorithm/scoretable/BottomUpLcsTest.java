@@ -1,12 +1,11 @@
 package com.fillumina.lcs.algorithm.scoretable;
 
-import com.fillumina.lcs.algorithm.scoretable.BottomUpLcs;
-import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class BottomUpLcsTest extends AbstractLcsTest {
 
