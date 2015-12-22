@@ -1,20 +1,20 @@
 package com.fillumina.lcs.docx4j;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  * This is an adapter to make the DOCX4J LCS algorithm be testable along
  * with the other algorithms in this project. This IBM implementation is a useful
  * reference for every speeding-up challenges. It implements the Myers
  * algorithm pretty efficiently and also can be limited on the maximum space
- * between successive matches (d) and a way to avoid calculating indexes
+ * between successive matches (d) and has a way to avoid calculating indexes
  * outside the virtual table.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class IbmLcs implements LcsList {
     private static final LCSSettings SETTINGS = new LCSSettings() {

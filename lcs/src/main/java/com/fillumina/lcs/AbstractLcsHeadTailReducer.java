@@ -5,8 +5,9 @@ import java.util.List;
 /**
  * Abstract template that implements the head-tail equal elements optimization.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
+// cannot be made public because it uses LcsItemImpl which is package protected
 abstract class AbstractLcsHeadTailReducer {
     private int counter = -1;
 
@@ -26,19 +27,27 @@ abstract class AbstractLcsHeadTailReducer {
     /** @return the length of the second sequence. */
     protected abstract int getSecondSequenceLength();
 
-    /** @return {@code true} when the elements at the specified indexes
-     *          matches.
+    /**
+     * @return {@code true} when the elements at the specified indexes
+     *         matches.
      */
     protected abstract boolean sameAtIndex(int x, int y);
 
     /** Template method called by {@link #lcsHeadTail(int, int, int, int)}. */
     abstract LcsItemImpl lcs(int a0, int n, int b0, int m);
 
+    /** @return a list of matching indexes from the LCS. */
     public List<LcsItem> calculateLcs() {
         return lcsHeadTail(0, getFirstSequenceLength(),
                 0, getSecondSequenceLength());
     }
 
+    /**
+     * @return the length of the LCS. The length can also be read from
+     *         {@code calculateLcs().size()} but this version
+     *         avoid creating the list and so it is more efficient if you only
+     *         need the length.
+     */
     public int calculateLcsLength() {
         final List<LcsItem> list = calculateLcs();
         if (counter == -1) {
@@ -47,18 +56,7 @@ abstract class AbstractLcsHeadTailReducer {
         return counter;
     }
 
-    /**
-     * Override if you simply need to capture the LCS length
-     * (in that case you can simply return {@code null} avoiding the
-     * creation of unused objects):
-     * <code><pre>
-     * protected LcsItem match(int x, int y, int steps) {
-     *   this.counter += steps;
-     *   return null;
-     * }
-     * </pre></code>
-     */
-    LcsItemImpl match(int x, int y, int steps) {
+    final LcsItemImpl match(int x, int y, int steps) {
         if (counter == -1) {
             return new LcsItemImpl(x, y, steps);
         } else {

@@ -2,11 +2,10 @@ package com.fillumina.lcs.testutil;
 
 import java.util.List;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class RandomSequenceGeneratorTest {
 

@@ -3,11 +3,12 @@ package com.fillumina.lcs;
 import java.io.Serializable;
 
 /**
- * Item of the LCS sequence. Note that the steps value doesn't correspond
- * to the maximum sequence of consecutive matches: there could be another
- * successive item with an element consecutive to the given one.
+ * Item containing the matching indexes of the LCS sequence. To minimize the
+ * number of nodes successive items are packed together in a single item but
+ * there is no assurance that an item contains the longest sequence of
+ * successive matches.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public interface LcsItem extends Serializable {
 

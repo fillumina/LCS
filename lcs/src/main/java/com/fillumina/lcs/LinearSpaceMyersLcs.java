@@ -8,12 +8,15 @@ import java.util.List;
 /**
  * Implementation of the Linear Space Myers LCS algorithm. It is fast
  * and memory efficient (O(n)).
+ * <p>
+ * Note that if you need to process a primitive array it is more efficient
+ * to implement the {@link AbstractLinearSpaceMyersLcs} template.
  *
  * @see AbstractLinearSpaceMyersLcs
  * @see <a href='www.xmailserver.org/diff2.pdf'>
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class LinearSpaceMyersLcs implements Lcs {
     public static final LinearSpaceMyersLcs INSTANCE =

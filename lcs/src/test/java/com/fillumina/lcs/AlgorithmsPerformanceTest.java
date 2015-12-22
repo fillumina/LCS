@@ -1,18 +1,20 @@
 package com.fillumina.lcs;
 
 import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
 import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Confront the performances of different algorithms. Note that performances
+ * can vary for different values of {@link #TOTAL} and {@link #LCS}.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 

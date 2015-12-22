@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 
 /**
- * A performance test that compares the LCS implementation of this project
+ * A performance test that compares the LCS implementation from this project
  * with the one present in IBM DOCX4J.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class ChallengePerformanceTest
         extends AutoProgressionPerformanceTemplate {

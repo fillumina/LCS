@@ -1,8 +1,10 @@
 package com.fillumina.distance;
 
 /**
- * A Levenshtein algorithm using only 2 rows of the distance matrix. It's
- * very fast and memory efficient.
+ * Calculates the Levenshtein distance between two sequences. It quantifies
+ * how much two sequences differs (i.e. for auto-correction).
+ * This implementation uses only 2 rows of the distance matrix and so it is
+ * a linear space algorithm.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
  *  Levenshtein distance
@@ -11,7 +13,7 @@ package com.fillumina.distance;
  *  Fast memory efficient Levenshtein algorithm (Sten Hjelmqvist)
  * </a>
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public abstract class AbstractHjelmqvistLevenshteinDistance {
 
@@ -64,9 +66,8 @@ public abstract class AbstractHjelmqvistLevenshteinDistance {
             // copy v1 (current row) to v0 (previous row) for next iteration
 
             // it would seem better to simply swap the arrays or use
-            // System.arraycopy(), but this method, althought slow in
-            // theory, allows a better use of cache and it's way faster
-            // than the others. (see tests)
+            // System.arraycopy(), but this method allows for a better use of
+            // cache and it's way faster in practice (see tests).
             for (int j = 0; j < v0.length; j++) {
                 v0[j] = v1[j];
             }

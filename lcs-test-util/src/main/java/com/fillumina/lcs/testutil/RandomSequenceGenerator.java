@@ -13,7 +13,7 @@ import java.util.TreeSet;
  * sequence is easily recognizable because it is composed of negative
  * numbers.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class RandomSequenceGenerator {
 
@@ -24,7 +24,7 @@ public class RandomSequenceGenerator {
     /**
      *
      * @param total length of the sequences
-     * @param lcs   lenght of the longest common sequence
+     * @param lcs   length of the longest common sequence (lcs <= total)
      */
     public RandomSequenceGenerator(final int total, final int lcs) {
         this(total, lcs, System.nanoTime());
@@ -40,6 +40,7 @@ public class RandomSequenceGenerator {
      */
     public RandomSequenceGenerator(final int total, final int lcs,
             final long seed) {
+        assert lcs <= total;
         this.total = total;
         this.lcs = lcs;
         this.seed = seed;
@@ -48,7 +49,7 @@ public class RandomSequenceGenerator {
         List<Integer> bList = new ArrayList<>(total);
         createSequences(aList, bList, total);
 
-        this.lcsList = createLcsList(new ArrayList<>(lcs), lcs);
+        this.lcsList = createLcsList(new ArrayList<Integer>(lcs), lcs);
 
         Random rnd = new Random(seed);
         this.a = setLcsSequenceRandomlyIntoList(aList, lcsList, rnd);

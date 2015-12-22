@@ -6,9 +6,11 @@ import java.util.NoSuchElementException;
 
 /**
  * Item of a linked list of ordered LCS matches.
- * LcsItems are created by always adding a lower match to a chain of matches.
- * Because of that the first element of the chain (the head) is always the last
- * added one and so it contains an updated LCS length.
+ * {@link LcsItem}s are created by the Myers algorithm by always adding a lower
+ * match to a chain of matches. Because of that the first element of the chain
+ * (the head) is always the last added one and so it contains an updated
+ * LCS length. Because this implementation is so tied with the internals of
+ * the Myers algorithm it cannot be part of the public API.
  */
 class LcsItemImpl extends AbstractList<LcsItem>
         implements LcsItem {

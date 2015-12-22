@@ -2,9 +2,12 @@ package com.fillumina.lcs;
 
 /**
  * Implementation of the Linear Space Myers LCS algorithm. It is fast
- * and memory efficient (O(n)).
+ * and memory efficient O(n).
  *
- * @author Francesco Illuminati 
+ * @see <a href='www.xmailserver.org/diff2.pdf'>
+ *  An O(ND) Difference Algorithm and Its Variations (PDF)
+ * </a>
+ * @author Francesco Illuminati
  */
 public abstract class AbstractLinearSpaceMyersLcs
         extends AbstractLcsHeadTailReducer {
@@ -16,7 +19,7 @@ public abstract class AbstractLinearSpaceMyersLcs
 
     /**
      * @param sizeOnly {@code true} if only interested in the size of the LCS
-     *                (the lists returned will be empty).
+     *                (the returned list will always be empty).
      */
     public AbstractLinearSpaceMyersLcs(boolean sizeOnly) {
         super(sizeOnly);

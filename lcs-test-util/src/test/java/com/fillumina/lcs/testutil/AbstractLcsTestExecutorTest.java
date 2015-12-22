@@ -1,16 +1,15 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.helper.LcsLength;
-import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
-import java.util.List;
-import org.junit.Test;
 import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
 import java.util.ArrayList;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class AbstractLcsTestExecutorTest {
 
@@ -104,11 +103,11 @@ public class AbstractLcsTestExecutorTest {
                     count(xs, ys);
                     try {
                         final String[] inputLine = inputs[index++];
-                        List<Character> a = CharacterLcsHelper.toList(inputLine[0]);
-                        List<Character> b = CharacterLcsHelper.toList(inputLine[1]);
+                        List<Character> a = ConversionHelper.toList(inputLine[0]);
+                        List<Character> b = ConversionHelper.toList(inputLine[1]);
                         return (List<? extends T>) lcs(a, b);
                     } catch (IndexOutOfBoundsException e) {
-                        return (List<? extends T>) CharacterLcsHelper.toList(result);
+                        return (List<? extends T>) ConversionHelper.toList(result);
                     }
                 }
             };

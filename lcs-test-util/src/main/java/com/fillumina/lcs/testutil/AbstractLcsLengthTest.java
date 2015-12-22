@@ -1,18 +1,19 @@
 package com.fillumina.lcs.testutil;
 
-import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.helper.LcsLength;
+import com.fillumina.lcs.helper.LcsList;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
- * A suite of test that tests the returned LCS length.
+ * A test suite that checks the returned LCS length.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
 
+    //TODO why??
     public abstract <T extends LcsList & LcsLength> T getLcsSequenceGenerator();
 
     @Override
@@ -130,8 +131,8 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
     }
 
     private void countLcs(String a, String b, int expectedLcs) {
-        final List<Character> listA = CharacterLcsHelper.toList(a);
-        final List<Character> listB = CharacterLcsHelper.toList(b);
+        final List<Character> listA = ConversionHelper.toList(a);
+        final List<Character> listB = ConversionHelper.toList(b);
         final LcsLength algorithm = getLcsSequenceGenerator();
         assertEquals(expectedLcs, algorithm.lcsLength(listA, listB));
     }

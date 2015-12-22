@@ -10,12 +10,15 @@ import java.util.List;
  * linear space alternative but its space usage is an O(n^2).
  * Note that the used space increases dramatically
  * when there are few matching elements (it's allocated dynamically).
+ * <p>
+ * Note that if you need to process a primitive array it is more efficient
+ * to implement the {@link AbstractLinearSpaceMyersLcs} template.
  *
  * @see AbstractMyersLcs
  * @see <a href='www.xmailserver.org/diff2.pdf'>
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class MyersLcs implements Lcs {
     public static final MyersLcs INSTANCE =

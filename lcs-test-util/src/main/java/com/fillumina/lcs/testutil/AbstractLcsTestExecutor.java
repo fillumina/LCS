@@ -1,22 +1,22 @@
 package com.fillumina.lcs.testutil;
 
-import com.fillumina.lcs.helper.LcsLength;
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.events.Characters;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  * An helper for testing LCS algorithms.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public abstract class AbstractLcsTestExecutor
-        extends CharacterLcsHelper {
+        extends ConversionHelper {
     private final Map<String, Integer> countingMap = new HashMap<>();
     /**
      * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
@@ -35,7 +35,7 @@ public abstract class AbstractLcsTestExecutor
     static String executeLcs(LcsList lcs, String a, String b) {
         @SuppressWarnings("unchecked")
         List<? extends Character> resultList =
-                lcs.lcs(CharacterLcsHelper.toList(a), CharacterLcsHelper.toList(b));
+                lcs.lcs(ConversionHelper.toList(a), ConversionHelper.toList(b));
         return toString(resultList);
     }
 

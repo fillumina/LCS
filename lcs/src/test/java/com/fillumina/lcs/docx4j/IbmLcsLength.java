@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Implementation of the IBM LCS algorithm optimized for calculating the LCS
+ * length only.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 class IbmLcsLength extends LCS {
     private static final LCSSettings LCS_SETTINGS = new LCSSettings();

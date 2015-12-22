@@ -1,12 +1,17 @@
 package com.fillumina.lcs;
 
 /**
- * An implementation of the Myers algorithm. It's faster than the
- * linear space alternative but its space usage is an O(n^2).
+ * An implementation of the Myers LCS algorithm. It's faster than the
+ * linear space alternative but its space usage is quadratic O(n<sup>2</sup>).
  * Note that the used space increases dramatically
- * when there are few matching elements (it's allocated dynamically).
+ * when the matching elements are far apart (memory is allocated dynamically
+ * as needed).
  *
- * @author Francesco Illuminati 
+ * @see <a href='www.xmailserver.org/diff2.pdf'>
+ *  An O(ND) Difference Algorithm and Its Variations (PDF)
+ * </a>
+ *
+ * @author Francesco Illuminati
  */
 public abstract class AbstractMyersLcs extends AbstractLcsHeadTailReducer {
 

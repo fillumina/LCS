@@ -1,16 +1,16 @@
 package com.fillumina.lcs.testutil;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
 import java.util.Objects;
 import static org.junit.Assert.assertEquals;
-import com.fillumina.lcs.helper.LcsList;
+import org.junit.Test;
 
 /**
  * A suite of tests for LCS sequences.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
@@ -243,6 +243,7 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
     }
 
     /**
+     * Checks for a possible error in finding the longest subsequence.
      * @see <a href="https://neil.fraser.name/writing/diff/">
      * Myers algorithm problems
      * </a>
