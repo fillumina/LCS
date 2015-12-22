@@ -28,6 +28,9 @@ two given sequences. The result of the calculation can be any of these:
 Notice that the LCS is not unique, there could be many different sub-sequences
 of the same (maximum) size.
 
+The module containing the optimized algorithms will be soon released on
+maven central.
+
 
 ## Modules
 
@@ -65,8 +68,6 @@ The algorithms included are (along with some variants and optimizations):
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/myers/linearspace/LinearSpaceMyersLcsSolver.java)
 
 There is also a very fast implementation of the Levenshtein distance algorithm.
-The module containing the optimized algorithms will be soon released on
-maven central.
 
 
 ## Bibliography

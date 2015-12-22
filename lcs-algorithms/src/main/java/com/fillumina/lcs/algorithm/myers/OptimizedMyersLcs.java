@@ -15,15 +15,7 @@ import java.util.Objects;
 public class OptimizedMyersLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        @SuppressWarnings("unchecked")
-        final T[] aa = a.toArray((T[])new Object[a.size()]);
-        @SuppressWarnings("unchecked")
-        final T[] bb = b.toArray((T[])new Object[b.size()]);
-        return lcsMyers(aa, bb);
-    }
-
-    private <T> List<? extends T> lcsMyers(T[] a, T[] b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         int n = a.length;
         int m = b.length;
         int max = n + m + 1;
@@ -71,7 +63,7 @@ public class OptimizedMyersLcs implements LcsList {
         throw new AssertionError();
     }
 
-    protected <T> List<? extends T> backwardReadLcs(int n, int m, int d, int k,
+    protected <T> List<T> backwardReadLcs(int n, int m, int d, int k,
             int[][] vv, int x, T[] a) {
         int maxk;
         int next;

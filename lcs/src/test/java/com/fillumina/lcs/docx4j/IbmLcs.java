@@ -25,7 +25,7 @@ public class IbmLcs implements LcsList {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         LcsImpl lcs = new LcsImpl(a, b);
         lcs.longestCommonSubsequence(SETTINGS);
         return (List<T>) lcs.getSolution();
@@ -42,9 +42,9 @@ public class IbmLcs implements LcsList {
         private final Object[] a, b;
         private List<Integer> solutionIndexes;
 
-        public LcsImpl(List<?> a, List<?> b) {
-            this.a = a.toArray();
-            this.b = b.toArray();
+        public LcsImpl(Object[] a, Object[] b) {
+            this.a = a;
+            this.b = b;
         }
 
         public List<?> getSolution() {

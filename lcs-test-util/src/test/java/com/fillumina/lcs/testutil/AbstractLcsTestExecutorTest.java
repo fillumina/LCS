@@ -3,6 +3,8 @@ package com.fillumina.lcs.testutil;
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -97,17 +99,15 @@ public class AbstractLcsTestExecutorTest {
 
                 @Override
                 @SuppressWarnings("unchecked")
-                public <T> List<? extends T> lcs(
-                        List<? extends T> xs,
-                        List<? extends T> ys) {
+                public <T> List<T> lcs(T[] xs, T[] ys) {
                     count(xs, ys);
                     try {
                         final String[] inputLine = inputs[index++];
-                        List<Character> a = ConversionHelper.toList(inputLine[0]);
-                        List<Character> b = ConversionHelper.toList(inputLine[1]);
-                        return (List<? extends T>) lcs(a, b);
+                        Character[] a = ConversionHelper.toArray(inputLine[0]);
+                        Character[] b = ConversionHelper.toArray(inputLine[1]);
+                        return (List<T>) lcs(a, b);
                     } catch (IndexOutOfBoundsException e) {
-                        return (List<? extends T>) ConversionHelper.toList(result);
+                        return (List<T>) ConversionHelper.toList(result);
                     }
                 }
             };
@@ -123,12 +123,10 @@ public class AbstractLcsTestExecutorTest {
     static class ConcatLcs implements LcsList {
 
         @Override
-        public <T> List<? extends T> lcs(
-                List<? extends T> xs,
-                List<? extends T> ys) {
-            List<T> list = new ArrayList<>(xs.size() + ys.size() + 1);
-            list.addAll(xs);
-            list.addAll(ys);
+        public <T> List<T> lcs(T[] xs, T[] ys) {
+            List<T> list = new ArrayList<>(xs.length + ys.length + 1);
+            list.addAll((Collection<? extends T>) Arrays.asList(xs));
+            list.addAll((Collection<? extends T>) Arrays.asList(ys));
             return list;
         }
     }

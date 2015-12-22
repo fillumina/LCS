@@ -18,23 +18,22 @@ import java.util.Objects;
 public class SmithWatermanLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        int n = a.size();
-        int m = b.size();
+    public <T> List<T> lcs(T[] a, T[] b) {
+        int n = a.length;
+        int m = b.length;
 
         int[][] d = computeDistanceMatrix(a, n, b, m);
         return backtrack(n, m, d, a);
     }
 
-    private <T> int[][] computeDistanceMatrix(
-            List<? extends T> a, int n, List<? extends T> b, int m) {
+    private <T> int[][] computeDistanceMatrix(T[] a, int n, T[] b, int m) {
 
         int[][] d = new int[n + 1][m + 1];
 
         // row 0 and column 0 are initialized to 0 already by java
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (Objects.equals(a.get(i), b.get(j))) {
+                if (Objects.equals(a[i], b[j])) {
                     d[i + 1][j + 1] = d[i][j] + 1;
                 } else {
                     d[i + 1][j + 1]
@@ -45,8 +44,7 @@ public class SmithWatermanLcs implements LcsList {
         return d;
     }
 
-    private <T> List<? extends T> backtrack(int n, int m, int[][] d,
-            List<? extends T> a) {
+    private <T> List<T> backtrack(int n, int m, int[][] d, T[] a) {
         int index = d[n][m]; // the lcs length
 
         // read the substring out from the matrix
@@ -59,7 +57,7 @@ public class SmithWatermanLcs implements LcsList {
             } else if (d[x][y] == d[x][y - 1]) {
                 y--;
             } else {
-                sb[index--] = a.get(x - 1); // set the list in reverse order
+                sb[index--] = a[x - 1]; // set the list in reverse order
                 x--;
                 y--;
             }

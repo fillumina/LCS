@@ -2,7 +2,6 @@ package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsLength;
 import com.fillumina.lcs.helper.LcsList;
-import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -13,12 +12,11 @@ import org.junit.Test;
  */
 public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
 
-    //TODO why??
-    public abstract <T extends LcsList & LcsLength> T getLcsSequenceGenerator();
+    public abstract LcsLength getLcsLengthAlgorithm();
 
     @Override
     public LcsList getLcsAlgorithm() {
-        return getLcsSequenceGenerator();
+        return getLcsLengthAlgorithm();
     }
 
     @Test(timeout = 2000L)
@@ -126,15 +124,16 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
         final int tot = 600;
         final int lcs = 500;
         RandomSequenceGenerator seqGen = new RandomSequenceGenerator(tot, lcs);
-        final LcsLength algorithm = getLcsSequenceGenerator();
-        assertEquals(lcs, algorithm.lcsLength(seqGen.getA(), seqGen.getB()));
+        final LcsLength algorithm = getLcsLengthAlgorithm();
+        assertEquals(lcs, algorithm.lcsLength(seqGen.getArrayA(),
+                seqGen.getArrayB()));
     }
 
     private void countLcs(String a, String b, int expectedLcs) {
-        final List<Character> listA = ConversionHelper.toList(a);
-        final List<Character> listB = ConversionHelper.toList(b);
-        final LcsLength algorithm = getLcsSequenceGenerator();
-        assertEquals(expectedLcs, algorithm.lcsLength(listA, listB));
+        final Character[] arrayA = ConversionHelper.toArray(a);
+        final Character[] arrayB = ConversionHelper.toArray(b);
+        final LcsLength algorithm = getLcsLengthAlgorithm();
+        assertEquals(expectedLcs, algorithm.lcsLength(arrayA, arrayB));
     }
 
     @Test//(timeout = 2_000L)

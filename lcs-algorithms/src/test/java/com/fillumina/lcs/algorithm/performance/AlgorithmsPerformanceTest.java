@@ -1,6 +1,5 @@
 package com.fillumina.lcs.algorithm.performance;
 
-import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.algorithm.hirschberg.HirschbergLinearSpaceAlgorithmLcs;
 import com.fillumina.lcs.algorithm.hirschberg.OptimizedHirschbergLinearSpaceLcs;
 import com.fillumina.lcs.algorithm.myers.MyersLcs;
@@ -10,6 +9,7 @@ import com.fillumina.lcs.algorithm.myers.linearspace.RLinearSpaceMyersLcs;
 import com.fillumina.lcs.algorithm.scoretable.BottomUpLcs;
 import com.fillumina.lcs.algorithm.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.algorithm.scoretable.WagnerFischerLcs;
+import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
 import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
 import com.fillumina.performance.producer.TestContainer;
@@ -29,9 +29,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     private static final int LCS = 7;
     private static final long SEED = System.nanoTime();
 
+    private final RandomSequenceGenerator generator;
     private final List<Integer> lcsList;
-    private final List<Integer> a;
-    private final List<Integer> b;
 
     public static void main(String[] args) {
         System.out.println("performance evaluation, please wait...");
@@ -40,11 +39,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     public AlgorithmsPerformanceTest() {
         super();
-        RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(TOTAL, LCS, SEED);
+        this.generator = new RandomSequenceGenerator(TOTAL, LCS, SEED);
         this.lcsList = generator.getLcs();
-        this.a = generator.getA();
-        this.b = generator.getB();
     }
 
     private class LcsRunnable implements Runnable {
@@ -57,7 +53,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
         @Override
         public void run() {
             assertEquals(lcsAlgorithm.getClass().getSimpleName(),
-                    lcsList, lcsAlgorithm.lcs(a, b));
+                    lcsList, lcsAlgorithm.lcs(
+                            generator.getArrayA(), generator.getArrayB()));
         }
     }
 

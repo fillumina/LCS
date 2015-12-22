@@ -1,7 +1,6 @@
 package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsList;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import static org.junit.Assert.assertEquals;
@@ -21,8 +20,9 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
                     new RandomSequenceGenerator(len,lcs);
 
             @SuppressWarnings("unchecked")
-            List<Integer> lcsList = (List<Integer>) algorithm
-                    .lcs(generator.getA(), generator.getB());
+            List<Integer> lcsList = algorithm
+                    .lcs(generator.getArrayA(),
+                            generator.getArrayB());
 
             final List<Integer> expectedLcs = generator.getLcs();
             final int size = expectedLcs.size();
@@ -51,13 +51,13 @@ public abstract class AbstractLcsTest extends AbstractLcsTestExecutor {
 
     @Test
     public void shouldAllowNullValueInTheList() {
-        List<Character> a = new ArrayList<>();
-        List<Character> b = new ArrayList<>();
-        a.add(null);
-        b.add(null);
+        Character[] a = new Character[1];
+        Character[] b = new Character[1];
+
         @SuppressWarnings("unchecked")
-        List<? extends Character> solution = getLcsAlgorithm().lcs(a, b);
-        assertEquals(a, solution);
+        List<?> solution = getLcsAlgorithm().lcs(a, b);
+        assertEquals(1, solution.size());
+        assertEquals(null, solution.get(0));
     }
 
     @Test(timeout = 10_000L)

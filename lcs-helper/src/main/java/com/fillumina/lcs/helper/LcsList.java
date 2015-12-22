@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Interface useful to test various LCS algorithms.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public interface LcsList {
 
-    <T> List<? extends T> lcs(List<? extends T> xs, List<? extends T> ys);
+    <T> List<T> lcs(T[] xs, T[] ys);
 }

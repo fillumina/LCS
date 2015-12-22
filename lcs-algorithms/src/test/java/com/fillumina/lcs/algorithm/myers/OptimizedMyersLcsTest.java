@@ -1,10 +1,8 @@
 package com.fillumina.lcs.algorithm.myers;
 
-import com.fillumina.lcs.algorithm.myers.OptimizedMyersLcs;
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
-import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -45,9 +43,7 @@ public class OptimizedMyersLcsTest extends AbstractLcsTest {
         final OptimizedMyersLcsMemConsumption algo
                 = new OptimizedMyersLcsMemConsumption();
 
-        @SuppressWarnings("unchecked")
-        List<Integer> lcsList = (List<Integer>) algo
-                .lcs(generator.getA(), generator.getB());
+        algo.lcs(generator.getArrayA(), generator.getArrayB());
 
         return algo.getMemCounter();
     }

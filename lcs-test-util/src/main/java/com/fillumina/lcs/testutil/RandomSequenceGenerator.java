@@ -1,7 +1,6 @@
 package com.fillumina.lcs.testutil;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +18,8 @@ public class RandomSequenceGenerator {
 
     private final int total, lcs;
     private final long seed;
-    private final List<Integer> lcsList, a, b;
+    private final List<Integer> lcsList;
+    private Integer[] a, b;
 
     /**
      *
@@ -45,38 +45,38 @@ public class RandomSequenceGenerator {
         this.lcs = lcs;
         this.seed = seed;
 
-        List<Integer> aList = new ArrayList<>(total);
-        List<Integer> bList = new ArrayList<>(total);
-        createSequences(aList, bList, total);
+        this.a = new Integer[total];
+        this.b = new Integer[total];
+        createSequences(total);
 
-        this.lcsList = createLcsList(new ArrayList<Integer>(lcs), lcs);
+        Integer[] lcsArray = createLcsArray(lcs);
 
         Random rnd = new Random(seed);
-        this.a = setLcsSequenceRandomlyIntoList(aList, lcsList, rnd);
-        this.b = setLcsSequenceRandomlyIntoList(bList, lcsList, rnd);
+        setLcsSequenceRandomlyIntoList(a, lcsArray, rnd);
+        setLcsSequenceRandomlyIntoList(b, lcsArray, rnd);
+
+        this.lcsList = Arrays.asList(lcsArray);
     }
 
-    private static void createSequences(final List<Integer> a,
-            final List<Integer> b,
-            final int total) {
+    private void createSequences(final int total) {
         int index;
         for (int i = 0; i < total; i++) {
             index = i * 2;
-            a.add(index);
-            b.add(index+1);
+            a[i] = index;
+            b[i] = index+1;
         }
     }
 
-    private static List<Integer> createLcsList(final List<Integer> lcsList,
-            final int lcs) {
+    private static Integer[] createLcsArray(final int lcs) {
+        Integer[] lcsArray = new Integer[lcs];
         for (int i = 1; i <= lcs; i++) {
-            lcsList.add(-i);
+            lcsArray[i-1] = -i;
         }
-        return Collections.unmodifiableList(lcsList);
+        return lcsArray;
     }
 
-    private List<Integer> setLcsSequenceRandomlyIntoList(final List<Integer> list,
-            final List<Integer> lcsList, final Random rnd) {
+    private void setLcsSequenceRandomlyIntoList(Integer[] array,
+            final Integer[] lcsArray, final Random rnd) {
         int max = lcs;
         TreeSet<Integer> set = new TreeSet<>();
         for (int i=0; i<max; i++) {
@@ -88,10 +88,9 @@ public class RandomSequenceGenerator {
         int index = 0;
         Iterator<Integer> i = set.iterator();
         while(i.hasNext()) {
-            list.set(i.next(), lcsList.get(index));
+            array[i.next()] = lcsArray[index];
             index++;
         }
-        return Collections.unmodifiableList(list);
     }
 
     public List<Integer> getLcs() {
@@ -99,11 +98,19 @@ public class RandomSequenceGenerator {
     }
 
     public List<Integer> getA() {
-        return a;
+        return Arrays.asList(a);
     }
 
     public List<Integer> getB() {
-        return b;
+        return Arrays.asList(b);
+    }
+
+    public Integer[] getArrayA() {
+        return Arrays.copyOf(a, a.length);
+    }
+
+    public Integer[] getArrayB() {
+        return Arrays.copyOf(b, b.length);
     }
 
     public long getSeed() {

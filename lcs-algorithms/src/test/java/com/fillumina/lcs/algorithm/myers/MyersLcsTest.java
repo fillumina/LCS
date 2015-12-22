@@ -1,12 +1,11 @@
 package com.fillumina.lcs.algorithm.myers;
 
-import com.fillumina.lcs.algorithm.myers.MyersLcs;
-import com.fillumina.lcs.testutil.AbstractLcsTest;
 import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class MyersLcsTest extends AbstractLcsTest {
 

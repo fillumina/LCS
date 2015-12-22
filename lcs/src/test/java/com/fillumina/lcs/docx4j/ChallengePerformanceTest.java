@@ -24,9 +24,8 @@ public class ChallengePerformanceTest
     private static final int LCS = 40;
     private static final long SEED = System.nanoTime();
 
+    private final RandomSequenceGenerator generator;
     private final List<Integer> lcsList;
-    private final List<Integer> a;
-    private final List<Integer> b;
 
     public static void main(String[] args) {
         new ChallengePerformanceTest().executeWithIntermediateOutput();
@@ -34,13 +33,10 @@ public class ChallengePerformanceTest
 
     public ChallengePerformanceTest() {
         super();
-        RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(TOTAL, LCS, SEED);
+        this.generator = new RandomSequenceGenerator(TOTAL, LCS, SEED);
         this.lcsList = generator.getLcs();
-        this.a = generator.getA();
-        this.b = generator.getB();
-        assertEquals(TOTAL, this.a.size());
-        assertEquals(TOTAL, this.b.size());
+        assertEquals(TOTAL, generator.getArrayA().length);
+        assertEquals(TOTAL, generator.getArrayB().length);
         assertEquals(LCS, this.lcsList.size());
     }
 
@@ -56,7 +52,9 @@ public class ChallengePerformanceTest
         tests.addTest("IBM", new Runnable() {
             @Override
             public void run() {
-                final IbmLcsLength ibmLcsLength = new IbmLcsLength(a, b);
+                final IbmLcsLength ibmLcsLength =
+                        new IbmLcsLength(generator.getArrayA(),
+                                generator.getArrayB());
                 assertEquals(LCS, ibmLcsLength.getLcs());
             }
         });
@@ -65,7 +63,8 @@ public class ChallengePerformanceTest
             @Override
             public void run() {
                 assertEquals(LCS, LinearSpaceMyersLcs.INSTANCE
-                        .calculateLcsLength(a, b));
+                        .calculateLcsLength(
+                                generator.getArrayA(), generator.getArrayB()));
             }
         });
 
@@ -73,7 +72,7 @@ public class ChallengePerformanceTest
             @Override
             public void run() {
                 assertEquals(LCS,  new BaselineLinearSpaceMyersLcs()
-                        .lcs(a, b).size());
+                        .lcs(generator.getArrayA(), generator.getArrayB()).size());
             }
         });
     }

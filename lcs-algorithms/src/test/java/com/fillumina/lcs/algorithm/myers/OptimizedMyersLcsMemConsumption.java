@@ -13,20 +13,12 @@ import java.util.Objects;
 public class OptimizedMyersLcsMemConsumption implements LcsList {
     private int memCounter;
 
-    @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        @SuppressWarnings("unchecked")
-        final T[] aa = a.toArray((T[])new Object[a.size()]);
-        @SuppressWarnings("unchecked")
-        final T[] bb = b.toArray((T[])new Object[b.size()]);
-        return lcsMyers(aa, bb);
-    }
-
     public int getMemCounter() {
         return memCounter;
     }
 
-    private <T> List<? extends T> lcsMyers(T[] a, T[] b) {
+    @Override
+    public <T> List<T> lcs(T[] a, T[] b) {
         int n = a.length;
         int m = b.length;
         int max = n + m + 1;

@@ -24,16 +24,15 @@ import java.util.Objects;
 public class WagnerFischerLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        int n = a.size();
-        int m = b.size();
+    public <T> List<T> lcs(T[] a, T[] b) {
+        int n = a.length;
+        int m = b.length;
 
         int[][] d = computeDistanceMatrix(a, n, b, m);
         return backtrack(n, m, d, a);
     }
 
-    private <T> int[][] computeDistanceMatrix(List<? extends T> a, int n,
-            List<? extends T> b, int m) {
+    private <T> int[][] computeDistanceMatrix(T[] a, int n, T[] b, int m) {
         int[][] d = new int[n+1][m+1];
 
         // score table initialization
@@ -50,7 +49,7 @@ public class WagnerFischerLcs implements LcsList {
         for (int j=1; j<=m; j++) {
             for (int i=1; i<=n; i++) {
                 // lists start from 0
-                if (Objects.equals(a.get(i-1), b.get(j-1))) {
+                if (Objects.equals(a[i-1], b[j-1])) {
                     d[i][j] = d[i-1][j-1];
                 } else {
                     // modified to accomplish LCS in which the only operations
@@ -62,7 +61,7 @@ public class WagnerFischerLcs implements LcsList {
         return d;
     }
 
-    private <T> List<? extends T> backtrack(int n, int m, int[][] d, List<T> a) {
+    private <T> List<T> backtrack(int n, int m, int[][] d, T[] a) {
         int lcs = (n + m - d[n][m]) >> 1;
         @SuppressWarnings("unchecked")
         T[] lcsSeq = (T[]) new Object[lcs];
@@ -71,7 +70,7 @@ public class WagnerFischerLcs implements LcsList {
             switch (minIndex(d[i-1][j-1], d[i-1][j], d[i][j-1])) {
                 case 1:
                     if (d[i][j] == d[i-1][j-1]) {
-                        lcsSeq[--lcs] = a.get(i-1);
+                        lcsSeq[--lcs] = a[i-1];
                     }
                     i--;
                     j--;

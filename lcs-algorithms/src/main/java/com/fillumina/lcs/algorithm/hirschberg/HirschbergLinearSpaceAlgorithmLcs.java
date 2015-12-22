@@ -2,6 +2,7 @@ package com.fillumina.lcs.algorithm.hirschberg;
 
 import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -23,32 +24,34 @@ import java.util.Objects;
 public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        int n = a.size();
-        int m = b.size();
+    public <T> List<T> lcs(T[] a, T[] b) {
+        int n = a.length;
+        int m = b.length;
 
         switch (n) {
             case 0:
                 return Collections.<T>emptyList();
 
             case 1:
-                final T t = a.get(0);
-                if (b.contains(t)) {
-                    return Collections.singletonList(t);
+                final T t = a[0];
+                for (int i=0; i<m; i++) {
+                    if (b[i] == t) {
+                        return Collections.singletonList(t);
+                    }
                 }
                 return Collections.<T>emptyList();
 
             default:
                 int i = n / 2;
-                List<? extends T> aHead = a.subList(0, i);
-                List<? extends T> aTail = a.subList(i, n);
+                T[] aHead = Arrays.copyOfRange(a, 0, i);
+                T[] aTail = Arrays.copyOfRange(a, i, n);
                 int[] forward = calculateLcs(aHead, b);
                 int[] backward = calculateLcs(reverse(aTail), reverse(b));
 
                 int k = indexOfBiggerSum(forward, backward);
 
-                List<? extends T> bHead = b.subList(0, k);
-                List<? extends T> bTail = b.subList(k, m);
+                T[] bHead = Arrays.copyOfRange(b, 0, k);
+                T[] bTail = Arrays.copyOfRange(b, k, m);
                 return concatenate(lcs(aHead, bHead), lcs(aTail, bTail));
         }
     }
@@ -72,8 +75,8 @@ public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
      * @see com.fillumina.lcs.algorithm.scoretable.SmithWatermanLcs
      * @return the last row of the score table
      */
-    private <T> int[] calculateLcs(List<? extends T> a, List<? extends T> b) {
-        final int m = b.size();
+    private <T> int[] calculateLcs(T[] a, T[] b) {
+        final int m = b.length;
 
         int[][] array = new int[2][m+1];
         int[] curr = array[0];
@@ -88,7 +91,7 @@ public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
 
             // it's the Smith-Waterman algorithm
             for (int i=0; i<m; i++) {
-                T y = b.get(i);
+                T y = b[i];
                 if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
@@ -100,8 +103,7 @@ public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
     }
 
     /** The given lists are not modified. */
-    static <T> List<? extends T> concatenate(
-            List<? extends T> a, List<? extends T> b) {
+    static <T> List<T> concatenate(List<T> a, List<T> b) {
         if (a.isEmpty()) {
             return b;
         }
@@ -114,10 +116,14 @@ public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
         return l;
     }
 
-    /** The given list is not modified. */
-    static <T> List<T> reverse(final List<T> list) {
-        List<T> l = new ArrayList<>(list);
-        Collections.reverse(l);
-        return Collections.unmodifiableList(l);
+    /** The given array is not modified. */
+    static <T> T[] reverse(final T[] array) {
+        final int length = array.length;
+        @SuppressWarnings("unchecked")
+        T[] reversed = (T[]) new Object[length];
+        for (int i=0; i<length; i++) {
+            reversed[i] = array[length - i - 1];
+        }
+        return reversed;
     }
 }

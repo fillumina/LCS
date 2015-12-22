@@ -1,10 +1,10 @@
 package com.fillumina.lcs.algorithm.recursive;
 
-import java.util.List;
-import java.util.Objects;
+import com.fillumina.lcs.helper.LcsList;
 import java.util.Arrays;
 import java.util.Collections;
-import com.fillumina.lcs.helper.LcsList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * The simplest LCS algorithm. It is based on recursion so it's quite
@@ -12,24 +12,23 @@ import com.fillumina.lcs.helper.LcsList;
  * clear implementation.
  *
  * @see MomoizedRecursiveLcs
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class RecursiveLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        return recursiveLcs(a, a.size(), b, b.size()).asList();
+    public <T> List<T> lcs(T[] a, T[] b) {
+        return recursiveLcs(a, a.length, b, b.length).asList();
     }
 
     @SuppressWarnings("unchecked")
-    <T> Stack<T> recursiveLcs(List<? extends T> a, int n,
-            List<? extends T> b, int m) {
+    <T> Stack<T> recursiveLcs(T[] a, int n, T[] b, int m) {
         if (n == 0 || m == 0) {
             return (Stack<T>) Stack.NULL;
         }
 
-        T x = a.get(n-1);
-        T y = b.get(m-1);
+        T x = a[n-1];
+        T y = b[m-1];
 
         if (Objects.equals(x, y)) {
             return recursiveLcs(a, n-1, b, m-1).push(x);
@@ -73,7 +72,7 @@ public class RecursiveLcs implements LcsList {
         }
 
         @SuppressWarnings("unchecked")
-        List<? extends T> asList() {
+        List<T> asList() {
             if (this == NULL) {
                 return Collections.<T>emptyList();
             }

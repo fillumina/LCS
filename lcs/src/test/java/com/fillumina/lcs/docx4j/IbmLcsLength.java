@@ -1,6 +1,5 @@
 package com.fillumina.lcs.docx4j;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,11 +14,9 @@ class IbmLcsLength extends LCS {
     private final Object[] b;
     private int lcs;
 
-    public IbmLcsLength(
-            List<?> a,
-            List<?> b) {
-        this.a = a.toArray();
-        this.b = b.toArray();
+    public IbmLcsLength(Object[] a, Object[] b) {
+        this.a = a;
+        this.b = b;
         longestCommonSubsequence(LCS_SETTINGS);
     }
 

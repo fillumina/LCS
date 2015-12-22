@@ -2,6 +2,7 @@ package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public abstract class AbstractLcsTestExecutor
     static String executeLcs(LcsList lcs, String a, String b) {
         @SuppressWarnings("unchecked")
         List<? extends Character> resultList =
-                lcs.lcs(ConversionHelper.toList(a), ConversionHelper.toList(b));
+                lcs.lcs(ConversionHelper.toArray(a), ConversionHelper.toArray(b));
         return toString(resultList);
     }
 
@@ -46,8 +47,8 @@ public abstract class AbstractLcsTestExecutor
      * @param xs
      * @param ys
      */
-    protected <T> void count(List<? extends T> xs, List<? extends T> ys) {
-        count(xs.toString() + ys.toString());
+    protected <T> void count(T[] xs, T[] ys) {
+        count(Arrays.toString(xs) + Arrays.toString(ys));
     }
 
     private void count(String s) {

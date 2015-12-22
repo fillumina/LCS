@@ -2,7 +2,6 @@ package com.fillumina.lcs.algorithm.recursive;
 
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
-import java.util.List;
 import org.junit.Ignore;
 
 /**
@@ -16,8 +15,7 @@ public class MemoizedRecursiveLcsTest extends AbstractLcsTest {
         return new MemoizedRecursiveLcs.Inner() {
 
             @Override
-            <T> Stack<T> recursiveLcs(List<? extends T> a, int n,
-                    List<? extends T> b, int m) {
+            <T> Stack<T> recursiveLcs(T[] a, int n, T[] b, int m) {
                 count(a, b);
                 return super.recursiveLcs(a, n, b, m);
             }

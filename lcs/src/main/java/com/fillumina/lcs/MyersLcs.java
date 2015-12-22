@@ -25,27 +25,7 @@ public class MyersLcs implements Lcs {
             new MyersLcs();
 
     @Override
-    public <T> List<? extends T> calculateLcs(final Collection<? extends T> a,
-            final Collection<? extends T> b) {
-        final Inner<T> inner = new Inner<>(false, a, b);
-        List<LcsItem> lcs = inner.calculateLcs();
-        return inner.extractLcsList(lcs);
-    }
-
-    @Override
-    public <T> List<LcsItem> calculateLcsIndexes(final Collection<? extends T> a,
-            final Collection<? extends T> b) {
-        return new Inner<>(false, a, b).calculateLcs();
-    }
-
-    @Override
-    public <T> int calculateLcsLength(final Collection<? extends T> a,
-            final Collection<? extends T> b) {
-        return new Inner<>(true, a, b).calculateLcsLength();
-    }
-
-    @Override
-    public <T> List<? extends T> calculateLcs(Object[] a, Object[] b) {
+    public <T> List<T> calculateLcs(T[] a, T[] b) {
         final Inner<T> inner = new Inner<>(false, a, b);
         List<LcsItem> lcs = inner.calculateLcs();
         return inner.extractLcsList(lcs);

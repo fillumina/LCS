@@ -2,6 +2,7 @@ package com.fillumina.lcs.algorithm;
 
 import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -31,9 +32,9 @@ public class CommonOptimizations implements LcsList {
     }
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
+    public <T> List<T> lcs(T[] a, T[] b) {
+        final int n = a.length;
+        final int m = b.length;
 
         // emptyness
         if (n == 0) {
@@ -44,15 +45,15 @@ public class CommonOptimizations implements LcsList {
         }
 
         // equality
-        if (a.equals(b)) {
-            return new ArrayList<>(a);
+        if (Arrays.equals(a, b)) {
+            return Arrays.asList(a);
         }
 
         // one column
         if (n == 1) {
-            T t = a.get(0);
+            T t = a[0];
             for (int i=0; i<m; i++) {
-                if (Objects.equals(t, b.get(i))) {
+                if (Objects.equals(t, b[i])) {
                     return Collections.singletonList(t);
                 }
             }
@@ -60,9 +61,9 @@ public class CommonOptimizations implements LcsList {
 
         // one row
         if (m == 1) {
-            T t = b.get(0);
+            T t = b[0];
             for (int i=0; i<n; i++) {
-                if (Objects.equals(t, a.get(i))) {
+                if (Objects.equals(t, a[i])) {
                     return Collections.singletonList(t);
                 }
             }
@@ -71,21 +72,22 @@ public class CommonOptimizations implements LcsList {
         // common prefix/suffix O(n)
         final int min = n < m ? n : m;
         int d;
-        for (d=0; d<min && Objects.equals(a.get(d), b.get(d)); d++) {}
-        final List<? extends T> before = (d > 0) ? a.subList(0, d) : null;
+        for (d=0; d<min && Objects.equals(a[d], b[d]); d++) {}
+        final List<T> before = (d > 0) ? Arrays.asList(a).subList(0, d) : null;
         if (d == min) {
             return before;
         }
         int u;
-        for (u=0; u<(min-d) && Objects.equals(a.get(n-u-1), b.get(m-u-1)); u++) {}
+        for (u=0; u<(min-d) && Objects.equals(a[n-u-1], b[m-u-1]); u++) {}
         if (d == 0 && u == 0) {
             return delegate.lcs(a, b);
         }
 
-        final List<? extends T> middle =
-                delegate.lcs(a.subList(d,n-u), b.subList(d,m-u));
+        final List<T> middle = delegate.lcs(Arrays.copyOfRange(a, d, n-u),
+                        Arrays.copyOfRange(b, d, m-u));
 
-        final List<? extends T> after = (u > 0) ? a.subList(n-u,n) : null;
+        final List<T> after = (u > 0) ? Arrays.asList(a).subList(n-u,n) : null;
+        
         if (d > 0) {
             if (!middle.isEmpty()) {
                 if (u > 0) {
@@ -114,8 +116,7 @@ public class CommonOptimizations implements LcsList {
     }
 
     /** The given lists are not modified. */
-    static <T> List<? extends T> concatenate(
-            List<? extends T> a, List<? extends T> b) {
+    static <T> List<T> concatenate(List<T> a, List<T> b) {
         if (a.isEmpty()) {
             return b;
         }

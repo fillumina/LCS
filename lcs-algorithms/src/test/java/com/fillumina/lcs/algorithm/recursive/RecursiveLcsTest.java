@@ -1,18 +1,16 @@
 package com.fillumina.lcs.algorithm.recursive;
 
-import com.fillumina.lcs.algorithm.recursive.RecursiveLcs;
-import com.fillumina.lcs.testutil.AbstractLcsTest;
-import java.util.List;
-import org.junit.Test;
 import com.fillumina.lcs.algorithm.recursive.RecursiveLcs.Stack;
+import com.fillumina.lcs.helper.LcsList;
+import com.fillumina.lcs.testutil.AbstractLcsTest;
 import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import com.fillumina.lcs.helper.LcsList;
+import org.junit.Test;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class RecursiveLcsTest extends AbstractLcsTest {
 
@@ -21,8 +19,7 @@ public class RecursiveLcsTest extends AbstractLcsTest {
         return new RecursiveLcs() {
 
             @Override
-            <T> Stack<T> recursiveLcs(List<? extends T> a, int n,
-                    List<? extends T> b, int m) {
+            <T> Stack<T> recursiveLcs(T[] a, int n, T[] b, int m) {
                 count(a, b);
                 return super.recursiveLcs(a, n, b, m);
             }

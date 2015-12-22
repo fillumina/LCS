@@ -16,24 +16,12 @@ import java.util.Objects;
 public class BaselineLinearSpaceMyersLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(final List<? extends T> a,
-            final List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         final LcsItem matches = lcsMatch(a, b);
         return matches.extractLcsForFirstSequence(a);
     }
 
-    public <T> LcsItem lcsMatch(final List<? extends T> a,
-            final List<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
-        @SuppressWarnings("unchecked")
-        final LcsItem match = lcsTails((T[])a.toArray(), n,
-                (T[])b.toArray(), m);
-        return match == null ? LcsItem.NULL : match;
-    }
-
-
-    public <T> LcsItem lcsMatch(final T[] a, final T[] b) {
+    public <T> LcsItem lcsMatch(T[] a, T[] b) {
         final LcsItem match = lcsTails(a, a.length, b, b.length);
         return match == null ? LcsItem.NULL : match;
     }
@@ -278,7 +266,7 @@ public class BaselineLinearSpaceMyersLcs implements LcsList {
         /**
          * @return the common subsequence elements.
          */
-        public <T> List<T> extractLcsForFirstSequence(List<T> a) {
+        public <T> List<T> extractLcsForFirstSequence(T[] a) {
             List<T> list = new ArrayList<>(getLcs());
             for (LcsItem segment : this) {
                 segment.addEquals(list, a);
@@ -286,9 +274,9 @@ public class BaselineLinearSpaceMyersLcs implements LcsList {
             return list;
         }
 
-        private <T> void addEquals(List<T> list, List<T> a) {
+        private <T> void addEquals(List<T> list, T[] a) {
             for (int i = x; i < x + steps; i++) {
-                list.add(a.get(i));
+                list.add(a[i]);
             }
         }
 

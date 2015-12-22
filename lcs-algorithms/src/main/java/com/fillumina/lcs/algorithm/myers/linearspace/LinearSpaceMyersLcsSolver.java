@@ -13,31 +13,29 @@ import java.util.List;
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 class LinearSpaceMyersLcsSolver<T> {
 
-    private final List<? extends T> a;
-    private final List<? extends T> b;
+    private final T[] a;
+    private final T[] b;
 
-    public LinearSpaceMyersLcsSolver(
-            List<? extends T> a,
-            List<? extends T> b) {
+    public LinearSpaceMyersLcsSolver(T[] a, T[] b) {
         this.a = a;
         this.b = b;
     }
 
-    List<? extends T> calculateLcs() {
-        Snake snakes = new Section(0, 0, a.size(), b.size()).lcs();
+    List<T> calculateLcs() {
+        Snake snakes = new Section(0, 0, a.length, b.length).lcs();
         return extractLcs(snakes);
     }
 
     /** @return the common subsequence elements. */
-    private List<? extends T> extractLcs(Snake snakes) {
+    private List<T> extractLcs(Snake snakes) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int index : snake.getDiagonal()) {
-                list.add(a.get(index));
+                list.add(a[index]);
             }
         }
         return list;
@@ -257,8 +255,8 @@ class LinearSpaceMyersLcsSolver<T> {
         }
 
         boolean sameItem(int aIndex, int bIndex) {
-            T aItem = a.get(getxStart() + aIndex);
-            T bItem = b.get(getyStart() + bIndex);
+            T aItem = a[getxStart() + aIndex];
+            T bItem = b[getyStart() + bIndex];
             return aItem == bItem || (aItem != null && aItem.equals(bItem));
         }
     }

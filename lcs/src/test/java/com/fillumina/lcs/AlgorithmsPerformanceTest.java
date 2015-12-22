@@ -22,9 +22,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     private static final int LCS = 400;
     private static final long SEED = System.nanoTime();
 
+    private final RandomSequenceGenerator generator;
     private final List<Integer> lcsList;
-    private final List<Integer> a;
-    private final List<Integer> b;
 
     public static void main(String[] args) {
         System.out.println("performance evaluation, please wait...");
@@ -33,11 +32,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
 
     public AlgorithmsPerformanceTest() {
         super();
-        RandomSequenceGenerator generator =
-                new RandomSequenceGenerator(TOTAL, LCS, SEED);
+        this.generator = new RandomSequenceGenerator(TOTAL, LCS, SEED);
         this.lcsList = generator.getLcs();
-        this.a = generator.getA();
-        this.b = generator.getB();
     }
 
     private class LcsRunnable implements Runnable {
@@ -50,7 +46,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
         @Override
         public void run() {
             assertEquals(lcsAlgorithm.getClass().getSimpleName(),
-                    lcsList, lcsAlgorithm.lcs(a, b));
+                    lcsList, lcsAlgorithm.lcs(
+                            generator.getArrayA(), generator.getArrayB()));
         }
     }
 
@@ -66,9 +63,9 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
         tests.addTest("Baseline",
                 new LcsRunnable(new BaselineLinearSpaceMyersLcs()));
         tests.addTest("MyersLcs",
-                new LcsRunnable(new LcsAdaptor(MyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsLengthAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",
-                new LcsRunnable(new LcsAdaptor(LinearSpaceMyersLcs.INSTANCE)));
+                new LcsRunnable(new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE)));
     }
 
     @Override

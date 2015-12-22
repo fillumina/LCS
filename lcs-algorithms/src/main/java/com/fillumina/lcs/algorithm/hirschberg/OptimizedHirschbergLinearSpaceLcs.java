@@ -1,24 +1,23 @@
 package com.fillumina.lcs.algorithm.hirschberg;
 
-import java.util.List;
-import java.util.Objects;
+import com.fillumina.lcs.helper.LcsList;
 import java.util.AbstractList;
 import java.util.Collections;
-import com.fillumina.lcs.helper.LcsList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
  * reverse vector without the need to reverse the list.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
-        final int m = b.size();
-        List<? extends T> list =
-                lcsRlw(a, 0, a.size(), b, 0, m, new int[3][m + 1]);
+    public <T> List<T> lcs(T[] a, T[] b) {
+        final int m = b.length;
+        List<T> list = lcsRlw(a, 0, a.length, b, 0, m, new int[3][m + 1]);
         if (list == null) {
             return Collections.<T>emptyList();
         }
@@ -26,8 +25,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
     }
 
     <T> ConcatList<T> lcsRlw(
-            List<? extends T> a, int aStart, int aEnd,
-            List<? extends T> b, int bStart, int bEnd,
+            T[] a, int aStart, int aEnd,
+            T[] b, int bStart, int bEnd,
             int[][] buffer) {
         final int n = aEnd - aStart;
 
@@ -36,9 +35,9 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
                 return ConcatList.<T>empty();
 
             case 1:
-                final T t = a.get(aStart);
+                final T t = a[aStart];
                 for (int i=bStart; i<bEnd; i++) {
-                    if (Objects.equals(t, b.get(i))) {
+                    if (Objects.equals(t, b[i])) {
                         return new ConcatList<>(t);
                     }
                 }
@@ -58,8 +57,8 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
     }
 
     private <T> int calculateCuttingIndex(
-            List<? extends T> a, int aStart, final int aBisect, int aEnd,
-            List<? extends T> b, int bStart, int bEnd,
+            T[] a, int aStart, final int aBisect, int aEnd,
+            T[] b, int bStart, int bEnd,
             int[][] buffer) {
 
         int[] forward = calculateLcsForward(
@@ -72,17 +71,17 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
     }
 
     private static <T> int[] calculateLcsForward(
-            List<? extends T> a, int aStart, int aEnd,
-            List<? extends T> b, int bStart, int bEnd,
+            T[] a, int aStart, int aEnd,
+            T[] b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[0];
         int[] prev = buffer[2];
         int[] tmp;
 
-        T x = a.get(aStart);
+        T x = a[aStart];
         curr[bStart] = 0;
         for (int i=bStart; i<bEnd; i++) {
-            T y = b.get(i);
+            T y = b[i];
             if (Objects.equals(x, y)) {
                 for (int ii=i+1; ii<=bEnd; ii++) {
                     curr[ii] = 1;
@@ -94,14 +93,14 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
         }
 
         for (int j=aStart+1; j<aEnd; j++) {
-            x = a.get(j);
+            x = a[j];
             tmp = prev;
             prev = curr;
             curr = tmp;
             curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
-                T y = b.get(i);
+                T y = b[i];
                 if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
@@ -120,18 +119,18 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
     }
 
     private static <T> int[] calculateLcsReverse(
-            List<? extends T> a, int aStart, int aEnd,
-            List<? extends T> b, int bStart, int bEnd,
+            T[] a, int aStart, int aEnd,
+            T[] b, int bStart, int bEnd,
             int[][] buffer) {
         int[] curr = buffer[1];
         int[] prev = buffer[2];
         int[] tmp;
         int offset = bEnd + bStart - 1;
 
-        T x = a.get(aEnd-1);
+        T x = a[aEnd-1];
         curr[bStart] = 0;
         for (int i=bStart; i<bEnd; i++) {
-            T y = b.get(offset - i);
+            T y = b[offset - i];
             if (Objects.equals(x, y)) {
                 for (int ii=i+1; ii<=bEnd; ii++) {
                     curr[ii] = 1;
@@ -143,14 +142,14 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
         }
 
         for (int j=aEnd-2; j>=aStart; j--) {
-            x = a.get(j);
+            x = a[j];
             tmp = prev;
             prev = curr;
             curr = tmp;
             curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
-                T y = b.get(offset - i);
+                T y = b[offset - i];
                 if (Objects.equals(x, y)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {

@@ -14,7 +14,7 @@ import java.util.List;
 public class RLinearSpaceMyersLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         return new LinearSpaceMyersLcsSolver<>(a, b).calculateLcs();
     }
 }

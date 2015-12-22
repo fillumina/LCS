@@ -16,7 +16,7 @@ import java.util.Map;
 public class MemoizedRecursiveLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         return new Inner().lcs(a, b);
     }
 
@@ -24,15 +24,14 @@ public class MemoizedRecursiveLcs implements LcsList {
         private final Map<Long, Stack<?>> resultsMap = new HashMap<>();
 
         @Override
-        public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+        public <T> List<T> lcs(T[] a, T[] b) {
             resultsMap.clear();
             return super.lcs(a, b);
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        <T> Stack<T> recursiveLcs(List<? extends T> a, int n,
-                List<? extends T> b, int m) {
+        <T> Stack<T> recursiveLcs(T[] a, int n, T[] b, int m) {
             // packs two integer indexes in a single long for efficiency
             long l = (long)n << 32 | m & 0xFFFFFFFFL; // long64 = (int32,int32)
             @SuppressWarnings("unchecked")

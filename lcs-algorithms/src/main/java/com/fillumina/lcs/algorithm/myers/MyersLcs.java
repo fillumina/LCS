@@ -37,15 +37,14 @@ import java.util.Objects;
 public class MyersLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         final List<Snake> snakes = lcsMyers(a, b);
         return extractLcs(snakes, a);
     }
 
-    private <T> List<Snake> lcsMyers(List<? extends T> a,
-            List<? extends T> b) {
-        int n = a.size();
-        int m = b.size();
+    private <T> List<Snake> lcsMyers(T[] a, T[] b) {
+        int n = a.length;
+        int m = b.length;
         int max = n + m + 1;
 
         BidirectionalVector[] vv = new BidirectionalVector[max];
@@ -64,7 +63,7 @@ public class MyersLcs implements LcsList {
                     x = (prev < next) ? next : prev + 1;
                 }
                 y = x - k;
-                while (x < n && y < m && Objects.equals(a.get(x), b.get(y))) {
+                while (x < n && y < m && Objects.equals(a[x], b[y])) {
                     x++;
                     y++;
                 }
@@ -119,12 +118,11 @@ public class MyersLcs implements LcsList {
     }
 
     /** @return the common subsequence elements. */
-    private <T> List<? extends T> extractLcs(List<Snake> snakes,
-            List<? extends T> a) {
+    private <T> List<T> extractLcs(List<Snake> snakes, T[] a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int x=snake.xMid + 1; x<=snake.xEnd; x++) {
-                list.add(a.get(x - 1));
+                list.add(a[x - 1]);
             }
         }
         return list;

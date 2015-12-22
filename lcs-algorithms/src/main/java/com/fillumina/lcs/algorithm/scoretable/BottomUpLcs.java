@@ -1,10 +1,10 @@
 package com.fillumina.lcs.algorithm.scoretable;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  * This algorithm uses the LCS score table in a graphical way. It's useful
@@ -13,20 +13,20 @@ import com.fillumina.lcs.helper.LcsList;
  * @see SmithWatermanLcs
  * @see WagnerFisherLcs
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class BottomUpLcs implements LcsList {
     private static final Cell DEFAULT_INVALID_CELL = new Cell(0, Move.INVALID);
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         final Grid grid = createGrid(a, b);
         return readLcs(a, b, grid);
     }
 
-    private <T> Grid createGrid(List<? extends T> a, List<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
+    private <T> Grid createGrid(T[] a, T[] b) {
+        final int n = a.length;
+        final int m = b.length;
 
         final Grid grid = new Grid(n, m, DEFAULT_INVALID_CELL);
 
@@ -34,9 +34,9 @@ public class BottomUpLcs implements LcsList {
         int left, over;
 
         for (int j = 0; j < m; j++) {
-            T y = b.get(j);
+            T y = b[j];
             for (int i = 0; i < n; i++) {
-                T x = a.get(i);
+                T x = a[i];
 
                 if (Objects.equals(x, y)) {
                     cell = new Cell(grid.get(i - 1, j - 1).len + 1,
@@ -58,17 +58,16 @@ public class BottomUpLcs implements LcsList {
         return grid;
     }
 
-    private <T> List<? extends T> readLcs(
-            List<? extends T> a, List<? extends T> b, Grid grid) {
+    private <T> List<T> readLcs(T[] a, T[] b, Grid grid) {
         List<T> lcs = new ArrayList<>();
-        int i = a.size() - 1;
-        int j = b.size() - 1;
+        int i = a.length - 1;
+        int j = b.length - 1;
         Move move;
         do {
             move = grid.get(i, j).move;
             switch (move) {
                 case DIAGONAL:
-                    lcs.add(a.get(i));
+                    lcs.add(a[i]);
                     i--;
                     j--;
                     break;

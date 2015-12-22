@@ -1,10 +1,10 @@
 package com.fillumina.lcs.algorithm.myers;
 
+import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import com.fillumina.lcs.helper.LcsList;
 
 /**
  * Because the linear space optimization of the basic Myers algorithm uses
@@ -22,19 +22,19 @@ import com.fillumina.lcs.helper.LcsList;
  * @see <a href="https://neil.fraser.name/software/diff_match_patch/myers.pdf">
  * An O(ND) Difference Algorithm and Its Variations, Myers 1986
  * </a>
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class ReverseMyersLcs implements LcsList {
 
     @Override
-    public <T> List<? extends T> lcs(List<? extends T> a, List<? extends T> b) {
+    public <T> List<T> lcs(T[] a, T[] b) {
         List<Snake> snakes = lcsMyers(a, b);
         return extractLcs(snakes, a);
     }
 
-    private <T> List<Snake> lcsMyers(List<? extends T> a, List<? extends T> b) {
-        final int n = a.size();
-        final int m = b.size();
+    private <T> List<Snake> lcsMyers(T[] a, T[] b) {
+        final int n = a.length;
+        final int m = b.length;
         if (n==0 || m==0) {
             return Collections.<Snake>emptyList();
         }
@@ -58,8 +58,7 @@ public class ReverseMyersLcs implements LcsList {
                     x = next - 1;   // left
                 }
                 y = x - k;
-                while (x > 0 && y > 0 &&
-                        Objects.equals(a.get(x - 1), b.get(y - 1))) {
+                while (x > 0 && y > 0 && Objects.equals(a[x - 1], b[y - 1])) {
                     x--;
                     y--;
                 }
@@ -108,12 +107,11 @@ public class ReverseMyersLcs implements LcsList {
     }
 
     /** @return the common subsequence elements. */
-    private <T> List<? extends T> extractLcs(List<Snake> snakes,
-            List<? extends T> a) {
+    private <T> List<T> extractLcs(List<Snake> snakes, T[] a) {
         List<T> list = new ArrayList<>();
         for (Snake snake : snakes) {
             for (int x=snake.xStart + 1; x<=snake.xMid; x++) {
-                list.add(a.get(x - 1));
+                list.add(a[x - 1]);
             }
         }
         return list;

@@ -12,25 +12,21 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class LcsAdaptor implements LcsList, LcsLength {
+public class LcsLengthAdaptor implements LcsList, LcsLength {
     private final Lcs lcs;
 
-    public LcsAdaptor(final Lcs lcs) {
+    public LcsLengthAdaptor(final Lcs lcs) {
         this.lcs = lcs;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<? extends T> lcs(
-            List<? extends T> xs,
-            List<? extends T> ys) {
+    public <T> List<T> lcs(T[] xs, T[] ys) {
         return lcs.calculateLcs(xs, ys);
     }
 
     @Override
-    public <T> int lcsLength(
-            List<? extends T> xs,
-            List<? extends T> ys) {
+    public int lcsLength(Object[] xs, Object[] ys) {
         return lcs.calculateLcsLength(xs, ys);
     }
 }
