@@ -10,7 +10,7 @@ import org.junit.Test;
  *
  * @author Francesco Illuminati
  */
-public class ConversionHelperTest {
+public class ConverterTest {
 
     private static final String STRING = "hello world";
     private static final List<Character> LIST = Arrays.asList(
@@ -18,35 +18,35 @@ public class ConversionHelperTest {
 
     @Test
     public void shouldTransformToList() {
-        assertEquals(LIST, ConversionHelper.toList(STRING));
+        assertEquals(LIST, Converter.toList(STRING));
     }
 
     @Test
     public void shouldTrasformAnEmptyString() {
         assertEquals(Collections.<Character>emptyList(),
-                ConversionHelper.toList(""));
+                Converter.toList(""));
     }
 
     @Test
     public void shouldTrasformToASingletonString() {
         assertEquals(Collections.<Character>singletonList('A'),
-                ConversionHelper.toList("A"));
+                Converter.toList("A"));
     }
 
     @Test
     public void shouldTransformToString() {
-        assertEquals(STRING, ConversionHelper.toString(LIST));
+        assertEquals(STRING, Converter.toString(LIST));
     }
 
     @Test
     public void shouldTrasformIntoAnEmptyString() {
-        assertEquals("", ConversionHelper.toString(
+        assertEquals("", Converter.toString(
                 Collections.<Character>emptyList()));
     }
 
     @Test
     public void shouldTrasformIntoASingletonString() {
-        assertEquals("Z", ConversionHelper.toString(
+        assertEquals("Z", Converter.toString(
                 Collections.<Character>singletonList('Z')));
     }
 }

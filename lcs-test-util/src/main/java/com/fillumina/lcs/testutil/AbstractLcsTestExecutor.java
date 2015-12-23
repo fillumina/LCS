@@ -1,15 +1,8 @@
 package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsList;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.xml.stream.events.Characters;
-import static org.junit.Assert.assertEquals;
 
 /**
  * An helper for testing LCS algorithms.
@@ -17,8 +10,8 @@ import static org.junit.Assert.assertEquals;
  * @author Francesco Illuminati
  */
 public abstract class AbstractLcsTestExecutor
-        extends ConversionHelper {
-    private final Map<String, Integer> countingMap = new HashMap<>();
+        extends Converter {
+
     /**
      * Call {@link #count(List<Characters> xs, List<Charactes> ys)} in
      * the body of the created
@@ -28,35 +21,14 @@ public abstract class AbstractLcsTestExecutor
 
     @SuppressWarnings("unchecked")
     public Result lcs(final String xs, final String ys) {
-        return new Result(
-                executeLcs(getLcsAlgorithm(), xs, ys),
-                new CountingResult(countingMap));
+        return new Result(executeLcs(getLcsAlgorithm(), xs, ys));
     }
 
-    static String executeLcs(LcsList lcs, String a, String b) {
-        @SuppressWarnings("unchecked")
-        List<? extends Character> resultList =
-                lcs.lcs(ConversionHelper.toArray(a), ConversionHelper.toArray(b));
+    public static String executeLcs(LcsList lcs, String a, String b) {
+        final Character[] aa = Converter.toArray(a);
+        final Character[] bb = Converter.toArray(b);
+        List<? extends Character> resultList = lcs.lcs(aa, bb);
         return toString(resultList);
-    }
-
-    /**
-     * Call this method to count how many times a method has been called
-     * with specific parameters.
-     * @param <T>
-     * @param xs
-     * @param ys
-     */
-    protected <T> void count(T[] xs, T[] ys) {
-        count(Arrays.toString(xs) + Arrays.toString(ys));
-    }
-
-    private void count(String s) {
-        Integer num = countingMap.get(s);
-        if (num == null) {
-            num = 0;
-        }
-        countingMap.put(s, num + 1);
     }
 
     private String getName() {
@@ -70,17 +42,17 @@ public abstract class AbstractLcsTestExecutor
 
     public class Result {
         private final String result;
-        private final CountingResult countingResult;
 
-        public Result(String result, CountingResult countingResult) {
+        public Result(String result) {
             this.result = result;
-            this.countingResult = countingResult;
         }
 
         public Result assertResult(String... results) {
             boolean success = false;
-            for (String result : results) {
-                success = success || result.equals(this.result);
+            for (String r : results) {
+                if (r != null) {
+                    success = success || r.equals(this.result);
+                }
             }
             if (!success) {
                 throw new AssertionError(getName() +
@@ -99,57 +71,8 @@ public abstract class AbstractLcsTestExecutor
             return "\"" + s + "\"";
         }
 
-        public Result assertNumberOfCalls(long calls) {
-            assertEquals(getName() + " wrong number of calls",
-                    calls, countingResult.getNumberOfCalls());
-            return this;
-        }
-
         public void printerr() {
             System.err.println(toString());
-        }
-
-        @Override
-        public String toString() {
-            return countingResult.toString();
-        }
-    }
-
-    private static class CountingResult {
-        private final List<Map.Entry<String,Integer>> list;
-        private final long numberOfCalls;
-
-        public CountingResult(Map<String,Integer> countingMap) {
-            long counter = 0;
-            list = new ArrayList<>(countingMap.size());
-            for (Map.Entry<String,Integer> entry : countingMap.entrySet()) {
-                counter += entry.getValue();
-                list.add(entry);
-            }
-            this.numberOfCalls = counter;
-        }
-
-        public long getNumberOfCalls() {
-            return numberOfCalls;
-        }
-
-        @Override
-        public String toString() {
-            Collections.sort(list, new Comparator<Map.Entry<String,Integer>>() {
-                @Override
-                public int compare(Map.Entry<String, Integer> o1,
-                        Map.Entry<String, Integer> o2) {
-                    return Integer.compare(o2.getValue(), o1.getValue());
-                }
-            });
-
-            StringBuilder buf = new StringBuilder();
-            for (Map.Entry<String,Integer> entry : list) {
-                buf.append(entry.getValue()).append(":\t")
-                        .append(entry.getKey()).append('\n');
-            };
-            buf.append("\n--------\nTOTAL:\t").append(numberOfCalls).append('\n');
-            return buf.toString();
         }
     }
 }

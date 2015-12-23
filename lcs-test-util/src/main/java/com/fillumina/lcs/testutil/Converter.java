@@ -7,9 +7,12 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class ConversionHelper {
+public class Converter {
 
     public static  Character[] toArray(String s) {
+        if (s == null) {
+            return new Character[0];
+        }
         char[] array = s.toCharArray();
         Character[] ca = new Character[array.length];
         for (int i=0; i<array.length; i++) {

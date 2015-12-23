@@ -4,6 +4,7 @@ import com.fillumina.lcs.helper.LcsLength;
 import com.fillumina.lcs.helper.LcsList;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * A test suite that checks the returned LCS length.
@@ -130,8 +131,8 @@ public abstract class AbstractLcsLengthTest extends AbstractLcsTest {
     }
 
     private void countLcs(String a, String b, int expectedLcs) {
-        final Character[] arrayA = ConversionHelper.toArray(a);
-        final Character[] arrayB = ConversionHelper.toArray(b);
+        final Character[] arrayA = Converter.toArray(a);
+        final Character[] arrayB = Converter.toArray(b);
         final LcsLength algorithm = getLcsLengthAlgorithm();
         assertEquals(expectedLcs, algorithm.lcsLength(arrayA, arrayB));
     }

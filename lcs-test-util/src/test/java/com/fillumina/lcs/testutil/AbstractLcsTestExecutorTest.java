@@ -1,135 +1,42 @@
 package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsList;
-import com.fillumina.lcs.testutil.AbstractLcsTestExecutor.Result;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
  *
  * @author Francesco Illuminati
  */
-public class AbstractLcsTestExecutorTest {
+public class AbstractLcsTestExecutorTest extends AbstractLcsTestExecutor {
 
     @Test
-    public void checkSingleCall() {
-        Result result = test("result", new String[][] {
-            {"alfa", "beta"}
-        });
-        result.assertNumberOfCalls(1);
-        result.assertResult("result");
+    public void shouldReturnResult() {
+        lcs("ab", "cd").assertResult("abcd");
     }
 
     @Test(expected = AssertionError.class)
-    public void checkSingleCallError() {
-        Result result = test("result", new String[][] {
-            {"alfa", "beta"}
-        });
-        result.assertNumberOfCalls(4);
+    public void shouldCheckErrorResult() {
+        lcs("ab", "cd").assertResult("ERROR");
     }
 
     @Test(expected = AssertionError.class)
-    public void checkSingleCallResultError() {
-        Result result = test("result", new String[][] {
-            {"alfa", "beta"}
-        });
-        result.assertResult("error");
+    public void shouldGetEmptyStrings() {
+        lcs(null, "").assertResult((String)null);
     }
 
-    @Test
-    public void checkTwoCalls() {
-        Result result = test("two", new String[][] {
-            {"alfa", "beta"}, {"gamma", "delta"}
-        });
-        result.assertNumberOfCalls(2);
-        result.assertResult("two");
+    @Override
+    public LcsList getLcsAlgorithm() {
+        return new LcsList() {
+            @Override
+            public <T> List<T> lcs(T[] xs, T[] ys) {
+                List<T> list = new ArrayList<>(xs.length + ys.length);
+                list.addAll(Arrays.asList(xs));
+                list.addAll(Arrays.asList(ys));
+                return list;
+            }
+        };
     }
-
-    @Test
-    public void check100Calls() {
-        String[][] inputs = new String[100][];
-        for (int i=0; i<100; i++) {
-            inputs[i] = new String[2];
-            inputs[i][0] = "one_" + i;
-            inputs[i][1] = "two_" + i;
-        }
-        Result result = test("hundred", inputs);
-        result.assertNumberOfCalls(100);
-        result.assertResult("hundred");
-    }
-
-    @Test(expected = AssertionError.class)
-    public void check100CallsError() {
-        String[][] inputs = new String[100][];
-        for (int i=0; i<100; i++) {
-            inputs[i] = new String[2];
-            inputs[i][0] = "one_" + i;
-            inputs[i][1] = "two_" + i;
-        }
-        Result result = test("hundred", inputs);
-        result.assertNumberOfCalls(101); // <--------------- *
-        result.assertResult("hundred");
-    }
-
-    private Result test(String result, String[][] inputs) {
-        AbstractLcsTestExecutor executor =
-            new AbstractLcsTestExecutorImpl(result, inputs);
-        return executor.lcs(inputs[0][0], inputs[0][1]);
-    }
-
-    private static class AbstractLcsTestExecutorImpl
-            extends AbstractLcsTestExecutor {
-
-        private final String[][] inputs;
-        private final String result;
-        private int index = 1;
-
-        public AbstractLcsTestExecutorImpl(String result, String[][] inputs) {
-            this.result = result;
-            this.inputs = inputs;
-        }
-
-        @Override
-        public LcsList getLcsAlgorithm() {
-            return new LcsList() {
-
-                @Override
-                @SuppressWarnings("unchecked")
-                public <T> List<T> lcs(T[] xs, T[] ys) {
-                    count(xs, ys);
-                    try {
-                        final String[] inputLine = inputs[index++];
-                        Character[] a = ConversionHelper.toArray(inputLine[0]);
-                        Character[] b = ConversionHelper.toArray(inputLine[1]);
-                        return (List<T>) lcs(a, b);
-                    } catch (IndexOutOfBoundsException e) {
-                        return (List<T>) ConversionHelper.toList(result);
-                    }
-                }
-            };
-        }
-    }
-
-    @Test
-    public void shouldExecuteTheLcsAlgorithm() {
-        assertEquals("ALFABETA",
-                AbstractLcsTestExecutor.executeLcs(new ConcatLcs(), "ALFA", "BETA"));
-    }
-
-    static class ConcatLcs implements LcsList {
-
-        @Override
-        public <T> List<T> lcs(T[] xs, T[] ys) {
-            List<T> list = new ArrayList<>(xs.length + ys.length + 1);
-            list.addAll((Collection<? extends T>) Arrays.asList(xs));
-            list.addAll((Collection<? extends T>) Arrays.asList(ys));
-            return list;
-        }
-    }
-
-
 }

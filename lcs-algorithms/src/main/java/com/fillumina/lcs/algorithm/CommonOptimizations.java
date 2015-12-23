@@ -63,7 +63,7 @@ public class CommonOptimizations implements LcsList {
         if (m == 1) {
             T t = b[0];
             for (int i=0; i<n; i++) {
-                if (Objects.equals(t, a[i])) {
+                if (Objects.equals(a[i], t)) {
                     return Collections.singletonList(t);
                 }
             }
@@ -73,7 +73,7 @@ public class CommonOptimizations implements LcsList {
         final int min = n < m ? n : m;
         int d;
         for (d=0; d<min && Objects.equals(a[d], b[d]); d++) {}
-        final List<T> before = (d > 0) ? Arrays.asList(a).subList(0, d) : null;
+        final List<T> before = (d > 0) ? Arrays.asList(Arrays.copyOf(a, d)) : null;
         if (d == min) {
             return before;
         }
@@ -87,7 +87,7 @@ public class CommonOptimizations implements LcsList {
                         Arrays.copyOfRange(b, d, m-u));
 
         final List<T> after = (u > 0) ? Arrays.asList(a).subList(n-u,n) : null;
-        
+
         if (d > 0) {
             if (!middle.isEmpty()) {
                 if (u > 0) {

@@ -4,9 +4,11 @@ import com.fillumina.lcs.algorithm.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.algorithm.recursive.RecursiveLcs;
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
-import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
-import com.fillumina.performance.producer.TestContainer;
-import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
+import com.fillumina.performance.consumer.assertion.SuiteExecutionAssertion;
+import com.fillumina.performance.producer.suite.ParameterContainer;
+import com.fillumina.performance.producer.suite.ParametrizedExecutor;
+import com.fillumina.performance.producer.suite.ParametrizedRunnable;
+import com.fillumina.performance.template.ParametrizedPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +21,8 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Francesco Illuminati
  */
-public class RecursivePerformanceTest extends AutoProgressionPerformanceTemplate {
+public class RecursivePerformanceTest
+        extends ParametrizedPerformanceTemplate<LcsList> {
 
     private static final int TOTAL = 15;
     private static final int LCS = 10;
@@ -39,36 +42,54 @@ public class RecursivePerformanceTest extends AutoProgressionPerformanceTemplate
         this.lcsList = generator.getLcs();
     }
 
-    private class LcsRunnable implements Runnable {
-        private final LcsList lcsAlgorithm;
-
-        public LcsRunnable(LcsList lcsAlgorithm) {
-            this.lcsAlgorithm = lcsAlgorithm;
-        }
-
-        @Override
-        public void run() {
-            assertEquals(lcsAlgorithm.getClass().getSimpleName(),
-                    lcsList, lcsAlgorithm.lcs(
-                            generator.getArrayA(), generator.getArrayB()));
-        }
-    }
-
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(30);
-        config.setTimeout(30, TimeUnit.MINUTES);
-        config.setMaxStandardDeviation(2);
+        config.setBaseIterations(1_000);
+        config.setTimeout(360, TimeUnit.SECONDS);
+        config.setMaxStandardDeviation(3);
     }
 
     @Override
-    public void addTests(TestContainer tests) {
-        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
-        tests.addTest("MemoizedRecursive",
-                new LcsRunnable(new MemoizedRecursiveLcs()));
+    public void addParameters(ParameterContainer<LcsList> parameters) {
+        // Recursive is WAY slower than anything else
+        parameters.addParameter("Recursive", new RecursiveLcs());
+        parameters.addParameter("MemoizedRecursive", new MemoizedRecursiveLcs());
+
+//        parameters.addParameter("BottomUp", new BottomUpLcs());
+//        parameters.addParameter("SmithWaterman", new SmithWatermanLcs());
+//        parameters.addParameter("WagnerFischer", new WagnerFischerLcs());
+//
+//
+//        parameters.addParameter("HirschbergLinearSpaceAlgorithm",
+//                new HirschbergLinearSpaceAlgorithmLcs());
+//        parameters.addParameter("OptimizedHirschbergLinearSpace",
+//                new OptimizedHirschbergLinearSpaceLcs());
+//
+//        parameters.addParameter("Myers", new MyersLcs());
+//        parameters.addParameter("ReverseMyers", new ReverseMyersLcs());
+//        parameters.addParameter("OptimizedMyers", new OptimizedMyersLcs());
+//        parameters.addParameter("RLinearSpaceMyers", new RLinearSpaceMyersLcs());
+
+//        parameters.addParameter("OptimizedMyersLcs",
+//                new LcsLengthAdaptor(com.fillumina.lcs.MyersLcs.INSTANCE));
+//        parameters.addParameter("OptimizedLinearSpaceLcs",
+//                new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE));
+
     }
 
     @Override
-    public void addAssertions(PerformanceAssertion assertion) {
+    public void executeTests(ParametrizedExecutor<LcsList> executor) {
+        executor.executeTest(new ParametrizedRunnable<LcsList>() {
+            @Override
+            public void call(LcsList lcs) {
+                assertEquals(lcs.getClass().getSimpleName(),
+                        lcsList,
+                        lcs.lcs(generator.getArrayA(), generator.getArrayB()));
+            }
+        });
+    }
+
+    @Override
+    public void addAssertions(SuiteExecutionAssertion assertion) {
     }
 }

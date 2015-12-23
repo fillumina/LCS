@@ -1,6 +1,6 @@
 package com.fillumina.lcs.algorithm.scoretable;
 
-import com.fillumina.lcs.testutil.ConversionHelper;
+import com.fillumina.lcs.testutil.Converter;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -16,8 +16,8 @@ public class WagnerFischerLevenshteinDistanceTest {
         WagnerFischerLevenshteinDistance algo =
                 new WagnerFischerLevenshteinDistance();
 
-        List<Character> a = ConversionHelper.toList("tuesday");
-        List<Character> b = ConversionHelper.toList("thursday");
+        List<Character> a = Converter.toList("tuesday");
+        List<Character> b = Converter.toList("thursday");
 
         assertEquals(2, algo.distance(a, b));
     }
@@ -27,8 +27,8 @@ public class WagnerFischerLevenshteinDistanceTest {
         WagnerFischerLevenshteinDistance algo =
                 new WagnerFischerLevenshteinDistance();
 
-        List<Character> a = ConversionHelper.toList("monday");
-        List<Character> b = ConversionHelper.toList("saturday");
+        List<Character> a = Converter.toList("monday");
+        List<Character> b = Converter.toList("saturday");
 
         assertEquals(5, algo.distance(a, b));
     }

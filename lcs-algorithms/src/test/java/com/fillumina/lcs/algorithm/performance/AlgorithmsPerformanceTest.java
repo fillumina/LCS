@@ -11,9 +11,11 @@ import com.fillumina.lcs.algorithm.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.algorithm.scoretable.WagnerFischerLcs;
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.RandomSequenceGenerator;
-import com.fillumina.performance.consumer.assertion.PerformanceAssertion;
-import com.fillumina.performance.producer.TestContainer;
-import com.fillumina.performance.template.AutoProgressionPerformanceTemplate;
+import com.fillumina.performance.consumer.assertion.SuiteExecutionAssertion;
+import com.fillumina.performance.producer.suite.ParameterContainer;
+import com.fillumina.performance.producer.suite.ParametrizedExecutor;
+import com.fillumina.performance.producer.suite.ParametrizedRunnable;
+import com.fillumina.performance.template.ParametrizedPerformanceTemplate;
 import com.fillumina.performance.template.ProgressionConfigurator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,10 +25,11 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Francesco Illuminati
  */
-public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
+public class AlgorithmsPerformanceTest
+        extends ParametrizedPerformanceTemplate<LcsList> {
 
-    private static final int TOTAL = 10;
-    private static final int LCS = 7;
+    private static final int TOTAL = 40;
+    private static final int LCS = 3;
     private static final long SEED = System.nanoTime();
 
     private final RandomSequenceGenerator generator;
@@ -43,55 +46,54 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
         this.lcsList = generator.getLcs();
     }
 
-    private class LcsRunnable implements Runnable {
-        private final LcsList lcsAlgorithm;
-
-        public LcsRunnable(LcsList lcsAlgorithm) {
-            this.lcsAlgorithm = lcsAlgorithm;
-        }
-
-        @Override
-        public void run() {
-            assertEquals(lcsAlgorithm.getClass().getSimpleName(),
-                    lcsList, lcsAlgorithm.lcs(
-                            generator.getArrayA(), generator.getArrayB()));
-        }
-    }
-
     @Override
     public void init(ProgressionConfigurator config) {
         config.setBaseIterations(1_000);
         config.setTimeout(360, TimeUnit.SECONDS);
-        config.setMaxStandardDeviation(2);
+        config.setMaxStandardDeviation(3);
     }
 
     @Override
-    public void addTests(TestContainer tests) {
+    public void addParameters(ParameterContainer<LcsList> parameters) {
         // Recursive is WAY slower than anything else
-//        tests.addTest("Recursive", new LcsRunnable(new RecursiveLcs()));
-//        tests.addTest("MemoizedRecursive",
-//                new LcsRunnable(new MemoizedRecursiveLcs()));
+//        parameters.addParameter("Recursive", new RecursiveLcs());
+//        parameters.addParameter("MemoizedRecursive", new MemoizedRecursiveLcs());
 
-        tests.addTest("BottomUp", new LcsRunnable(new BottomUpLcs()));
-        tests.addTest("SmithWaterman",
-                new LcsRunnable(new SmithWatermanLcs()));
-        tests.addTest("WagnerFischer",
-                new LcsRunnable(new WagnerFischerLcs()));
+        parameters.addParameter("BottomUp", new BottomUpLcs());
+        parameters.addParameter("SmithWaterman", new SmithWatermanLcs());
+        parameters.addParameter("WagnerFischer", new WagnerFischerLcs());
 
 
-        tests.addTest("HirschbergLinearSpaceAlgorithm",
-                new LcsRunnable(new HirschbergLinearSpaceAlgorithmLcs()));
-        tests.addTest("OptimizedHirschbergLinearSpace",
-                new LcsRunnable(new OptimizedHirschbergLinearSpaceLcs()));
+        parameters.addParameter("HirschbergLinearSpaceAlgorithm",
+                new HirschbergLinearSpaceAlgorithmLcs());
+        parameters.addParameter("OptimizedHirschbergLinearSpace",
+                new OptimizedHirschbergLinearSpaceLcs());
 
-        tests.addTest("Myers", new LcsRunnable(new MyersLcs()));
-        tests.addTest("ReverseMyers", new LcsRunnable(new ReverseMyersLcs()));
-        tests.addTest("OptimizedMyers", new LcsRunnable(new OptimizedMyersLcs()));
-        tests.addTest("RLinearSpaceMyers",
-                new LcsRunnable(new RLinearSpaceMyersLcs()));
+        parameters.addParameter("Myers", new MyersLcs());
+        parameters.addParameter("ReverseMyers", new ReverseMyersLcs());
+        parameters.addParameter("OptimizedMyers", new OptimizedMyersLcs());
+        parameters.addParameter("RLinearSpaceMyers", new RLinearSpaceMyersLcs());
+
+//        parameters.addParameter("OptimizedMyersLcs",
+//                new LcsLengthAdaptor(com.fillumina.lcs.MyersLcs.INSTANCE));
+//        parameters.addParameter("OptimizedLinearSpaceLcs",
+//                new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE));
+
     }
 
     @Override
-    public void addAssertions(PerformanceAssertion assertion) {
+    public void executeTests(ParametrizedExecutor<LcsList> executor) {
+        executor.executeTest(new ParametrizedRunnable<LcsList>() {
+            @Override
+            public void call(LcsList lcs) {
+                assertEquals(lcs.getClass().getSimpleName(),
+                        lcsList,
+                        lcs.lcs(generator.getArrayA(), generator.getArrayB()));
+            }
+        });
+    }
+
+    @Override
+    public void addAssertions(SuiteExecutionAssertion assertion) {
     }
 }

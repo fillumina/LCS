@@ -38,7 +38,7 @@ The project is divided in 4 (maven) modules:
 
 1. `lcs-helper` defines some common interfaces
 2. `lcs-test-util` contains a test suit to make it sure that every
-algorithm is working right.
+algorithm is correct.
 3. `lcs-algorithm` contains the implementation of many different
 LCS algorithms. There is also a performance test to compare them
 under different conditions.
@@ -56,10 +56,10 @@ The algorithms included are (along with some variants and optimizations):
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/recursive/MemoizedRecursiveLcs.java)
 * [Bottom-up]
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/BottomUpLcs.java)
-* [Smith-Waterman]
-(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
 * [Wagner-Fisher]
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/WagnerFischerLcs.java)
+* [Smith-Waterman]
+(lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/scoretable/SmithWatermanLcs.java)
 * [Linear space Hirschberg]
 (lcs-algorithms/src/main/java/com/fillumina/lcs/algorithm/hirschberg/HirschbergLinearSpaceAlgorithmLcs.java)
 * [Myers]

@@ -14,7 +14,7 @@ import java.util.Objects;
  * creating the entire table by just using these two. By calculating
  * the forward and backward vector and watching where they meet the
  * LCS can be calculated by successively dividing the virtual score table at
- * the meeting point. The dividing technique is called
+ * meeting points. The dividing technique is called
  * <a href='https://en.wikipedia.org/wiki/Dynamic_programming'>dynamic
  * programming</a>. This algorithm is slower than those that
  * use the full score table.
