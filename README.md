@@ -136,6 +136,38 @@ of memory it becomes more interesting as the length of the sequences increases.
     OptimizedMyersLcs             	   3 :	    601.26 ms		     87.15 %
     OptimizedLinearSpaceLcs       	   4 :	    689.91 ms		    100.00 %
 
+
+In case of small different sequences the Wagner-Fischer algorithm seems to
+have an edge over the others:
+
+    `TOTAL=30` and `LCS=2`:
+
+    SmithWaterman                 	   0 :	      6.17 us		     40.80 %
+    WagnerFischer                 	   1 :	      5.39 us		     35.68 %
+    OptimizedHirschbergLinearSpace	   2 :	      7.95 us		     52.56 %
+    OptimizedMyersLcs             	   3 :	     14.82 us		     98.00 %
+    OptimizedLinearSpaceLcs       	   4 :	     15.13 us		    100.00 %
+
+
+But, of course, the Myers perform better when the sequences are similar.
+
+    `TOTAL=30` and `LCS=20`:
+
+    SmithWaterman                 	   0 :	      6.28 us		     73.83 %
+    WagnerFischer                 	   1 :	      5.72 us		     67.23 %
+    OptimizedHirschbergLinearSpace	   2 :	      8.51 us		    100.00 %
+    OptimizedMyersLcs             	   3 :	      3.63 us		     42.69 %
+    OptimizedLinearSpaceLcs       	   4 :	      4.52 us		     53.18 %
+
+
+    `TOTAL=60` and `LCS=40`:
+
+    SmithWaterman                 	   0 :	     21.51 us		     72.52 %
+    WagnerFischer                 	   1 :	     19.29 us		     65.05 %
+    OptimizedHirschbergLinearSpace	   2 :	     29.66 us		    100.00 %
+    OptimizedMyersLcs             	   3 :	     11.40 us		     38.44 %
+    OptimizedLinearSpaceLcs       	   4 :	     13.78 us		     46.47 %
+
 To summarize:
 
     * __For similar sequences:__ the Linear Space Myers algorithm is very fast

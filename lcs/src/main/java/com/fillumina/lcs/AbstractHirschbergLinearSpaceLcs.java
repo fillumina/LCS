@@ -2,8 +2,8 @@ package com.fillumina.lcs;
 
 /**
  * The Hirschberg linear space algorithm is very memory efficient (only
- * {@code 3 * (m+1)} int elements used) and fast for sequences which are
- * not similar. It can efficiently matches long sequences. In case the
+ * {@code 3 * (m+1)} int elements used) and fast for sequences which are mostly
+ * different. It can efficiently matches long sequences. In case the
  * sequences are known to be similar (6:4) the
  * {@link AbastractLinearSpaceMyersLcs} algorithm is more than twice faster.
  * To minimize the memory consumption set the smaller sequence to be the second

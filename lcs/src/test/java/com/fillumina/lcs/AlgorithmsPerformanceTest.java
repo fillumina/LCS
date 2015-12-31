@@ -18,8 +18,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplate {
 
-    private static final int TOTAL = 600;
-    private static final int LCS = 400;
+    private static final int TOTAL = 30;
+    private static final int LCS = 20;
     private static final long SEED = System.nanoTime();
 
     private final RandomSequenceGenerator generator;
@@ -68,6 +68,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
                 new LcsRunnable(new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE)));
         tests.addTest("HirschbergLcs",
                 new LcsRunnable(new LcsLengthAdaptor(HirschbergLinearSpaceLcs.INSTANCE)));
+        tests.addTest("WagnerFischerLcs",
+                new LcsRunnable(new LcsLengthAdaptor(WagnerFischerLcs.INSTANCE)));
     }
 
     @Override
