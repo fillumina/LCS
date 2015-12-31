@@ -19,6 +19,9 @@ import java.util.Objects;
  * programming</a>. This algorithm is slower than those that
  * use the full score table.
  *
+ * @see <a href='https://en.wikipedia.org/wiki/Hirschberg's_algorithm'>
+ *  Wikipedia: Hirschberg's Algorithm
+ * </a>
  * @author Francesco Illuminati
  */
 public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {

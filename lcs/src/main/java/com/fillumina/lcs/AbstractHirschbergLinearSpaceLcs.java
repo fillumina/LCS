@@ -1,14 +1,22 @@
 package com.fillumina.lcs;
 
 /**
- * Optimized Hirschberg Linear Space LCS algorithm that calculates the
- * reverse vector without the need to reverse the list.
+ * The Hirschberg linear space algorithm is very memory efficient (only
+ * {@code 3 * (m+1)} int elements used) and fast for sequences which are
+ * not similar. It can efficiently matches long sequences. In case the
+ * sequences are known to be similar (6:4) the
+ * {@link AbastractLinearSpaceMyersLcs} algorithm is more than twice faster.
+ * To minimize the memory consumption set the smaller sequence to be the second
+ * one.
  *
+ * @see <a href='https://en.wikipedia.org/wiki/Hirschberg's_algorithm'>
+ *  Wikipedia: Hirschberg's Algorithm
+ * </a>
  * @author Francesco Illuminati
  */
 public abstract class AbstractHirschbergLinearSpaceLcs
         extends AbstractLcsHeadTailReducer {
-    private int[][] buffer;
+    private int[][] array;
 
     public AbstractHirschbergLinearSpaceLcs() {
     }
@@ -17,20 +25,18 @@ public abstract class AbstractHirschbergLinearSpaceLcs
         super(sizeOnly);
     }
 
-    @Override
-    LcsItemImpl lcs(int a0, int n, int b0, int m) {
-        buffer = createBuffer(b0+m);
-        return lcsRlw(a0, a0+n, b0, b0+m);
-    }
-
-    /** Override if you want to provide a buffer. */
-    protected int[][] createBuffer(int m) {
+    /** Override if you want to provide an array {@code int[3][m+1]}. */
+    protected int[][] createArray(int m) {
         return new int[3][m+1];
     }
 
-    //TODO make it call the head-tail reducer in a loop
-    LcsItemImpl lcsRlw(int aStart, int aEnd, int bStart, int bEnd) {
-        final int n = aEnd - aStart;
+    @Override
+    LcsItemImpl lcs(int aStart, int n, int bStart, int m) {
+        if (array == null) {
+            array = createArray(bStart+m);
+        }
+        int bEnd = bStart + m;
+        int aEnd = aStart + n;
 
         switch (n) {
             case 0:
@@ -52,8 +58,8 @@ public abstract class AbstractHirschbergLinearSpaceLcs
                         bStart, bEnd);
 
                 return concat(
-                        lcsRlw(aStart, aBisect, bStart, bBisect),
-                        lcsRlw(aBisect, aEnd, bBisect, bEnd));
+                        lcsHeadTail(aStart, aBisect-aStart, bStart, bBisect-bStart),
+                        lcsHeadTail(aBisect, aEnd-aBisect, bBisect, bEnd-bBisect));
         }
     }
 
@@ -81,8 +87,8 @@ public abstract class AbstractHirschbergLinearSpaceLcs
     private int[] calculateLcsForward(
             int aStart, int aEnd,
             int bStart, int bEnd) {
-        int[] curr = buffer[0];
-        int[] prev = buffer[2];
+        int[] curr = array[0];
+        int[] prev = array[2];
         int[] tmp;
 
         curr[bStart] = 0;
@@ -113,19 +119,19 @@ public abstract class AbstractHirschbergLinearSpaceLcs
         }
 
         // swap the buffers so that curr is always buffer[0]
-        if (curr == buffer[2]) {
-            tmp = buffer[0];
-            buffer[0] = buffer[2];
-            buffer[2] = tmp;
+        if (curr == array[2]) {
+            tmp = array[0];
+            array[0] = array[2];
+            array[2] = tmp;
         }
-        return buffer[0];
+        return array[0];
     }
 
     private int[] calculateLcsReverse(
             int aStart, int aEnd,
             int bStart, int bEnd) {
-        int[] curr = buffer[1];
-        int[] prev = buffer[2];
+        int[] curr = array[1];
+        int[] prev = array[2];
         int[] tmp;
         int offset = bEnd + bStart - 1;
 
@@ -157,12 +163,12 @@ public abstract class AbstractHirschbergLinearSpaceLcs
         }
 
         // swap the buffers so that curr is always buffer[1]
-        if (curr == buffer[2]) {
-            tmp = buffer[1];
-            buffer[1] = buffer[2];
-            buffer[2] = tmp;
+        if (curr == array[2]) {
+            tmp = array[1];
+            array[1] = array[2];
+            array[2] = tmp;
         }
-        return buffer[1];
+        return array[1];
     }
 
     private static int indexOfBiggerSum(int[] forward, int[] reverse,

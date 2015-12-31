@@ -87,7 +87,8 @@ with the added advantage of being constant (it's independent from the
 distance between the matches).
 [AlgorithmPerformanceTest]
 (lcs-algorithms/src/test/java/com/fillumina/lcs/algorithm/performance/AlgorithmsPerformanceTest.java)
-with `TOTAL=600` and `LCS=400`:
+
+    `TOTAL=600` and `LCS=400`:
 
     SmithWaterman                 	   0 :	      1.97 ms		     74.90 %
     WagnerFischer                 	   1 :	      2.14 ms		     81.50 %
@@ -98,7 +99,8 @@ with `TOTAL=600` and `LCS=400`:
 When the length of the sequences grows the memory access become more costly and
 the performances of the HirschbergLinearSpace starts to improve in respect to
 the scoretable algorithms.
-with `TOTAL=6000` and `LCS=4000`:
+
+    `TOTAL=6000` and `LCS=4000`:
 
     SmithWaterman                 	   0 :	    251.23 ms		     61.32 %
     WagnerFischer                 	   1 :	    409.72 ms		    100.00 %
@@ -112,7 +114,8 @@ Wagner-Fischer) are clearly faster as shown by the following table (but their
 memory usage is quadratic with the length of the sequences).
 [AlgorithmPerformanceTest]
 (lcs-algorithms/src/test/java/com/fillumina/lcs/algorithm/performance/AlgorithmsPerformanceTest.java)
-with `TOTAL=600` and `LCS=4`:
+
+    `TOTAL=600` and `LCS=4`:
 
     SmithWaterman                 	   0 :	      2.43 ms		     36.44 %
     WagnerFischer                 	   1 :	      2.22 ms		     33.35 %
@@ -125,7 +128,7 @@ of the sequences increase by an order of magnitude. The HirshbergLinearSpace
 gains even more speed and considering the quadratic algorithms consumes a lot
 of memory it becomes more interesting as the length of the sequences increases.
 
-with `TOTAL=6000` and `LCS=40`:
+    `TOTAL=6000` and `LCS=40`:
 
     SmithWaterman                 	   0 :	    218.84 ms		     31.72 %
     WagnerFischer                 	   1 :	    293.51 ms		     42.54 %
@@ -135,14 +138,16 @@ with `TOTAL=6000` and `LCS=40`:
 
 To summarize:
 
-    * for similar sequences: the Linear Space Myers algorithm seems the better
-      choice: it's very fast (only slightly slower than the direct Myers
-      algorithm) and consumes much less memory.
+    * __For similar sequences:__ the Linear Space Myers algorithm is very fast
+      (only slightly slower than the direct Myers
+      algorithm) and memory efficient. For small sequences the simple
+      Myers algorithm might be preferred but be warned that its memory usage
+      grows quite fast with the distance between matches.
 
-    * for different sequences: the Linear Space Hirschberg algorithm is a bit
-      slower for few elements but becomes more and more efficient as the length
-      of the sequences increases plus it uses much less memory than the
-      quadratic space algorithms.
+    * __For mostly different sequences:__ the Linear Space Hirschberg algorithm
+      is a bit slower for few elements but becomes more and more efficient as
+      the length of the sequences increases plus it uses much less memory than
+      the quadratic space algorithms.
 
 ## Bibliography
 

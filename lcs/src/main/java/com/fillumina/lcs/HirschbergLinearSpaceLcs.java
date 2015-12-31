@@ -6,8 +6,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * The Hirschberg linear space algorithm is very memory efficient (only
+ * {@code 3 * (m+1)} int elements used) and fast for sequences which are
+ * not similar. It can efficiently matches long sequences. In case the
+ * sequences are known to be similar (6:4) the
+ * {@link AbastractLinearSpaceMyersLcs} algorithm is more than twice faster.
+ * To minimize the memory consumption set the smaller sequence to be the second
+ * one.
+ * 
+ * @see <a href='https://en.wikipedia.org/wiki/Hirschberg's_algorithm'>
+ *  Wikipedia: Hirschberg's Algorithm
+ * </a>
+ * @author Francesco Illuminati
  */
 public class HirschbergLinearSpaceLcs implements Lcs {
     public static final HirschbergLinearSpaceLcs INSTANCE =

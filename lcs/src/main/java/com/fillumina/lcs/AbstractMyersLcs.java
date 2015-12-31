@@ -6,11 +6,13 @@ package com.fillumina.lcs;
  * Note that the used space increases dramatically
  * when the matching elements are far apart (memory is allocated dynamically
  * as needed).
+ * This algorithm is slower than
+ * {@link AbstractHirschbergLinearSpaceLcs} when the sequences are
+ * mostly different.
  *
  * @see <a href='www.xmailserver.org/diff2.pdf'>
  *  An O(ND) Difference Algorithm and Its Variations (PDF)
  * </a>
- *
  * @author Francesco Illuminati
  */
 public abstract class AbstractMyersLcs extends AbstractLcsHeadTailReducer {

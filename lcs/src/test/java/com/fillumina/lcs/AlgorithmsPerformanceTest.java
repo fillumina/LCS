@@ -54,7 +54,7 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
     @Override
     public void init(ProgressionConfigurator config) {
         config.setBaseIterations(100);
-        config.setTimeout(360, TimeUnit.SECONDS);
+        config.setTimeout(10, TimeUnit.MINUTES);
         config.setMaxStandardDeviation(6);
     }
 
@@ -66,6 +66,8 @@ public class AlgorithmsPerformanceTest extends AutoProgressionPerformanceTemplat
                 new LcsRunnable(new LcsLengthAdaptor(MyersLcs.INSTANCE)));
         tests.addTest("LinearSpaceLcs",
                 new LcsRunnable(new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE)));
+        tests.addTest("HirschbergLcs",
+                new LcsRunnable(new LcsLengthAdaptor(HirschbergLinearSpaceLcs.INSTANCE)));
     }
 
     @Override
