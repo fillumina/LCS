@@ -1,9 +1,4 @@
-package com.fillumina.lcs.algorithm.hirschberg;
-
-import com.fillumina.lcs.helper.LcsList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+package com.fillumina.lcs;
 
 /**
  * Optimized Hirschberg Linear Space LCS algorithm that calculates the
@@ -11,77 +6,88 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati
  */
-public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
+public abstract class AbstractHirschbergLinearSpaceLcs
+        extends AbstractLcsHeadTailReducer {
+    private int[][] buffer;
 
-    @Override
-    public <T> List<T> lcs(T[] a, T[] b) {
-        final int m = b.length;
-        List<T> list = lcsRlw(a, 0, a.length, b, 0, m, new int[3][m + 1]);
-        if (list == null) {
-            return Collections.<T>emptyList();
-        }
-        return list;
+    public AbstractHirschbergLinearSpaceLcs() {
     }
 
-    <T> ConcatList<T> lcsRlw(
-            T[] a, int aStart, int aEnd,
-            T[] b, int bStart, int bEnd,
-            int[][] buffer) {
+    public AbstractHirschbergLinearSpaceLcs(boolean sizeOnly) {
+        super(sizeOnly);
+    }
+
+    @Override
+    LcsItemImpl lcs(int a0, int n, int b0, int m) {
+        buffer = createBuffer(b0+m);
+        return lcsRlw(a0, a0+n, b0, b0+m);
+    }
+
+    /** Override if you want to provide a buffer. */
+    protected int[][] createBuffer(int m) {
+        return new int[3][m+1];
+    }
+
+    //TODO make it call the head-tail reducer in a loop
+    LcsItemImpl lcsRlw(int aStart, int aEnd, int bStart, int bEnd) {
         final int n = aEnd - aStart;
 
         switch (n) {
             case 0:
-                return ConcatList.<T>empty();
+                return null;
 
             case 1:
-                final T t = a[aStart];
                 for (int i=bStart; i<bEnd; i++) {
-                    if (Objects.equals(t, b[i])) {
-                        return new ConcatList<>(t);
+                    if (sameAtIndex(aStart, i)) {
+                        return match(aStart, i, 1);
                     }
                 }
-                return ConcatList.<T>empty();
+                return null;
 
             default:
                 final int aBisect = aStart + n / 2;
 
                 final int bBisect = calculateCuttingIndex(
-                        a, aStart, aBisect, aEnd,
-                        b, bStart, bEnd,
-                        buffer);
+                        aStart, aBisect, aEnd,
+                        bStart, bEnd);
 
-                return lcsRlw(a, aStart, aBisect, b, bStart, bBisect, buffer)
-                    .concat(lcsRlw(a, aBisect, aEnd, b, bBisect, bEnd, buffer));
+                return concat(
+                        lcsRlw(aStart, aBisect, bStart, bBisect),
+                        lcsRlw(aBisect, aEnd, bBisect, bEnd));
         }
     }
 
-    private <T> int calculateCuttingIndex(
-            T[] a, int aStart, final int aBisect, int aEnd,
-            T[] b, int bStart, int bEnd,
-            int[][] buffer) {
+    private LcsItemImpl concat(LcsItemImpl a, LcsItemImpl b) {
+        if (a == null) {
+            return b;
+        }
+        if (b == null) {
+            return a;
+        }
+        return a.chain(b);
+    }
 
-        int[] forward = calculateLcsForward(
-                a, aStart, aBisect, b, bStart, bEnd, buffer);
+    private int calculateCuttingIndex(
+            int aStart, int aBisect, int aEnd,
+            int bStart, int bEnd) {
 
-        int[] backward = calculateLcsReverse(
-                a, aBisect, aEnd, b, bStart, bEnd, buffer);
+        int[] forward = calculateLcsForward(aStart, aBisect, bStart, bEnd);
+
+        int[] backward = calculateLcsReverse(aBisect, aEnd, bStart, bEnd);
 
         return indexOfBiggerSum(forward, backward, bStart, bEnd) ;
     }
 
-    private static <T> int[] calculateLcsForward(
-            T[] a, int aStart, int aEnd,
-            T[] b, int bStart, int bEnd,
-            int[][] buffer) {
+    private int[] calculateLcsForward(
+            int aStart, int aEnd,
+            int bStart, int bEnd) {
         int[] curr = buffer[0];
         int[] prev = buffer[2];
         int[] tmp;
 
-        T x = a[aStart];
         curr[bStart] = 0;
         for (int i=bStart; i<bEnd; i++) {
-            T y = b[i];
-            if (Objects.equals(x, y)) {
+            if (sameAtIndex(aStart, i)) {
                 for (int ii=i+1; ii<=bEnd; ii++) {
                     curr[ii] = 1;
                 }
@@ -92,15 +98,13 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
         }
 
         for (int j=aStart+1; j<aEnd; j++) {
-            x = a[j];
             tmp = prev;
             prev = curr;
             curr = tmp;
             curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
-                T y = b[i];
-                if (Objects.equals(x, y)) {
+                if (sameAtIndex(j, i)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);
@@ -117,20 +121,17 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
         return buffer[0];
     }
 
-    private static <T> int[] calculateLcsReverse(
-            T[] a, int aStart, int aEnd,
-            T[] b, int bStart, int bEnd,
-            int[][] buffer) {
+    private int[] calculateLcsReverse(
+            int aStart, int aEnd,
+            int bStart, int bEnd) {
         int[] curr = buffer[1];
         int[] prev = buffer[2];
         int[] tmp;
         int offset = bEnd + bStart - 1;
 
-        T x = a[aEnd-1];
         curr[bStart] = 0;
         for (int i=bStart; i<bEnd; i++) {
-            T y = b[offset - i];
-            if (Objects.equals(x, y)) {
+            if (sameAtIndex(aEnd - 1, offset - i)) {
                 for (int ii=i+1; ii<=bEnd; ii++) {
                     curr[ii] = 1;
                 }
@@ -141,15 +142,13 @@ public class OptimizedHirschbergLinearSpaceLcs implements LcsList {
         }
 
         for (int j=aEnd-2; j>=aStart; j--) {
-            x = a[j];
             tmp = prev;
             prev = curr;
             curr = tmp;
             curr[bStart] = 0;
 
             for (int i=bStart; i<bEnd; i++) {
-                T y = b[offset - i];
-                if (Objects.equals(x, y)) {
+                if (sameAtIndex(j, offset - i)) {
                     curr[i + 1] = prev[i] + 1;
                 } else {
                     curr[i + 1] = Math.max(curr[i], prev[i + 1]);

@@ -1,12 +1,7 @@
 package com.fillumina.lcs.algorithm.performance;
 
-import com.fillumina.lcs.algorithm.hirschberg.HirschbergLinearSpaceAlgorithmLcs;
+import com.fillumina.lcs.LinearSpaceMyersLcs;
 import com.fillumina.lcs.algorithm.hirschberg.OptimizedHirschbergLinearSpaceLcs;
-import com.fillumina.lcs.algorithm.myers.MyersLcs;
-import com.fillumina.lcs.algorithm.myers.OptimizedMyersLcs;
-import com.fillumina.lcs.algorithm.myers.ReverseMyersLcs;
-import com.fillumina.lcs.algorithm.myers.linearspace.RLinearSpaceMyersLcs;
-import com.fillumina.lcs.algorithm.scoretable.BottomUpLcs;
 import com.fillumina.lcs.algorithm.scoretable.SmithWatermanLcs;
 import com.fillumina.lcs.algorithm.scoretable.WagnerFischerLcs;
 import com.fillumina.lcs.helper.LcsList;
@@ -28,8 +23,8 @@ import static org.junit.Assert.assertEquals;
 public class AlgorithmsPerformanceTest
         extends ParametrizedPerformanceTemplate<LcsList> {
 
-    private static final int TOTAL = 40;
-    private static final int LCS = 3;
+    private static final int TOTAL = 60_000;
+    private static final int LCS = 40;
     private static final long SEED = System.nanoTime();
 
     private final RandomSequenceGenerator generator;
@@ -48,8 +43,8 @@ public class AlgorithmsPerformanceTest
 
     @Override
     public void init(ProgressionConfigurator config) {
-        config.setBaseIterations(1_000);
-        config.setTimeout(360, TimeUnit.SECONDS);
+        config.setBaseIterations(100);
+        config.setTimeout(120, TimeUnit.MINUTES);
         config.setMaxStandardDeviation(3);
     }
 
@@ -59,25 +54,25 @@ public class AlgorithmsPerformanceTest
 //        parameters.addParameter("Recursive", new RecursiveLcs());
 //        parameters.addParameter("MemoizedRecursive", new MemoizedRecursiveLcs());
 
-        parameters.addParameter("BottomUp", new BottomUpLcs());
+//        parameters.addParameter("BottomUp", new BottomUpLcs());
         parameters.addParameter("SmithWaterman", new SmithWatermanLcs());
         parameters.addParameter("WagnerFischer", new WagnerFischerLcs());
 
 
-        parameters.addParameter("HirschbergLinearSpaceAlgorithm",
-                new HirschbergLinearSpaceAlgorithmLcs());
+//        parameters.addParameter("HirschbergLinearSpaceAlgorithm",
+//                new HirschbergLinearSpaceAlgorithmLcs());
         parameters.addParameter("OptimizedHirschbergLinearSpace",
                 new OptimizedHirschbergLinearSpaceLcs());
 
-        parameters.addParameter("Myers", new MyersLcs());
-        parameters.addParameter("ReverseMyers", new ReverseMyersLcs());
-        parameters.addParameter("OptimizedMyers", new OptimizedMyersLcs());
-        parameters.addParameter("RLinearSpaceMyers", new RLinearSpaceMyersLcs());
+//        parameters.addParameter("Myers", new MyersLcs());
+//        parameters.addParameter("ReverseMyers", new ReverseMyersLcs());
+//        parameters.addParameter("OptimizedMyers", new OptimizedMyersLcs());
+//        parameters.addParameter("RLinearSpaceMyers", new RLinearSpaceMyersLcs());
 
-//        parameters.addParameter("OptimizedMyersLcs",
-//                new LcsLengthAdaptor(com.fillumina.lcs.MyersLcs.INSTANCE));
-//        parameters.addParameter("OptimizedLinearSpaceLcs",
-//                new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE));
+        parameters.addParameter("OptimizedMyersLcs",
+                new LcsLengthAdaptor(com.fillumina.lcs.MyersLcs.INSTANCE));
+        parameters.addParameter("OptimizedLinearSpaceLcs",
+                new LcsLengthAdaptor(LinearSpaceMyersLcs.INSTANCE));
 
     }
 

@@ -102,7 +102,6 @@ public class HirschbergLinearSpaceAlgorithmLcs implements LcsList {
         return curr;
     }
 
-    /** The given lists are not modified. */
     static <T> List<T> concatenate(List<T> a, List<T> b) {
         if (a.isEmpty()) {
             return b;

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class BidirectionalVector {
 

@@ -1,6 +1,7 @@
 package com.fillumina.lcs.testutil;
 
 import com.fillumina.lcs.helper.LcsList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.stream.events.Characters;
 
@@ -56,7 +57,8 @@ public abstract class AbstractLcsTestExecutor
             }
             if (!success) {
                 throw new AssertionError(getName() +
-                        " invalid result: " + orEmpty(this.result));
+                        " invalid result: " + orEmpty(this.result) +
+                        " instead of " + Arrays.toString(results));
             }
             return this;
         }

@@ -36,8 +36,7 @@ public class SmithWatermanLcs implements LcsList {
                 if (Objects.equals(a[i], b[j])) {
                     d[i + 1][j + 1] = d[i][j] + 1;
                 } else {
-                    d[i + 1][j + 1]
-                            = Math.max(d[i + 1][j], d[i][j + 1]);
+                    d[i + 1][j + 1] = Math.max(d[i + 1][j], d[i][j + 1]);
                 }
             }
         }
@@ -57,7 +56,8 @@ public class SmithWatermanLcs implements LcsList {
             } else if (d[x][y] == d[x][y - 1]) {
                 y--;
             } else {
-                sb[index--] = a[x - 1]; // set the list in reverse order
+                sb[index] = a[x - 1]; // set the list in reverse order
+                index--;
                 x--;
                 y--;
             }

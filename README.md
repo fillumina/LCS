@@ -70,6 +70,80 @@ The algorithms included are (along with some variants and optimizations):
 There is also a very fast implementation of the Levenshtein distance algorithm.
 
 
+## Speed Considerations
+
+The main usage of the Longest Common Sub-sequence algorithms is to find out
+what are the differences between two sequences that are known to be similar
+(i.e. they share most of the elements in the sequence). This is the case
+of the diff program that shows changes applied to a text or of programs that
+searches for mutations on a DNA sequence. For this kind of usage the
+Myers algorithm is the clear winner. The following table shows the results
+of a performance test applied to the algorithms comparing two sequences of
+600 elements with an LCS (number of equal elements) of 400. Consider
+that the memory utilization of the not linear Myers algorithm grows
+quadratically with the distance between the matches while the
+linear space variant, although a bit slower, has a much smaller memory footprint
+with the added advantage of being constant (it's independent from the
+distance between the matches).
+[AlgorithmPerformanceTest]
+(lcs-algorithms/src/test/java/com/fillumina/lcs/algorithm/performance/AlgorithmsPerformanceTest.java)
+with `TOTAL=600` and `LCS=400`:
+
+    SmithWaterman                 	   0 :	      1.97 ms		     74.90 %
+    WagnerFischer                 	   1 :	      2.14 ms		     81.50 %
+    OptimizedHirschbergLinearSpace	   2 :	      2.63 ms		    100.00 %
+    OptimizedMyersLcs             	   3 :	      0.85 ms		     32.56 %
+    OptimizedLinearSpaceLcs       	   4 :	      1.00 ms		     38.28 %
+
+When the length of the sequences grows the memory access become more costly and
+the performances of the HirschbergLinearSpace starts to improve in respect to
+the scoretable algorithms.
+with `TOTAL=6000` and `LCS=4000`:
+
+    SmithWaterman                 	   0 :	    251.23 ms		     61.32 %
+    WagnerFischer                 	   1 :	    409.72 ms		    100.00 %
+    OptimizedHirschbergLinearSpace	   2 :	    250.73 ms		     61.20 %
+    OptimizedMyersLcs             	   3 :	     89.51 ms		     21.85 %
+    OptimizedLinearSpaceLcs       	   4 :	     92.15 ms		     22.49 %
+
+When the sequences are different and share very few elements the results
+changes dramatically: the scoretable algorithms (Smith-Waterman and
+Wagner-Fischer) are clearly faster as shown by the following table (but their
+memory usage is quadratic with the length of the sequences).
+[AlgorithmPerformanceTest]
+(lcs-algorithms/src/test/java/com/fillumina/lcs/algorithm/performance/AlgorithmsPerformanceTest.java)
+with `TOTAL=600` and `LCS=4`:
+
+    SmithWaterman                 	   0 :	      2.43 ms		     36.44 %
+    WagnerFischer                 	   1 :	      2.22 ms		     33.35 %
+    OptimizedHirschbergLinearSpace	   2 :	      2.76 ms		     41.30 %
+    OptimizedMyersLcs             	   3 :	      6.02 ms		     90.11 %
+    OptimizedLinearSpaceLcs       	   4 :	      6.68 ms		    100.00 %
+
+The performances remain stable when the tests are performed with the length
+of the sequences increase by an order of magnitude. The HirshbergLinearSpace
+gains even more speed and considering the quadratic algorithms consumes a lot
+of memory it becomes more interesting as the length of the sequences increases.
+
+with `TOTAL=6000` and `LCS=40`:
+
+    SmithWaterman                 	   0 :	    218.84 ms		     31.72 %
+    WagnerFischer                 	   1 :	    293.51 ms		     42.54 %
+    OptimizedHirschbergLinearSpace	   2 :	    238.50 ms		     34.57 %
+    OptimizedMyersLcs             	   3 :	    601.26 ms		     87.15 %
+    OptimizedLinearSpaceLcs       	   4 :	    689.91 ms		    100.00 %
+
+To summarize:
+
+    * for similar sequences: the Linear Space Myers algorithm seems the better
+      choice: it's very fast (only slightly slower than the direct Myers
+      algorithm) and consumes much less memory.
+
+    * for different sequences: the Linear Space Hirschberg algorithm is a bit
+      slower for few elements but becomes more and more efficient as the length
+      of the sequences increases plus it uses much less memory than the
+      quadratic space algorithms.
+
 ## Bibliography
 
 * [Wikipedia: Longest Common Subsequence problem]
