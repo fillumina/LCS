@@ -76,7 +76,10 @@ class LcsItemImpl extends AbstractList<LcsItem>
         return steps;
     }
 
-    /** This method is really inefficient this being a linked list. */
+    /**
+     * Being a linked list accessing elements with this method is very
+     * inefficient. Use iterators instead.
+     */
     @Override
     public LcsItem get(int index) {
         LcsItemImpl current = this;

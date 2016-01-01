@@ -2,7 +2,7 @@ package com.fillumina.lcs;
 
 /**
  * An implementation of the Myers LCS algorithm. It's faster than the
- * linear space alternative but its space usage is quadratic O(n<sup>2</sup>).
+ * linear space alternative but its space usage is quadratic.
  * Note that the used space increases dramatically
  * when the matching elements are far apart (memory is allocated dynamically
  * as needed).

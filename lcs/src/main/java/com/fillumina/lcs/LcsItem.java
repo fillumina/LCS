@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * Item containing the matching indexes of the LCS sequence. To minimize the
- * number of nodes successive items are packed together in a single item but
- * there is no assurance that an item contains the longest sequence of
+ * number of nodes successive items are packed together but
+ * there is no assurance that an item would contain the longest sequence of
  * successive matches.
  *
  * @author Francesco Illuminati

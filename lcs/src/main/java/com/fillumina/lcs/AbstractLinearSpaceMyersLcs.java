@@ -2,7 +2,7 @@ package com.fillumina.lcs;
 
 /**
  * Implementation of the Linear Space Myers LCS algorithm. It is fast
- * and memory efficient O(n). Its memory usage grows with the distance of the
+ * and memory efficient. Its memory usage grows with the distance of the
  * matches. It's slightly slower than the simple Myers algorithm.
  * This algorithm is slower than
  * {@link AbstractHirschbergLinearSpaceLcs} when the sequences are

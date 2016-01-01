@@ -14,7 +14,7 @@ optimizations.__
 
 This project accomplishes two different goals:
 
-1. realization of a fast LCS implementation (see `lcs` module)
+1. realization of some fast LCS implementations (see `lcs` module)
 2. study of some different practical LCS algorithms (see `lcs-algorithm` module)
 
 An [LCS](https://en.wikipedia.org/wiki/Longest_common_subsequence_problem)
@@ -37,7 +37,7 @@ maven central.
 The project is divided in 4 (maven) modules:
 
 1. `lcs-helper` defines some common interfaces
-2. `lcs-test-util` contains a test suit to make it sure that every
+2. `lcs-test-util` contains a test suite to be sure that every
 algorithm is correct.
 3. `lcs-algorithm` contains the implementation of many different
 LCS algorithms. There is also a performance test to compare them
