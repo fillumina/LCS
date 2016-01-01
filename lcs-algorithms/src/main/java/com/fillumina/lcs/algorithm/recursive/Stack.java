@@ -9,10 +9,10 @@ import java.util.List;
  * <ul>
  * <li>pushing a value into the static empty instance ({@link #EMPTY})
  *     creates a new instance containing the value.
- *     This is useful because the {@link RecursiveLcs}
+ *     The {@link RecursiveLcs}
  *     algorithm creates a lot of empty instances and only on some of them
  *     it pushes some actual elements.
- * <li>creates list from this stack very efficiently with {@link #toList() };
+ * <li>creates a list from this stack very efficiently with {@link #toList() };
  * </ul>
  *
  * @author Francesco Illuminati

@@ -11,13 +11,14 @@ import java.util.Objects;
  * Computes the LCS using linear space.
  * The algorithms that use the LCS score table only works with 2
  * rows at a time (current row j and j-1) so it is possible to avoid
- * creating the entire table by just using these two. By calculating
+ * creating the entire table by just using these two rows. By calculating
  * the forward and backward vector and watching where they meet the
  * LCS can be calculated by successively dividing the virtual score table at
  * meeting points. The dividing technique is called
  * <a href='https://en.wikipedia.org/wiki/Dynamic_programming'>dynamic
  * programming</a>. This algorithm is slower than those that
- * use the full score table.
+ * use the full score table but using less memory can be an advantage when
+ * accessing memory is costly.
  *
  * @see <a href='https://en.wikipedia.org/wiki/Hirschberg's_algorithm'>
  *  Wikipedia: Hirschberg's Algorithm

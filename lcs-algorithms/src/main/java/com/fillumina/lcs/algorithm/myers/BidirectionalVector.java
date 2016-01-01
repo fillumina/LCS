@@ -3,6 +3,7 @@ package com.fillumina.lcs.algorithm.myers;
 import java.util.Arrays;
 
 /**
+ * A vector (one-dimensional array) that accepts negative indexes.
  *
  * @author Francesco Illuminati
  */
@@ -11,6 +12,10 @@ public class BidirectionalVector {
     private final int[] array;
     private final int zero;
 
+    /**
+     * @param size specify the positive size (the total size will be
+     *             {@code size * 2 + 1}.
+     */
     public BidirectionalVector(int size) {
         this(size, 0);
     }
@@ -26,6 +31,7 @@ public class BidirectionalVector {
         this.zero = length - offset;
     }
 
+    /** Clone  constructor. */
     private BidirectionalVector(int zero, int[] array) {
         this.zero = zero;
         this.array = array;

@@ -30,7 +30,7 @@ public class SmithWatermanLcs implements LcsList {
 
         int[][] d = new int[n + 1][m + 1];
 
-        // row 0 and column 0 are initialized to 0 already by java
+        // row 0 and column 0 are initialized to 0
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (Objects.equals(a[i], b[j])) {
@@ -46,7 +46,6 @@ public class SmithWatermanLcs implements LcsList {
     private <T> List<T> backtrack(int n, int m, int[][] d, T[] a) {
         int index = d[n][m]; // the lcs length
 
-        // read the substring out from the matrix
         @SuppressWarnings("unchecked")
         T[] sb = (T[]) new Object[index];
         index--; // last index

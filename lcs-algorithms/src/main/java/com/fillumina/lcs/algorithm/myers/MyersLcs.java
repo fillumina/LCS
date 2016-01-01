@@ -13,10 +13,11 @@ import java.util.Objects;
  * distance until a match is found. The algorithm always work closer to the
  * optimal solution which is the diagonal (all elements are equal) and so the
  * first solution that completes can be safely taken because the solution on
- * a superior diagonal implies element farther apart and with less elements.
- * The other algorithms starts by searching
+ * a superior diagonal implies element farther apart and an LCS with less elements.
+ * Because the score-table algorithms searches
  * a match from the farthest distance possible (because they always start from
- * the beginning of a row in the score table).
+ * the beginning of a row in the score table) this algorithm is more efficient
+ * if the sequences are similar.
  * <p>
  * This implementation tries to be
  * as close as possible to the one described by the author on his paper.

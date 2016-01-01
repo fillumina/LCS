@@ -6,8 +6,8 @@ import java.util.Objects;
 
 /**
  * The simplest LCS algorithm. It is based on recursion so it's quite
- * impractical (it's time is exponential) but it offers a very concise and
- * clear implementation.
+ * impractical (it's execution time is exponential with the length of the
+ * sequences) but it offers a very concise and clear implementation.
  *
  * @see MomoizedRecursiveLcs
  * @author Francesco Illuminati
@@ -31,7 +31,9 @@ public class RecursiveLcs implements LcsList {
         if (Objects.equals(x, y)) {
             return recursiveLcs(a, n-1, b, m-1).push(x);
         } else {
-            return longest(recursiveLcs(a, n, b, m-1), recursiveLcs(a, n-1, b, m));
+            return longest(
+                    recursiveLcs(a, n, b, m-1),
+                    recursiveLcs(a, n-1, b, m));
         }
     }
 

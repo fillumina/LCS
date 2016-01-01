@@ -6,8 +6,8 @@ import java.util.List;
 
 /**
  * Myers algorithm that uses forward and backward snakes. It is not designed
- * to be performant but to be easy to understand and close to the description
- * given by Myers in his paper.
+ * to be fast but to be easy to understand and close to the description
+ * given by Myers on his paper.
  *
  * @see <a href='www.xmailserver.org/diff2.pdf'>
  *  An O(ND) Difference Algorithm and Its Variations (PDF)

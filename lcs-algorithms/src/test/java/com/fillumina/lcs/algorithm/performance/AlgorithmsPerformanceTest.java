@@ -24,7 +24,7 @@ public class AlgorithmsPerformanceTest
         extends ParametrizedPerformanceTemplate<LcsList> {
 
     private static final int TOTAL = 60;
-    private static final int LCS = 40;
+    private static final int LCS = 4;
     private static final long SEED = System.nanoTime();
 
     private final RandomSequenceGenerator generator;

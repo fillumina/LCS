@@ -16,8 +16,8 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Recursive and memoized-recursive LCS algorithms are tested separately
- * because they are so much slower than the other algorithm that the results
- * would be hard to read.
+ * because they are so much slower than the other algorithms that the results
+ * would be difficult to read.
  *
  * @author Francesco Illuminati
  */

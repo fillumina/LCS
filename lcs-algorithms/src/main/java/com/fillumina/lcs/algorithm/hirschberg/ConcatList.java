@@ -30,6 +30,7 @@ class ConcatList<T> extends AbstractList<T> {
         return array[index];
     }
 
+    /** Adds the given list at the end of the present one. */
     public ConcatList<T> concat(ConcatList<T> c) {
         if (c == null || c.size == 0) {
             return this;
