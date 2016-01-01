@@ -3,8 +3,13 @@ package com.fillumina.lcs.algorithm.myers.linearspace;
 import java.util.Iterator;
 
 /**
+ * Represents a series of consecutive matches followed or preceeded by a
+ * single non matching pair (depending if it is a {@link ForwardSnake} or
+ * a {@link ReverseSnake}. It extends {@link Rectangle} because it
+ * defines a rectangular region identified by its first and last pair
+ * read as Cartesian coordinates.
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 class Snake extends Rectangle implements Iterable<Snake> {
     protected final int xMid;

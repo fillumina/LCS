@@ -47,22 +47,32 @@ class LinearSpaceMyersLcsSolver<T> {
             super(xStart, yStart, xEnd, yEnd);
         }
 
+        /**
+         * Executes the LCS algorithm over this section. Remember that the
+         * returned snake is actually an iterable of snakes.
+         */
         <T> Snake lcs() {
             if (isImproper()) {
+                // has zero size in at least one of its dimensions
                 return createNullSnake();
             }
 
             Snake snake = findMiddleSnake();
-            if (equals(snake)) {
+            if (hasSameDimentionOf(snake)) {
+                // the returned snake has the size of the entire section
                 return snake;
             }
 
+            // recurse the algorithm on the sections before and after
+            // the returned snake
             Snake before = getSectionBefore(snake).lcs();
             Snake after = getSectionAfter(snake).lcs();
 
+            // chain the snakes containing the solution together
             return Snake.chain(before, snake, after);
         }
 
+        /** Searches for a snake in the section. */
         <T> Snake findMiddleSnake() {
             final int max = (int) Math.ceil((m + n) / 2.0) + 1;
             final int delta = n - m;
@@ -75,31 +85,31 @@ class LinearSpaceMyersLcsSolver<T> {
             vb.set(0, n);
             vb.set(delta - 1, n);
 
-            int kk, xf, xr, start, end;
+            int kk, xf, xb, start, end;
 
             for (int d = 0; d <= max; d++) {
                 start = delta - (d - 1);
                 end = delta + (d - 1);
 
                 for (int k = -d; k <= d; k += 2) {
-                    xf = findFurthestReachingDPath(d, k, vf);
+                    xf = findFurthestReachingDPathForward(d, k, vf);
                     if (!evenDelta && isIn(k, start, end) && vb.get(k) <= xf) {
-                        return findLastSnake(d, k, vf, xf);
+                        return findLastSnakeForward(d, k, vf, xf);
                     }
                 }
 
                 for (int k = -d; k <= d; k += 2) {
                     kk = k + delta;
-                    xr = findFurthestReachingDPathReverse(d, kk, delta, vb);
-                    if (evenDelta && isIn(kk, -d, d) && xr >= 0 && xr <= vf.get(kk)) {
-                        return findLastSnakeReverse(d, kk, delta, vb, xr);
+                    xb = findFurthestReachingDPathReverse(d, kk, delta, vb);
+                    if (evenDelta && isIn(kk, -d, d) && xb >= 0 && xb <= vf.get(kk)) {
+                        return findLastSnakeReverse(d, kk, delta, vb, xb);
                     }
                 }
             }
             return createNullSnake();
         }
 
-        private int findFurthestReachingDPath(int d, int k,
+        private int findFurthestReachingDPathForward(int d, int k,
                 BidirectionalVector vf) {
             int x, y;
 
@@ -113,7 +123,7 @@ class LinearSpaceMyersLcsSolver<T> {
             }
 
             y = x - k;
-            while (x >= 0 && y >= 0 && x < n && y < m && sameItem(x, y)) {
+            while (x >= 0 && y >= 0 && x < n && y < m && sameElementAtIndex(x, y)) {
                 x++;
                 y++;
             }
@@ -122,7 +132,8 @@ class LinearSpaceMyersLcsSolver<T> {
             return x;
         }
 
-        private Snake findLastSnake(int d, int k, BidirectionalVector vf, int x) {
+        private Snake findLastSnakeForward(int d, int k, BidirectionalVector vf,
+                int x) {
             int y = x - k;
 
             int xEnd = x;
@@ -151,7 +162,7 @@ class LinearSpaceMyersLcsSolver<T> {
             if (xMid == xEnd && yMid == yEnd) {
                 xMid = xStart;
                 yMid = yStart;
-                while (xStart > 0 && yStart > 0 && sameItem(xStart - 1,
+                while (xStart > 0 && yStart > 0 && sameElementAtIndex(xStart - 1,
                         yStart - 1)) {
                     xStart--;
                     yStart--;
@@ -175,7 +186,8 @@ class LinearSpaceMyersLcsSolver<T> {
             }
 
             y = x - k;
-            while (x > 0 && y > 0 && x <= n && y <= m && sameItem(x - 1, y - 1)) {
+            while (x > 0 && y > 0 && x <= n && y <= m &&
+                    sameElementAtIndex(x - 1, y - 1)) {
                 x--;
                 y--;
             }
@@ -213,7 +225,7 @@ class LinearSpaceMyersLcsSolver<T> {
             if (xMid == xStart && yMid == yStart) {
                 xMid = xEnd;
                 yMid = yEnd;
-                while (xEnd < n && yEnd < m && sameItem(xEnd, yEnd)) {
+                while (xEnd < n && yEnd < m && sameElementAtIndex(xEnd, yEnd)) {
                     xEnd++;
                     yEnd++;
                 }
@@ -222,17 +234,22 @@ class LinearSpaceMyersLcsSolver<T> {
             return createReverseSnake(xStart, yStart, xMid, yMid, xEnd, yEnd);
         }
 
-        /** @return the innner rectangle getSectionBefore the given one. */
+        /** @return the inner rectangle <i>before</i> the given one. */
         Section getSectionBefore(Rectangle o) {
             return new Section(getxStart(), getyStart(),
                     o.getxStart(), o.getyStart());
         }
 
-        /** @return the innner rectangle getSectionAfter the given one. */
+        /** @return the inner rectangle <i>after</i> the given one. */
         Section getSectionAfter(Rectangle o) {
             return new Section(o.getxEnd(), o.getyEnd(), getxEnd(), getyEnd());
         }
 
+        /**
+         * Creates a snake with a non matching pair at the beginning.
+         * Snake coordinates refers to the whole sequences hence the starting
+         * coordinates of this section must be added.
+         */
         Snake createForwardSnake(int xStart, int yStart, int xMid, int yMid,
                 int xEnd, int yEnd) {
             int x0 = getxStart();
@@ -241,6 +258,11 @@ class LinearSpaceMyersLcsSolver<T> {
                     y0 + yMid, x0 + xEnd, y0 + yEnd);
         }
 
+        /**
+         * Creates a snake with a non matching pair at its end.
+         * Snake coordinates refers to the whole sequences hence the starting
+         * coordinates of this section must be added.
+         */
         Snake createReverseSnake(int xStart, int yStart, int xMid, int yMid,
                 int xEnd, int yEnd) {
             int x0 = getxStart();
@@ -249,18 +271,36 @@ class LinearSpaceMyersLcsSolver<T> {
                     y0 + yMid, x0 + xEnd, y0 + yEnd);
         }
 
+        /**
+         * Creates a snake with no diagonal (no matching elements) with the
+         * size of its containing section.
+         * Snake coordinates refers to the whole sequences hence the starting
+         * coordinates of this section must be added.
+         */
         Snake createNullSnake() {
-            return new Snake(getxStart(), getyStart(), getxStart(), getyStart(),
-                    getxEnd(), getyEnd());
+            final int x0 = getxStart();
+            final int y0 = getyStart();
+            return new Snake(x0, y0, x0, y0, getxEnd(), getyEnd());
         }
 
-        boolean sameItem(int aIndex, int bIndex) {
+        /**
+         * Check if two elements at the given indexes in the two sequences
+         * are equal.
+         */
+        boolean sameElementAtIndex(int aIndex, int bIndex) {
             T aItem = a[getxStart() + aIndex];
             T bItem = b[getyStart() + bIndex];
             return aItem == bItem || (aItem != null && aItem.equals(bItem));
         }
     }
 
+    /**
+     * Check if the value is within the interval defined by:
+     * <ul>
+     * <li> startInterval, endInterval if startInterval &lt; endInterval;
+     * <li> endInterva, startInterval if endInterval &lt; startInterval.
+     * </ul>
+     */
     static boolean isIn(int value, int startInterval, int endInterval) {
         if (startInterval < endInterval) {
             if (value < startInterval) {

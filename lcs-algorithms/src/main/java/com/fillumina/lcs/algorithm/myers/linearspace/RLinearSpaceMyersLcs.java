@@ -7,7 +7,7 @@ import java.util.List;
  * The {@link LinearSpaceMyersLcsSolver} uses an internal state and so it
  * cannot be used stateless as suggested by the {@link LcsList} interface. This
  * adaptor instantiates a new {@link LinearSpaceMyersLcsSolver} at each
- * call of {@link #lcs(List,List)} complying with the interface.
+ * call of {@link #lcs(List,List)} complying with the interface intent.
  *
  * @author Francesco Illuminati
  */

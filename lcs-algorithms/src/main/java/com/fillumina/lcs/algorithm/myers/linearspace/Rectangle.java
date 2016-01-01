@@ -1,7 +1,7 @@
 package com.fillumina.lcs.algorithm.myers.linearspace;
 
 /**
- * A 2D area described by the top,left - bottom,right coordinates.
+ * A 2D area described by the coordinate of its top-left bottom-right vertexes.
  */
 class Rectangle {
     private final int xStart;
@@ -41,26 +41,14 @@ class Rectangle {
         return yEnd;
     }
 
-    /** The given rectangle is coincident with this. */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    /** The given rectangle is equal to this one. */
+    public boolean hasSameDimentionOf(Rectangle other) {
+        if (other == null) {
             return false;
         }
-        Rectangle other = (Rectangle) obj;
         return xStart == other.xStart &&
                 yStart == other.yStart &&
                 xEnd == other.xEnd &&
                 yEnd == other.yEnd;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + this.xStart;
-        hash = 59 * hash + this.yStart;
-        hash = 59 * hash + this.xEnd;
-        hash = 59 * hash + this.yEnd;
-        return hash;
     }
 }
