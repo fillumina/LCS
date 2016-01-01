@@ -1,6 +1,6 @@
 package com.fillumina.lcs.algorithm;
 
-import com.fillumina.lcs.algorithm.scoretable.BottomUpLcs;
+import com.fillumina.lcs.algorithm.scoretable.graphical.BottomUpLcs;
 import com.fillumina.lcs.helper.LcsList;
 import com.fillumina.lcs.testutil.AbstractLcsTest;
 

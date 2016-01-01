@@ -1,4 +1,4 @@
-package com.fillumina.lcs.algorithm.performance;
+package com.fillumina.lcs.algorithm.scoretable.graphical;
 
 import com.fillumina.lcs.algorithm.recursive.MemoizedRecursiveLcs;
 import com.fillumina.lcs.algorithm.recursive.RecursiveLcs;

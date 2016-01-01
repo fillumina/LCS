@@ -1,4 +1,4 @@
-package com.fillumina.lcs.algorithm.scoretable;
+package com.fillumina.lcs.algorithm.scoretable.graphical;
 
 import com.fillumina.lcs.helper.LcsList;
 import java.util.ArrayList;
@@ -39,7 +39,8 @@ public class BottomUpLcs implements LcsList {
                 T x = a[i];
 
                 if (Objects.equals(x, y)) {
-                    cell = new Cell(grid.get(i - 1, j - 1).len + 1,
+                    cell = new Cell(
+                            grid.get(i - 1, j - 1).len + 1,
                             Move.DIAGONAL);
 
                 } else {
@@ -84,71 +85,6 @@ public class BottomUpLcs implements LcsList {
 
         Collections.reverse(lcs);
         return lcs;
-    }
-
-    private static enum Move {
-        UP('^'), LEFT('<'), DIAGONAL('\\'), INVALID(' ');
-
-        private char symbol;
-
-        Move(char symbol) {
-            this.symbol = symbol;
-        }
-
-        @Override
-        public String toString() {
-            return Character.toString(symbol);
-        }
-    }
-
-    private static class Cell {
-        private final int len;
-        private final Move move;
-
-        public Cell(int len, Move move) {
-            this.len = len;
-            this.move = move;
-        }
-    }
-
-    /**
-     * It's a matrix of {@link Cell}s that returns a default value when an
-     * element has not been set or it's out of boundaries.
-     */
-    private static class Grid {
-
-        private final Cell[][] array;
-        private final Cell defaultValue;
-
-        @SuppressWarnings("unchecked")
-        public Grid(int rows, int columns, Cell defaultValue) {
-            this.array = new Cell[rows][columns];
-            this.defaultValue = defaultValue;
-        }
-
-        public Cell get(int x, int y) {
-            Cell value;
-            try {
-                value = array[x][y];
-            } catch (IndexOutOfBoundsException e) {
-                return defaultValue;
-            }
-            if (value == null) {
-                return defaultValue;
-            }
-            return value;
-        }
-
-        public void set(int x, int y, Cell cell) {
-            if (cell == null) {
-                return;
-            }
-            try {
-                array[x][y] = cell;
-            } catch (IndexOutOfBoundsException e) {
-                // do nothing
-            }
-        }
     }
 
     /**
