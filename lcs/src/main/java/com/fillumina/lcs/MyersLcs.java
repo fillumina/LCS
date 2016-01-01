@@ -7,12 +7,9 @@ import java.util.List;
 
 /**
  * An implementation of the forward Myers algorithm (1986). It's faster than the
- * linear space alternative but its space usage is an O(n^2).
+ * linear space alternative but it uses quadratic space.
  * Note that the used space increases dramatically
  * when there are few matching elements (it's allocated dynamically).
- * <p>
- * Note that if you need to process a primitive array it is more efficient
- * to implement the {@link AbstractLinearSpaceMyersLcs} template.
  *
  * @see AbstractMyersLcs
  * @see <a href='www.xmailserver.org/diff2.pdf'>

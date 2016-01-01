@@ -2,9 +2,8 @@ package com.fillumina.distance;
 
 /**
  * Calculates the Levenshtein distance between two sequences. It quantifies
- * how much two sequences differs (i.e. for auto-correction).
- * This implementation uses only 2 rows of the distance matrix and so it is
- * a linear space algorithm.
+ * how much two sequences differs. This implementation uses linear space and
+ * its execution time is quadratic (but oddly very fast on actual tests).
  *
  * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
  *  Levenshtein distance

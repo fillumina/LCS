@@ -2,7 +2,7 @@ package com.fillumina.distance;
 
 /**
  * An implementation of the {@link AbstractHjelmqvistLevenshteinDistance}
- * to return the distance between 2 strings.
+ * to return the distance between 2 strings (i.e. to use for auto-correction).
  *
  * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">
  *  Levenshtein distance
